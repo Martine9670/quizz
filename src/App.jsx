@@ -4,19 +4,45 @@ import confetti from 'canvas-confetti';
 import './App.css';
 
 function App() {
+  // --- ÉTATS ---
+  const [user, setUser] = useState(localStorage.getItem("quizzUser") || "");
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("quizzUser"));
   const [niveau, setNiveau] = useState(null);
   const [questionsDuNiveau, setQuestionsDuNiveau] = useState([]);
   const [indexQuestion, setIndexQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [termine, setTermine] = useState(false);
   const [reponse, setReponse] = useState("");
+  
+  // État pour l'historique chargé depuis le localStorage
+  const [historique, setHistorique] = useState(
+    JSON.parse(localStorage.getItem("quizzHistory") || "[]")
+  );
 
-  // Effet de cotillons : On ne passe pas d'objet de couleurs pour éviter l'injection de style via JS
+  // --- EFFETS ---
   useEffect(() => {
     if (termine && score === questionsDuNiveau.length && score > 0) {
       confetti(); 
     }
   }, [termine, score, questionsDuNiveau.length]);
+
+  // --- ACTIONS ---
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const name = e.target.username.value.trim();
+    if (name) {
+      localStorage.setItem("quizzUser", name);
+      setUser(name);
+      setIsLoggedIn(true);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("quizzUser");
+    setUser("");
+    setIsLoggedIn(false);
+    resetQuizz();
+  };
 
   const resetQuizz = () => {
     setNiveau(null);
@@ -28,17 +54,25 @@ function App() {
   };
 
   const handleDemarrer = (choix) => {
-    // Logique de pioche : mélange (shuffle) puis sélection des 5 premières (slice)
     const selection = [...questions[choix]]
       .sort(() => Math.random() - 0.5)
       .slice(0, 5);
     
     setQuestionsDuNiveau(selection);
     setNiveau(choix);
-    setIndexQuestion(0);
-    setScore(0);
-    setTermine(false);
-    setReponse("");
+  };
+
+  // Nouvelle fonction pour sauvegarder le score
+  const enregistrerScore = (finalScore, currentLevel) => {
+    const nouvelleEntree = {
+      pseudo: user,
+      points: finalScore,
+      difficulte: currentLevel,
+      date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })
+    };
+    const nouvelHistorique = [nouvelleEntree, ...historique].slice(0, 5);
+    setHistorique(nouvelHistorique);
+    localStorage.setItem("quizzHistory", JSON.stringify(nouvelHistorique));
   };
 
   const validerReponse = (e) => {
@@ -46,10 +80,11 @@ function App() {
     if (!reponse.trim()) return;
 
     const bonneReponse = questionsDuNiveau[indexQuestion].a;
+    let nouveauScore = score;
     
-    // Comparaison insensible à la casse et aux espaces
     if (reponse.trim().toLowerCase() === bonneReponse.toLowerCase()) {
-      setScore(s => s + 1);
+      nouveauScore = score + 1;
+      setScore(nouveauScore);
     }
 
     if (indexQuestion + 1 < questionsDuNiveau.length) {
@@ -57,54 +92,97 @@ function App() {
       setReponse("");
     } else {
       setTermine(true);
+      // On déclenche l'enregistrement ici
+      enregistrerScore(nouveauScore, niveau);
     }
   };
 
-  // --- ECRAN FINAL ---
+  // --- VUES ---
+
+  // 1. Écran de Login
+  if (!isLoggedIn) {
+    return (
+      <div className="app-container">
+        <h2 className="welcome-text">Bienvenue sur <br /> mon Quizz !</h2>
+        <div className="card">
+          <h1 className="main-title">IDENTIFICATION</h1>
+          <form onSubmit={handleLogin}>
+            <input name="username" className="input-field" placeholder="Ton pseudo..." required autoFocus />
+            <button type="submit" className="btn-primary">ENTRER</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Écran Final (avec Historique)
   if (termine) {
     const isParfait = score === questionsDuNiveau.length;
     return (
       <div className="app-container">
+        <div className="logout-banner">
+          <span className="user-name">Joueur : {user}</span>
+          <button onClick={handleLogout} className="btn-logout">Quitter</button>
+        </div>
         <div className="card">
           <h1 className="main-title">{isParfait ? "👑 MASTER !" : "FIN !"}</h1>
-          <p className="subtitle">Tu as obtenu {score} / {questionsDuNiveau.length}</p>
+          <p className="subtitle">{user}, tu as obtenu {score} / 5</p>
+          
+          <div className="history-section">
+            <h3>Derniers Scores</h3>
+            <ul className="history-list">
+              {historique.map((h, i) => (
+                <li key={i} className="history-item">
+                  <span>{h.date}</span>
+                  <strong>{h.points}/5</strong>
+                  <span className={`badge-mini ${h.difficulte}`}>{h.difficulte}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
         </div>
       </div>
     );
   }
 
-// --- ECRAN DE SELECTION ---
-if (!niveau) {
-  return (
-    <div className="app-container">
-      <h2 className="welcome-text">Bienvenue sur mon Quizz ! <br /> 
-      Un petit jeu pour un peu de détente...</h2>
-      <div className="card">
-        <h1 className="main-title">QUIZZY!</h1>
-        <p className="subtitle">Sélectionne un niveau pour piocher 5 questions au hasard</p>
-        <div className="level-grid">
-          {Object.keys(questions).map((lv) => (
-            <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
-              {lv.toUpperCase()}
-            </button>
-          ))}
+  // 3. Écran de Sélection
+  if (!niveau) {
+    return (
+      <div className="app-container">
+        <div className="logout-banner">
+          <span className="user-name">Joueur : {user}</span>
+          <button onClick={handleLogout} className="btn-logout">Quitter</button>
+        </div>
+        <h2 className="welcome-text">Bienvenue sur mon Quizz ! <br /> Un petit jeu pour un peu de détente...</h2>
+        <div className="card">
+          <h1 className="main-title">QUIZZY!</h1>
+          <p className="subtitle">Salut {user} ! Choisis ton niveau :</p>
+          <div className="level-grid">
+            {Object.keys(questions).map((lv) => (
+              <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
+                {lv.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-  // --- ECRAN DE JEU ---
+  // 4. Écran de Jeu
   return (
     <div className="app-container">
-      <h2 className="welcome-text">À toi de jouer ! </h2>
-
+      <div className="logout-banner">
+        <span className="user-name">Joueur : {user}</span>
+        <button onClick={handleLogout} className="btn-logout">Quitter</button>
+      </div>
+      <h2 className="welcome-text">À toi de jouer !</h2>
       <div className="card">
         <span className={`level-badge ${niveau}`}>{niveau}</span>
         <p className="subtitle">Question {indexQuestion + 1} / {questionsDuNiveau.length}</p>
         <p className="question-text">{questionsDuNiveau[indexQuestion].q}</p>
-        
         <form onSubmit={validerReponse}>
           <input 
             autoFocus
@@ -116,7 +194,6 @@ if (!niveau) {
           />
           <button type="submit" className="btn-primary">VALIDER</button>
         </form>
-        
         <button onClick={resetQuizz} className="btn-abandon">ABANDONNER</button>
       </div>
     </div>
