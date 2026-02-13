@@ -74,28 +74,32 @@ function App() {
     );
   }
 
-  // --- ECRAN DE SELECTION ---
-  if (!niveau) {
-    return (
-      <div className="app-container">
-        <div className="card">
-          <h1 className="main-title">QUIZZY!</h1>
-          <p className="subtitle">Sélectionne un niveau pour piocher 10 questions au hasard</p>
-          <div className="level-grid">
-            {Object.keys(questions).map((lv) => (
-              <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
-                {lv.toUpperCase()}
-              </button>
-            ))}
-          </div>
+// --- ECRAN DE SELECTION ---
+if (!niveau) {
+  return (
+    <div className="app-container">
+      <h2 className="welcome-text">Bienvenue sur mon Quizz ! <br /> 
+      Un petit jeu de questions / réponses, pour un peu de détente !</h2>
+      <div className="card">
+        <h1 className="main-title">QUIZZY!</h1>
+        <p className="subtitle">Sélectionne un niveau pour piocher 10 questions au hasard</p>
+        <div className="level-grid">
+          {Object.keys(questions).map((lv) => (
+            <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
+              {lv.toUpperCase()}
+            </button>
+          ))}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   // --- ECRAN DE JEU ---
   return (
     <div className="app-container">
+      <h2 className="welcome-text">À toi de jouer ! </h2>
+
       <div className="card">
         <span className="level-badge">{niveau}</span>
         <p className="subtitle">Question {indexQuestion + 1} / {questionsDuNiveau.length}</p>
