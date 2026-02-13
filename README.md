@@ -23,7 +23,7 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 1. **Clone the repository**
    ```bash
    git clone <your-repository-url>
-   cd quizz-master
+   cd quizz
 
     Install dependencies
     Bash
