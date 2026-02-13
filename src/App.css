@@ -1,0 +1,44 @@
+/* src/App.css */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background-color: #0f172a;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  color: white;
+}
+
+.card {
+  background: #1e293b;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  width: 400px;
+  position: relative;
+}
+
+/* La barre de progression sans attribut style direct */
+.progress-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: #334155;
+}
+
+/* On utilise l'astuce de l'animation ou de la transition sur le changement de data */
+/* Pour un rendu THP parfait, on peut utiliser des variables CSS */
+.progress-bar {
+  height: 100%;
+  background: #646cff;
+  transition: width 0.3s ease-in-out;
+  /* Ici on définit la largeur via la variable injectée proprement */
+  width: calc(var(--pct) * 1%); 
+}
