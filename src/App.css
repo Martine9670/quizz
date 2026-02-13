@@ -9,7 +9,7 @@ html, body, #root {
 
 .welcome-text {
   font-size: 2rem; /* On l'agrandit un peu puisqu'il est sur 2 lignes */
-  color: white;
+  color: black;
   text-transform: uppercase;
   letter-spacing: 4px;
   font-weight: 600;
@@ -28,7 +28,7 @@ html, body, #root {
   align-items: center;
   font-family: 'Poppins', sans-serif;
   
-  /* Arrière-plan plus riche avec un dégradé de couleurs joyeuses */
+  /* Arrière-plan plus riche avec un dégradé de couleurs */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   padding: 20px;
@@ -60,7 +60,7 @@ html, body, #root {
 }
 
 .card {
-  background: #ffffff;
+  background: black;
   padding: 50px;
   border-radius: 40px;
   text-align: center;
@@ -69,6 +69,7 @@ html, body, #root {
   box-shadow: 0 30px 60px rgba(0,0,0,0.3);
   border: 8px solid rgba(255, 255, 255, 0.2);
   position: relative;
+  text-transform: uppercase;
   z-index: 1; /* Pour passer devant les décorations */
 }
 
@@ -148,39 +149,78 @@ html, body, #root {
   border-color: #646cff;
 }
 
-.btn-primary {
-  display: block;
-  width: 100%;
-  padding: 15px;
-  background: #646cff;
-  color: white;
+/* Base commune pour les boutons d'action */
+.btn-primary, .btn-abandon {
   border: none;
-  border-radius: 15px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 8px 0 #483d8b;
-}
-
-.btn-primary:active {
-  transform: translateY(4px);
-  box-shadow: 0 4px 0 #483d8b;
-}
-
-.btn-link {
-  background: none;
-  border: none;
-  color: #94a3b8;
-  margin-top: 30px;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.level-badge {
-  background: #646cff;
-  color: white;
-  padding: 5px 15px;
+  padding: 10px 25px; /* Taille plus élégante */
   border-radius: 50px;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 220px;
+  height: 50px;
+  min-width: 140px;
+  display: block;
+  margin: 10px auto;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Style spécifique pour VALIDER */
+.btn-primary {
+  background: #667eea;
+  color: black;
+  border: 2px solid #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  margin-top: 20px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px); /* Petit saut vers le haut plutôt que scale */
+  filter: brightness(1.1);  background: #35aa4f;
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+}
+
+/* Style spécifique pour ABANDONNER */
+.btn-abandon {
+  background: rgba(223, 111, 111, 0.1); /* Fond léger */
+  color: #ff6b6b;
+  border: 2px solid #ff6b6b; /* Contour pour l'effet "bouton" */
+  margin-top: 15px;
+}
+
+.btn-abandon:hover {
+  transform: translateY(-2px); /* Petit saut vers le haut plutôt que scale */
+  filter: brightness(1.1);
+  background: #ff6b6b;
+  color: white;
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+}
+/* Style de base du badge */
+.level-badge {
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+/* Couleurs dynamiques selon la classe */
+.level-badge.facile {
+  background-color: #4ade80; /* Vert */
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.level-badge.moyen {
+  background-color: #facc15; /* Orange */
+  box-shadow: 0 0 10px rgba(255, 152, 0, 0.3);
+}
+
+.level-badge.difficile {
+  background-color: #f87171; /* Rouge */
+  box-shadow: 0 0 10px rgba(244, 67, 54, 0.3);
 }

@@ -28,10 +28,10 @@ function App() {
   };
 
   const handleDemarrer = (choix) => {
-    // Logique de pioche : mélange (shuffle) puis sélection des 10 premières (slice)
+    // Logique de pioche : mélange (shuffle) puis sélection des 5 premières (slice)
     const selection = [...questions[choix]]
       .sort(() => Math.random() - 0.5)
-      .slice(0, 10);
+      .slice(0, 5);
     
     setQuestionsDuNiveau(selection);
     setNiveau(choix);
@@ -79,10 +79,10 @@ if (!niveau) {
   return (
     <div className="app-container">
       <h2 className="welcome-text">Bienvenue sur mon Quizz ! <br /> 
-      Un petit jeu de questions / réponses, pour un peu de détente !</h2>
+      Un petit jeu pour un peu de détente...</h2>
       <div className="card">
         <h1 className="main-title">QUIZZY!</h1>
-        <p className="subtitle">Sélectionne un niveau pour piocher 10 questions au hasard</p>
+        <p className="subtitle">Sélectionne un niveau pour piocher 5 questions au hasard</p>
         <div className="level-grid">
           {Object.keys(questions).map((lv) => (
             <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
@@ -101,7 +101,7 @@ if (!niveau) {
       <h2 className="welcome-text">À toi de jouer ! </h2>
 
       <div className="card">
-        <span className="level-badge">{niveau}</span>
+        <span className={`level-badge ${niveau}`}>{niveau}</span>
         <p className="subtitle">Question {indexQuestion + 1} / {questionsDuNiveau.length}</p>
         <p className="question-text">{questionsDuNiveau[indexQuestion].q}</p>
         
@@ -117,7 +117,7 @@ if (!niveau) {
           <button type="submit" className="btn-primary">VALIDER</button>
         </form>
         
-        <button onClick={resetQuizz} className="btn-link">Abandonner</button>
+        <button onClick={resetQuizz} className="btn-abandon">ABANDONNER</button>
       </div>
     </div>
   );
