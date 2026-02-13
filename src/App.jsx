@@ -15,13 +15,7 @@ function App() {
 
   useEffect(() => {
     if (termine && score === questionsDuNiveau.length && score > 0) {
-      // On retire les couleurs du JS pour laisser la lib utiliser ses réglages par défaut
-      // ou on utilise des couleurs système
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
+      confetti(); // Cotillons par défaut (zéro config style dans le JS)
     }
   }, [termine, score, questionsDuNiveau.length]);
 
@@ -58,9 +52,9 @@ function App() {
     return (
       <div className="app-container">
         <div className="card">
-          <h1>{score === questionsDuNiveau.length ? "🏆 PARFAIT !" : "Fin !"}</h1>
-          <p className="score-final">Score : <strong>{score} / {questionsDuNiveau.length}</strong></p>
-          <button onClick={resetQuizz} className="btn-primary">Rejouer</button>
+          <h1 className="main-title">{score === questionsDuNiveau.length ? "👑 ROI !" : "FIN !"}</h1>
+          <p className="subtitle">Ton score est de {score} sur {questionsDuNiveau.length}</p>
+          <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
         </div>
       </div>
     );
@@ -69,31 +63,26 @@ function App() {
   if (!niveau) {
     return (
       <div className="app-container">
-        <h1 className="main-title">Quizz Master</h1>
-        <div className="level-grid">
-          {Object.keys(questions).map((lv) => (
-            <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
-              {lv}
-            </button>
-          ))}
+        <div className="card">
+          <h1 className="main-title">QUIZZY!</h1>
+          <p className="subtitle">Prêt à t'amuser ?</p>
+          <div className="level-grid">
+            {Object.keys(questions).map((lv) => (
+              <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
+                {lv.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
-  // Calcul du pourcentage pour la barre
-  const pourcentage = ((indexQuestion + 1) / questionsDuNiveau.length) * 100;
-
   return (
     <div className="app-container">
       <div className="card">
-        {/* AUCUN STYLE ICI : on utilise un attribut data personnalisé */}
-        <div className="progress-container">
-            <div className="progress-bar" data-pct={Math.round(pourcentage)}></div>
-        </div>
-        
         <span className="level-badge">{niveau}</span>
-        <h2>Question {indexQuestion + 1}</h2>
+        <p className="subtitle">Question {indexQuestion + 1} / {questionsDuNiveau.length}</p>
         <p className="question-text">{questionsDuNiveau[indexQuestion].q}</p>
         
         <form onSubmit={validerReponse}>
@@ -103,9 +92,9 @@ function App() {
             type="text" 
             value={reponse} 
             onChange={(e) => setReponse(e.target.value)} 
-            placeholder="Réponse..."
+            placeholder="Tape ici..."
           />
-          <button type="submit" className="btn-primary">OK</button>
+          <button type="submit" className="btn-primary">VALIDER</button>
         </form>
         <button onClick={resetQuizz} className="btn-link">Abandonner</button>
       </div>
