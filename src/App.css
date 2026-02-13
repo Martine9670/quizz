@@ -8,17 +8,18 @@ html, body, #root {
 }
 
 .welcome-text {
-  font-size: 2rem; /* On l'agrandit un peu puisqu'il est sur 2 lignes */
+  font-size: 2rem;
   color: black;
   text-transform: uppercase;
   letter-spacing: 4px;
   font-weight: 600;
-  text-align: center; /* Important pour les 2 lignes */
-  line-height: 1.2;    /* Ajuste l'espace entre les deux lignes */
+  text-align: center;
+  line-height: 1.2;
   margin-bottom: 30px;
   text-shadow: 2px 4px 15px rgba(0, 0, 0, 0.3);
   animation: slideDown 0.6s ease-out;
 }
+
 .app-container {
   min-height: 100vh;
   width: 100vw;
@@ -27,15 +28,13 @@ html, body, #root {
   justify-content: center;
   align-items: center;
   font-family: 'Poppins', sans-serif;
-  
-  /* Arrière-plan plus riche avec un dégradé de couleurs */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   padding: 20px;
   box-sizing: border-box;
 }
 
-/* Ajout de formes géométriques décoratives pour remplir le vide */
+/* Décorations */
 .app-container::before, .app-container::after {
   content: "?";
   position: absolute;
@@ -45,23 +44,12 @@ html, body, #root {
   z-index: 0;
   line-height: 1;
 }
-
-.app-container::before {
-  top: -20px;
-  left: 50px;
-  transform: rotate(-15deg);
-}
-
-.app-container::after {
-  bottom: -20px;
-  right: 50px;
-  content: "!";
-  transform: rotate(15deg);
-}
+.app-container::before { top: -20px; left: 50px; transform: rotate(-15deg); }
+.app-container::after { bottom: -20px; right: 50px; content: "!"; transform: rotate(15deg); }
 
 .card {
   background: black;
-  padding: 50px;
+  padding: 40px;
   border-radius: 40px;
   text-align: center;
   width: 100%;
@@ -69,162 +57,194 @@ html, body, #root {
   box-shadow: 0 30px 60px rgba(0,0,0,0.3);
   border: 8px solid rgba(255, 255, 255, 0.2);
   position: relative;
-  text-transform: uppercase;
-  z-index: 1; /* Pour passer devant les décorations */
-}
-
-/* Effet de lévitation pour la carte */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-
-.card {
+  z-index: 1;
   animation: float 4s ease-in-out infinite;
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
 .main-title {
-  font-size: 3.5rem;
-  margin-bottom: 30px;
+  font-size: 3rem;
+  margin-bottom: 20px;
   color: #646cff;
   text-transform: uppercase;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
 }
 
 .subtitle {
   color: #64748b;
-  margin-bottom: 40px;
-  font-size: 1.2rem;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
 }
 
-/* Grille de niveaux bien aérée */
+/* Grille de niveaux */
 .level-grid {
   display: flex;
-  flex-direction: column; /* On les met les uns sous les autres pour aérer */
-  gap: 20px;
-  margin-top: 20px;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .btn-level {
-  padding: 20px;
+  padding: 18px;
   border: none;
   border-radius: 15px;
   font-weight: 900;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 8px 0 rgba(0,0,0,0.1); /* Effet bouton 3D */
+  box-shadow: 0 6px 0 rgba(0,0,0,0.1);
 }
 
-.btn-level:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 0 rgba(0,0,0,0.05);
-}
-
+.btn-level:hover { transform: scale(1.03); }
 .facile { background: #4ade80; color: #064e3b; }
 .moyen { background: #facc15; color: #713f12; }
 .difficile { background: #f87171; color: #7f1d1d; }
 
 .question-text {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  margin: 30px 0;
+  margin: 20px 0;
   color: #1e293b;
 }
 
 .input-field {
   width: 80%;
   padding: 15px;
-  border-radius: 50px; /* Input en forme de pilule */
+  border-radius: 50px;
   border: 3px solid #e2e8f0;
   font-size: 1.1rem;
   margin-bottom: 20px;
   text-align: center;
   outline: none;
-  transition: border-color 0.3s;
 }
 
-.input-field:focus {
-  border-color: #646cff;
-}
-
-/* Base commune pour les boutons d'action */
+/* --- BOUTONS D'ACTION (VALIDER / ABANDONNER) --- */
 .btn-primary, .btn-abandon {
-  border: none;
-  padding: 10px 25px; /* Taille plus élégante */
+  width: 220px;
+  height: 50px;
   border-radius: 50px;
   font-size: 0.85rem;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 220px;
-  height: 50px;
-  min-width: 140px;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 10px auto;
   text-transform: uppercase;
   letter-spacing: 1px;
+  box-sizing: border-box;
 }
 
-/* Style spécifique pour VALIDER */
 .btn-primary {
   background: #667eea;
-  color: black;
-  border: 2px solid #667eea;
+  color: white;
+  border: 2px solid transparent; /* Pour compenser la bordure de l'autre */
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  margin-top: 20px;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px); /* Petit saut vers le haut plutôt que scale */
-  filter: brightness(1.1);  background: #35aa4f;
-  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+  background: #35aa4f; /* Vert au hover comme demandé */
+  transform: translateY(-2px);
 }
 
-/* Style spécifique pour ABANDONNER */
 .btn-abandon {
-  background: rgba(223, 111, 111, 0.1); /* Fond léger */
+  background: transparent;
   color: #ff6b6b;
-  border: 2px solid #ff6b6b; /* Contour pour l'effet "bouton" */
-  margin-top: 15px;
+  border: 2px solid #ff6b6b;
 }
 
 .btn-abandon:hover {
-  transform: translateY(-2px); /* Petit saut vers le haut plutôt que scale */
-  filter: brightness(1.1);
   background: #ff6b6b;
   color: white;
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+  transform: translateY(-2px);
 }
-/* Style de base du badge */
+
+/* --- BADGES ET SCORES --- */
 .level-badge {
-  padding: 10px 15px;
+  padding: 8px 20px;
   border-radius: 20px;
-  font-size: 2rem;
-  font-weight: 600;
   text-transform: uppercase;
-  color: white;
-  margin-bottom: 10px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: black;
   display: inline-block;
+  margin-bottom: 15px;
 }
 
-/* Couleurs dynamiques selon la classe */
-.level-badge.facile {
-  background-color: #4ade80; /* Vert */
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+/* --- LEADERBOARD (HALL OF FAME) --- */
+.history-section {
+  margin: 25px 0;
+  text-align: left;
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
 }
 
-.level-badge.moyen {
-  background-color: #facc15; /* Orange */
-  box-shadow: 0 0 10px rgba(255, 152, 0, 0.3);
+.history-section h3 {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  color: #764ba2;
+  text-align: center;
 }
 
-.level-badge.difficile {
-  background-color: #f87171; /* Rouge */
-  box-shadow: 0 0 10px rgba(244, 67, 54, 0.3);
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.history-item:last-child { border-bottom: none; }
+
+.history-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: black;
+}
+
+.history-details {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.rank {
+  color: #646cff;
+  font-weight: 900;
+  width: 25px;
+  font-size: 0.8rem;
+}
+
+.badge-mini {
+  font-size: 0.65rem;
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.points {
+  font-weight: 900;
+  color: #1e293b;
+  min-width: 35px;
+  text-align: right;
+}
+
+/* --- LOGOUT --- */
 .logout-banner {
   position: absolute;
   top: 20px;
@@ -233,59 +253,21 @@ html, body, #root {
   align-items: center;
   gap: 15px;
   color: white;
-  font-weight: 600;
 }
 
 .btn-logout {
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid white;
   color: white;
-  padding: 5px 12px;
-  border-radius: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.7rem;
-  text-transform: uppercase;
+  font-weight: 700;
   transition: 0.3s;
 }
 
 .btn-logout:hover {
   background: white;
   color: #764ba2;
-}
-
-.history-section {
-  margin: 20px 0;
-  text-align: left;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 15px;
-  border-radius: 12px;
-}
-
-.history-section h3 {
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  color: #764ba2;
-  text-transform: uppercase;
-}
-
-.history-list {
-  list-style: none;
-  padding: 0;
-}
-
-.history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  padding: 5px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.badge-mini {
-  font-size: 1rem;
-  padding: 10px 15px;
-  border-radius: 10px;
-  color: white;
-  text-transform: uppercase;
 }

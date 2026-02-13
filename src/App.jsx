@@ -14,7 +14,6 @@ function App() {
   const [termine, setTermine] = useState(false);
   const [reponse, setReponse] = useState("");
   
-  // État pour l'historique chargé depuis le localStorage
   const [historique, setHistorique] = useState(
     JSON.parse(localStorage.getItem("quizzHistory") || "[]")
   );
@@ -62,17 +61,23 @@ function App() {
     setNiveau(choix);
   };
 
-  // Nouvelle fonction pour sauvegarder le score
+  // --- LOGIQUE HALL OF FAME (TRI PAR SCORE) ---
   const enregistrerScore = (finalScore, currentLevel) => {
     const nouvelleEntree = {
-      pseudo: user,
+      pseudo: user, // On enregistre bien le pseudo du joueur actuel
       points: finalScore,
       difficulte: currentLevel,
       date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })
     };
-    const nouvelHistorique = [nouvelleEntree, ...historique].slice(0, 5);
-    setHistorique(nouvelHistorique);
-    localStorage.setItem("quizzHistory", JSON.stringify(nouvelHistorique));
+
+    // On récupère l'historique global, on ajoute le nouveau, et on trie par points décroissants
+    const toutLHistorique = [nouvelleEntree, ...historique];
+    const topScores = toutLHistorique
+      .sort((a, b) => b.points - a.points)
+      .slice(0, 5); // On garde uniquement les 5 meilleurs
+    
+    setHistorique(topScores);
+    localStorage.setItem("quizzHistory", JSON.stringify(topScores));
   };
 
   const validerReponse = (e) => {
@@ -92,14 +97,13 @@ function App() {
       setReponse("");
     } else {
       setTermine(true);
-      // On déclenche l'enregistrement ici
       enregistrerScore(nouveauScore, niveau);
     }
   };
 
   // --- VUES ---
 
-  // 1. Écran de Login
+  // 1. LOGIN
   if (!isLoggedIn) {
     return (
       <div className="app-container">
@@ -115,7 +119,7 @@ function App() {
     );
   }
 
-  // 2. Écran Final (avec Historique)
+  // 2. ÉCRAN FINAL (AVEC TOP 5 ET PSEUDOS)
   if (termine) {
     const isParfait = score === questionsDuNiveau.length;
     return (
@@ -129,13 +133,18 @@ function App() {
           <p className="subtitle">{user}, tu as obtenu {score} / 5</p>
           
           <div className="history-section">
-            <h3>Derniers Scores</h3>
+            <h3>🏆 Hall of Fame (Top 5)</h3>
             <ul className="history-list">
               {historique.map((h, i) => (
                 <li key={i} className="history-item">
-                  <span>{h.date}</span>
-                  <strong>{h.points}/5</strong>
-                  <span className={`badge-mini ${h.difficulte}`}>{h.difficulte}</span>
+                  <div className="history-user">
+                    <span className="rank">#{i + 1}</span>
+                    <strong>{h.pseudo}</strong> 
+                  </div>
+                  <div className="history-details">
+                    <span className={`badge-mini ${h.difficulte}`}>{h.difficulte}</span>
+                    <strong className="points">{h.points}/5</strong>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -147,7 +156,7 @@ function App() {
     );
   }
 
-  // 3. Écran de Sélection
+  // 3. SÉLECTION NIVEAU
   if (!niveau) {
     return (
       <div className="app-container">
@@ -171,7 +180,7 @@ function App() {
     );
   }
 
-  // 4. Écran de Jeu
+  // 4. JEU
   return (
     <div className="app-container">
       <div className="logout-banner">
