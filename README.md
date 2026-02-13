@@ -4,12 +4,13 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 
 ## ✨ Features
 
-- **3 Difficulty Levels**: Easy, Medium, and Hard (30 questions total).
-- **Dynamic Content**: Questions are shuffled at the start of each game for a unique experience.
+- **Massive Database**: 150 questions across 3 difficulty levels (Easy, Medium, Hard).
+- **Smart Sampling**: Randomly picks 10 unique questions per session for high replayability.
+- **Diverse Topics**: Includes Video Games, Web Development, Music, and General Culture.
 - **Progress Tracking**: Real-time score and question counter.
 - **Immersive UI**: Full-screen vibrant design with a floating card effect and decorative background.
 - **Celebration**: Interactive confetti effects powered by `canvas-confetti` for perfect scores.
-- **Zero Inline Styles**: 100% of the styling is handled via external CSS.
+- **Zero Inline Styles**: 100% of the styling is strictly handled via external CSS files.
 
 ## 🚀 Tech Stack
 
@@ -42,11 +43,13 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 
 🧠 Logic Highlights
 
-    Shuffle Algorithm: Uses a localized version of the Fisher-Yates principle to randomize questions upon level selection.
+    Shuffle & Slice Algorithm: Uses a localized Fisher-Yates shuffle to randomize the entire pool before slicing the top 10 questions, ensuring a fresh experience every game.
 
-    State Management: Centralized game state (score, index, level) to ensure smooth transitions and clean resets.
+    State Management: Centralized React state to handle level selection, real-time scoring, and seamless game resets.
 
-    Responsiveness: The layout uses min-height: 100vh and Flexbox to stay centered and visually appealing on all screen sizes.
+    Dynamic Layout: Fully responsive design using min-height: 100vh and Flexbox to keep the UI perfectly centered on any screen.
+
+Developed as part of the THP (The Hacking Project) curriculum.
 
     -----
 
