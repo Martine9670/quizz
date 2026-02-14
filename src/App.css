@@ -208,11 +208,27 @@ html, body, #root {
 
 .history-item:last-child { border-bottom: none; }
 
+/* Empile le pseudo et la date verticalement */
+.user-info-stack {
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start;
+  gap: 2px; /* Un tout petit espace entre le nom et la date */
+}
+
+/* Style spécifique pour la date */
+.score-date {
+  font-size: 0.75rem;
+  color: #64748b; /* Un gris plus doux */
+  font-weight: 400;
+}
+
+/* Aligne le rang (#1) avec le bloc nom/date */
 .history-user {
+  color: black;
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: black;
+  gap: 15px;
 }
 
 .history-details {

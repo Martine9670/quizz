@@ -169,11 +169,23 @@ function App() {
             <ul className="history-list">
               {historique.map((h, i) => {
                 const data = h.attributes ? h.attributes : h;
+                
+                // Formatage de la date (ex: 14/02/2026)
+                const dateBrute = new Date(data.createdAt);
+                const dateFormatee = dateBrute.toLocaleDateString('fr-FR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric'
+                });
+
                 return (
                   <li key={h.id} className="history-item">
                     <div className="history-user">
                       <span className="rank">#{i + 1}</span>
-                      <strong>{data.pseudo}</strong> 
+                      <div className="user-info-stack">
+                        <strong>{data.pseudo}</strong> 
+                        <span className="score-date">{dateFormatee}</span>
+                      </div>
                     </div>
                     <div className="history-details">
                       <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
