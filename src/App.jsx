@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'; // Ajout de useCallback
+import { useState, useEffect, useCallback } from 'react';
 import { questions } from './data';
 import confetti from 'canvas-confetti';
 import './App.css';
@@ -20,7 +20,7 @@ function App() {
 
   // --- LOGIQUE API STRAPI ---
 
-  // On utilise useCallback pour que la fonction ne soit pas recréée à chaque rendu
+  // Charger les scores (Top 5)
   const chargerScores = useCallback(async () => {
     try {
       const res = await fetch(`${API_URL}?sort=points:desc&pagination[limit]=5`);
@@ -33,7 +33,7 @@ function App() {
     }
   }, []);
 
-  // Enregistrer un score dans Strapi
+  // Enregistrer un score
   const enregistrerScore = async (finalScore, currentLevel) => {
     const payload = {
       data: {
@@ -56,25 +56,9 @@ function App() {
     }
   };
 
-  // Purger l'historique (Action Admin)
-  const purgerHistorique = async () => {
-    if (window.confirm("ADMIN : Voulez-vous vraiment effacer tous les scores de la base Strapi ?")) {
-      try {
-        for (const item of historique) {
-          await fetch(`${API_URL}/${item.id}`, { method: 'DELETE' });
-        }
-        alert("Base de données réinitialisée.");
-        chargerScores();
-      } catch (err) {
-        console.error("Erreur de purge :", err);
-      }
-    }
-  };
-
   // --- EFFETS ---
     
     useEffect(() => {
-      // On crée une fonction anonyme asynchrone qu'on appelle immédiatement ()
       (async () => {
         await chargerScores();
       })();
@@ -202,12 +186,6 @@ function App() {
               })}
             </ul>
           </div>
-
-          {user.toLowerCase() === "admin" && (
-            <button onClick={purgerHistorique} className="btn-reset-scores">
-              RÉINITIALISER LES SCORES (ADMIN)
-            </button>
-          )}
           
           <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
         </div>
