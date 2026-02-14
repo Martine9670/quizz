@@ -271,3 +271,26 @@ html, body, #root {
   background: white;
   color: #764ba2;
 }
+
+/* Style du bouton Reset */
+.btn-reset-scores {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #ff6b6b; /* Rouge clair */
+  background-color: transparent;
+  border: 1px solid #ff6b6b;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* État au survol : on inverse les couleurs proprement */
+.btn-reset-scores:hover {
+  background-color: #ff6b6b;
+  color: #ffffff !important; /* On force le blanc pour être sûr qu'il ne disparaisse pas */
+  transform: translateY(-2px); /* Petit effet de levier pour le jury */
+}

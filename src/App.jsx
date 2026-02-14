@@ -54,30 +54,47 @@ function App() {
 
   const handleDemarrer = (choix) => {
     const selection = [...questions[choix]]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 5);
+      .sort(() => Math.random() - 0.5);
     
     setQuestionsDuNiveau(selection);
     setNiveau(choix);
   };
 
-  // --- LOGIQUE HALL OF FAME (TRI PAR SCORE) ---
+  // --- LOGIQUE HALL OF FAME ---
+  const purgerHistorique = () => {
+    if (window.confirm("Voulez-vous vraiment effacer tous les scores du Hall of Fame ?")) {
+      localStorage.removeItem("quizzHistory");
+      setHistorique([]);
+    }
+  };
+
+  const terminerJeu = (scoreFinal) => {
+    setTermine(true);
+    enregistrerScore(scoreFinal, niveau);
+  };
+
   const enregistrerScore = (finalScore, currentLevel) => {
     const nouvelleEntree = {
-      pseudo: user, // On enregistre bien le pseudo du joueur actuel
+      pseudo: user,
       points: finalScore,
+      total: questionsDuNiveau.length,
       difficulte: currentLevel,
       date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })
     };
 
-    // On récupère l'historique global, on ajoute le nouveau, et on trie par points décroissants
     const toutLHistorique = [nouvelleEntree, ...historique];
     const topScores = toutLHistorique
       .sort((a, b) => b.points - a.points)
-      .slice(0, 5); // On garde uniquement les 5 meilleurs
+      .slice(0, 5);
     
     setHistorique(topScores);
     localStorage.setItem("quizzHistory", JSON.stringify(topScores));
+  };
+
+  const handleAbandon = () => {
+    if (window.confirm("Veux-tu abandonner et enregistrer ton score actuel ?")) {
+      terminerJeu(score);
+    }
   };
 
   const validerReponse = (e) => {
@@ -96,14 +113,12 @@ function App() {
       setIndexQuestion(i => i + 1);
       setReponse("");
     } else {
-      setTermine(true);
-      enregistrerScore(nouveauScore, niveau);
+      terminerJeu(nouveauScore);
     }
   };
 
   // --- VUES ---
 
-  // 1. LOGIN
   if (!isLoggedIn) {
     return (
       <div className="app-container">
@@ -119,7 +134,6 @@ function App() {
     );
   }
 
-  // 2. ÉCRAN FINAL (AVEC TOP 5 ET PSEUDOS)
   if (termine) {
     const isParfait = score === questionsDuNiveau.length;
     return (
@@ -130,7 +144,7 @@ function App() {
         </div>
         <div className="card">
           <h1 className="main-title">{isParfait ? "👑 MASTER !" : "FIN !"}</h1>
-          <p className="subtitle">{user}, tu as obtenu {score} / 5</p>
+          <p className="subtitle">{user}, tu as obtenu {score} / {questionsDuNiveau.length}</p>
           
           <div className="history-section">
             <h3>🏆 Hall of Fame (Top 5)</h3>
@@ -143,20 +157,28 @@ function App() {
                   </div>
                   <div className="history-details">
                     <span className={`badge-mini ${h.difficulte}`}>{h.difficulte}</span>
-                    <strong className="points">{h.points}/5</strong>
+                    <strong className="points">
+                        {h.points}{h.total ? `/${h.total}` : '/5'}
+                    </strong>
                   </div>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* BOUTON RESET : Sorti du bloc pour être visible coûte que coûte */}
+          <button 
+            onClick={purgerHistorique} 
+            className="btn-reset-scores"
+          >
+            RÉINITIALISER LES SCORES
+          </button>
           <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
         </div>
       </div>
     );
   }
 
-  // 3. SÉLECTION NIVEAU
   if (!niveau) {
     return (
       <div className="app-container">
@@ -180,7 +202,6 @@ function App() {
     );
   }
 
-  // 4. JEU
   return (
     <div className="app-container">
       <div className="logout-banner">
@@ -203,7 +224,7 @@ function App() {
           />
           <button type="submit" className="btn-primary">VALIDER</button>
         </form>
-        <button onClick={resetQuizz} className="btn-abandon">ABANDONNER</button>
+        <button onClick={handleAbandon} className="btn-abandon">QUITTER</button>
       </div>
     </div>
   );

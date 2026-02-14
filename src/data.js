@@ -36,7 +36,7 @@ export const questions = {
     { q: "Quel océan borde l'île de la Réunion ?", a: "Indien" },
     { q: "Quel animal est le roi de la jungle ?", a: "Lion" },
     { q: "Quel est le pays de la K-Pop ?", a: "Coree du Sud" },
-    { q: "Le bonhomme de neige dans La Reine des Neiges ?", a: "Olaf" },
+    { q: "Le nom du bonhomme de neige dans La Reine des Neiges ?", a: "Olaf" },
     { q: "Quelle est la capitale des Etats-Unis ?", a: "Washington" },
     { q: "L'oiseau bleu était le logo de quel réseau ?", a: "Twitter" },
     { q: "Symbole HTML pour ouvrir une balise ?", a: "<" },
