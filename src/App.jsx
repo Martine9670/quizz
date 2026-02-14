@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react'; // Ajout de useCallback
 import { questions } from './data';
 import confetti from 'canvas-confetti';
 import './App.css';
+
+// URL de ton API Strapi
+const API_URL = "http://localhost:1337/api/scores";
 
 function App() {
   // --- ÉTATS ---
@@ -13,17 +16,75 @@ function App() {
   const [score, setScore] = useState(0);
   const [termine, setTermine] = useState(false);
   const [reponse, setReponse] = useState("");
-  
-  const [historique, setHistorique] = useState(
-    JSON.parse(localStorage.getItem("quizzHistory") || "[]")
-  );
+  const [historique, setHistorique] = useState([]);
+
+  // --- LOGIQUE API STRAPI ---
+
+  // On utilise useCallback pour que la fonction ne soit pas recréée à chaque rendu
+  const chargerScores = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_URL}?sort=points:desc&pagination[limit]=5`);
+      const result = await res.json();
+      if (result.data) {
+        setHistorique(result.data);
+      }
+    } catch (err) {
+      console.error("Erreur de connexion à Strapi :", err);
+    }
+  }, []);
+
+  // Enregistrer un score dans Strapi
+  const enregistrerScore = async (finalScore, currentLevel) => {
+    const payload = {
+      data: {
+        pseudo: user,
+        points: finalScore,
+        total: questionsDuNiveau.length,
+        difficulte: currentLevel
+      }
+    };
+
+    try {
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      chargerScores(); 
+    } catch (err) {
+      console.error("Erreur d'enregistrement Strapi :", err);
+    }
+  };
+
+  // Purger l'historique (Action Admin)
+  const purgerHistorique = async () => {
+    if (window.confirm("ADMIN : Voulez-vous vraiment effacer tous les scores de la base Strapi ?")) {
+      try {
+        for (const item of historique) {
+          await fetch(`${API_URL}/${item.id}`, { method: 'DELETE' });
+        }
+        alert("Base de données réinitialisée.");
+        chargerScores();
+      } catch (err) {
+        console.error("Erreur de purge :", err);
+      }
+    }
+  };
 
   // --- EFFETS ---
-  useEffect(() => {
-    if (termine && score === questionsDuNiveau.length && score > 0) {
-      confetti(); 
-    }
-  }, [termine, score, questionsDuNiveau.length]);
+    
+    useEffect(() => {
+      // On crée une fonction anonyme asynchrone qu'on appelle immédiatement ()
+      (async () => {
+        await chargerScores();
+      })();
+    }, [chargerScores]);
+
+    useEffect(() => {
+      if (termine && score === questionsDuNiveau.length && score > 0) {
+        confetti(); 
+      }
+    }, [termine, score, questionsDuNiveau.length]);
 
   // --- ACTIONS ---
   const handleLogin = (e) => {
@@ -50,45 +111,18 @@ function App() {
     setScore(0);
     setTermine(false);
     setReponse("");
+    chargerScores();
   };
 
   const handleDemarrer = (choix) => {
-    const selection = [...questions[choix]]
-      .sort(() => Math.random() - 0.5);
-    
+    const selection = [...questions[choix]].sort(() => Math.random() - 0.5);
     setQuestionsDuNiveau(selection);
     setNiveau(choix);
-  };
-
-  // --- LOGIQUE HALL OF FAME ---
-  const purgerHistorique = () => {
-    if (window.confirm("Voulez-vous vraiment effacer tous les scores du Hall of Fame ?")) {
-      localStorage.removeItem("quizzHistory");
-      setHistorique([]);
-    }
   };
 
   const terminerJeu = (scoreFinal) => {
     setTermine(true);
     enregistrerScore(scoreFinal, niveau);
-  };
-
-  const enregistrerScore = (finalScore, currentLevel) => {
-    const nouvelleEntree = {
-      pseudo: user,
-      points: finalScore,
-      total: questionsDuNiveau.length,
-      difficulte: currentLevel,
-      date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })
-    };
-
-    const toutLHistorique = [nouvelleEntree, ...historique];
-    const topScores = toutLHistorique
-      .sort((a, b) => b.points - a.points)
-      .slice(0, 5);
-    
-    setHistorique(topScores);
-    localStorage.setItem("quizzHistory", JSON.stringify(topScores));
   };
 
   const handleAbandon = () => {
@@ -147,32 +181,34 @@ function App() {
           <p className="subtitle">{user}, tu as obtenu {score} / {questionsDuNiveau.length}</p>
           
           <div className="history-section">
-            <h3>🏆 Hall of Fame (Top 5)</h3>
+            <h3>🏆 Hall of Fame (Top 5 Strapi)</h3>
             <ul className="history-list">
-              {historique.map((h, i) => (
-                <li key={i} className="history-item">
-                  <div className="history-user">
-                    <span className="rank">#{i + 1}</span>
-                    <strong>{h.pseudo}</strong> 
-                  </div>
-                  <div className="history-details">
-                    <span className={`badge-mini ${h.difficulte}`}>{h.difficulte}</span>
-                    <strong className="points">
-                        {h.points}{h.total ? `/${h.total}` : '/5'}
-                    </strong>
-                  </div>
-                </li>
-              ))}
+              {historique.map((h, i) => {
+                const data = h.attributes ? h.attributes : h;
+                return (
+                  <li key={h.id} className="history-item">
+                    <div className="history-user">
+                      <span className="rank">#{i + 1}</span>
+                      <strong>{data.pseudo}</strong> 
+                    </div>
+                    <div className="history-details">
+                      <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
+                      <strong className="points">
+                          {data.points}/{data.total}
+                      </strong>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
-          {/* BOUTON RESET : Sorti du bloc pour être visible coûte que coûte */}
-          <button 
-            onClick={purgerHistorique} 
-            className="btn-reset-scores"
-          >
-            RÉINITIALISER LES SCORES
-          </button>
+          {user.toLowerCase() === "admin" && (
+            <button onClick={purgerHistorique} className="btn-reset-scores">
+              RÉINITIALISER LES SCORES (ADMIN)
+            </button>
+          )}
+          
           <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
         </div>
       </div>
