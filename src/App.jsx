@@ -20,7 +20,6 @@ function App() {
 
   // --- LOGIQUE API STRAPI ---
 
-  // Charger les scores (Top 5)
   const chargerScores = useCallback(async () => {
     try {
       const res = await fetch(`${API_URL}?sort=points:desc&pagination[limit]=5`);
@@ -33,7 +32,6 @@ function App() {
     }
   }, []);
 
-  // Enregistrer un score
   const enregistrerScore = async (finalScore, currentLevel) => {
     const payload = {
       data: {
@@ -43,7 +41,6 @@ function App() {
         difficulte: currentLevel
       }
     };
-
     try {
       await fetch(API_URL, {
         method: 'POST',
@@ -57,18 +54,17 @@ function App() {
   };
 
   // --- EFFETS ---
-    
-    useEffect(() => {
-      (async () => {
-        await chargerScores();
-      })();
-    }, [chargerScores]);
+  useEffect(() => {
+    (async () => {
+      await chargerScores();
+    })();
+  }, [chargerScores]);
 
-    useEffect(() => {
-      if (termine && score === questionsDuNiveau.length && score > 0) {
-        confetti(); 
-      }
-    }, [termine, score, questionsDuNiveau.length]);
+  useEffect(() => {
+    if (termine && score === questionsDuNiveau.length && score > 0) {
+      confetti(); 
+    }
+  }, [termine, score, questionsDuNiveau.length]);
 
   // --- ACTIONS ---
   const handleLogin = (e) => {
@@ -121,12 +117,10 @@ function App() {
 
     const bonneReponse = questionsDuNiveau[indexQuestion].a;
     let nouveauScore = score;
-    
     if (reponse.trim().toLowerCase() === bonneReponse.toLowerCase()) {
       nouveauScore = score + 1;
       setScore(nouveauScore);
     }
-
     if (indexQuestion + 1 < questionsDuNiveau.length) {
       setIndexQuestion(i => i + 1);
       setReponse("");
@@ -134,6 +128,41 @@ function App() {
       terminerJeu(nouveauScore);
     }
   };
+
+  // --- COMPOSANT INTERNE : LEADERBOARD ---
+  const renderLeaderboard = () => (
+    <div className="history-section">
+      <h3>🏆 Voici les légendes de ce jeu !! 🏆</h3>
+      <ul className="history-list">
+        {historique.map((h, i) => {
+          const data = h.attributes ? h.attributes : h;
+          const dateBrute = new Date(data.createdAt);
+          const dateFormatee = dateBrute.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+          return (
+            <li key={h.id} className="history-item">
+              <div className="history-user">
+                <span className="rank">#{i + 1}</span>
+                <div className="user-info-stack">
+                  <strong>{data.pseudo}</strong> 
+                  <span className="score-date">{dateFormatee}</span>
+                </div>
+              </div>
+              <div className="history-details">
+                <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
+                <strong className="points">
+                    {data.points}/{data.total}
+                </strong>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
 
   // --- VUES ---
 
@@ -147,6 +176,11 @@ function App() {
             <input name="username" className="input-field" placeholder="Ton pseudo..." required autoFocus />
             <button type="submit" className="btn-primary">ENTRER</button>
           </form>
+          
+          {/* LEADERBOARD SUR LA PAGE DE LOGIN */}
+          <div style={{ marginTop: '30px' }}>
+            {renderLeaderboard()}
+          </div>
         </div>
       </div>
     );
@@ -161,43 +195,10 @@ function App() {
           <button onClick={handleLogout} className="btn-logout">Quitter</button>
         </div>
         <div className="card">
-          <h1 className="main-title">{isParfait ? "👑 MASTER !" : "FIN !"}</h1>
+          <h1 className="main-title">{isParfait ? "👑 BRAVO !" : "FIN !"}</h1>
           <p className="subtitle">{user}, tu as obtenu {score} / {questionsDuNiveau.length}</p>
           
-          <div className="history-section">
-            <h3>🏆 Hall of Fame (Top 5 Strapi)</h3>
-            <ul className="history-list">
-              {historique.map((h, i) => {
-                const data = h.attributes ? h.attributes : h;
-                
-                // Formatage de la date (ex: 14/02/2026)
-                const dateBrute = new Date(data.createdAt);
-                const dateFormatee = dateBrute.toLocaleDateString('fr-FR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                });
-
-                return (
-                  <li key={h.id} className="history-item">
-                    <div className="history-user">
-                      <span className="rank">#{i + 1}</span>
-                      <div className="user-info-stack">
-                        <strong>{data.pseudo}</strong> 
-                        <span className="score-date">{dateFormatee}</span>
-                      </div>
-                    </div>
-                    <div className="history-details">
-                      <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
-                      <strong className="points">
-                          {data.points}/{data.total}
-                      </strong>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          {renderLeaderboard()}
           
           <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
         </div>
@@ -212,7 +213,7 @@ function App() {
           <span className="user-name">Joueur : {user}</span>
           <button onClick={handleLogout} className="btn-logout">Quitter</button>
         </div>
-        <h2 className="welcome-text">Bienvenue sur mon Quizz ! <br /> Un petit jeu pour un peu de détente...</h2>
+        <h2 className="welcome-text">Bienvenue sur mon Quizz !</h2>
         <div className="card">
           <h1 className="main-title">QUIZZY!</h1>
           <p className="subtitle">Salut {user} ! Choisis ton niveau :</p>
