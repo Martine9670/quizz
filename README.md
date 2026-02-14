@@ -5,6 +5,7 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 ## ✨ Features
 
 - **Massive Database**: 150 questions across 3 difficulty levels (Easy, Medium, Hard).
+- **Persistent Leaderboard**: Global "Hall of Fame" powered by a **Strapi REST API** to save scores permanently.
 - **Smart Sampling**: Randomly picks 10 unique questions per session for high replayability.
 - **Diverse Topics**: Includes Video Games, Web Development, Music, and General Culture.
 - **Progress Tracking**: Real-time score and question counter.
@@ -14,7 +15,8 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 
 ## 🚀 Tech Stack
 
-- **Frontend**: React (Hooks: `useState`, `useEffect`)
+- **Frontend**: React (Hooks: `useState`, `useEffect`, `useCallback`)
+- **Backend**: Strapi CMS (Headless CMS)
 - **Build Tool**: Vite
 - **Styling**: CSS3 (Flexbox, Animations, Pseudo-elements)
 - **Library**: [canvas-confetti](https://www.npmjs.com/package/canvas-confetti)
@@ -31,6 +33,12 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 
     npm install
 
+    Backend Setup (Strapi)
+
+        Ensure your Strapi server is running on http://localhost:1337.
+
+        Permissions for the Score collection must be set to find and create for the Public role.
+
     Run the development server
     Bash
 
@@ -41,7 +49,13 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 
     npm run build
 
+-----
+
 🧠 Logic Highlights
+
+    Fullstack Integration: Uses asynchronous fetch calls to synchronize local state with the Strapi database, ensuring a persistent and shared Hall of Fame.
+
+    Security Hardening: Administrative actions (like resetting scores) are decoupled from the frontend and managed directly through the Strapi Admin Dashboard to prevent unauthorized client-side access.
 
     Shuffle & Slice Algorithm: Uses a localized Fisher-Yates shuffle to randomize the entire pool before slicing the top 10 questions, ensuring a fresh experience every game.
 
@@ -49,8 +63,8 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 
     Dynamic Layout: Fully responsive design using min-height: 100vh and Flexbox to keep the UI perfectly centered on any screen.
 
+-----
+
 Developed as part of the THP (The Hacking Project) curriculum.
 
-    -----
-
-  ##  Author : Martine PINNA
+## Author : Martine PINNA
