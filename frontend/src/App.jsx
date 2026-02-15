@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { questions } from './data';
 import confetti from 'canvas-confetti';
 import './App.css';
 
 // URL de ton API Strapi
-const API_URL = "http://localhost:1337/api/scores";
+const API_URL_SCORES = "http://localhost:1337/api/scores";
+const API_URL_QUESTIONS = "http://localhost:1337/api/questions";
 
 function App() {
   // --- ÉTATS ---
@@ -22,13 +22,13 @@ function App() {
 
   const chargerScores = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}?sort=points:desc&pagination[limit]=5`);
+      const res = await fetch(`${API_URL_SCORES}?sort=points:desc&pagination[limit]=5`);
       const result = await res.json();
       if (result.data) {
         setHistorique(result.data);
       }
     } catch (err) {
-      console.error("Erreur de connexion à Strapi :", err);
+      console.error("Erreur de connexion à Strapi (scores) :", err);
     }
   }, []);
 
@@ -42,7 +42,7 @@ function App() {
       }
     };
     try {
-      await fetch(API_URL, {
+      await fetch(API_URL_SCORES, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -54,12 +54,13 @@ function App() {
   };
 
   // --- EFFETS ---
+  
+// Charge les scores une seule fois au montage du composant
   useEffect(() => {
-    (async () => {
-      await chargerScores();
-    })();
-  }, [chargerScores]);
-
+    chargerScores();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   useEffect(() => {
     if (termine && score === questionsDuNiveau.length && score > 0) {
       confetti(); 
@@ -94,15 +95,51 @@ function App() {
     chargerScores();
   };
 
-  const handleDemarrer = (choix) => {
-    const selection = [...questions[choix]].sort(() => Math.random() - 0.5);
-    setQuestionsDuNiveau(selection);
-    setNiveau(choix);
+  const handleDemarrer = async (choix) => {
+    try {
+      const niveauId = choix.toLowerCase();
+      const res = await fetch(`${API_URL_QUESTIONS}?filters[niveau][$eq]=${niveauId}&pagination[limit]=100`);
+      const result = await res.json();
+
+      console.log("Réponse brute Strapi :", result);
+
+      if (result.data && result.data.length > 0) {
+        const selection = result.data
+          .map(item => {
+            // Sécurité Strapi v4 vs v5 : on cherche l'intitule là où il se trouve
+            const rawData = item.attributes ? item.attributes : item;
+            return {
+              q: rawData.intitule,
+              a: rawData.reponse
+            };
+          })
+          // On filtre pour être sûr qu'on n'a pas de questions vides (null)
+          .filter(q => q.q !== null && q.q !== undefined)
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 10);
+
+        console.log("Questions traitées :", selection);
+
+        if (selection.length > 0) {
+          setQuestionsDuNiveau(selection);
+          setNiveau(choix);
+          setIndexQuestion(0);
+          setReponse("");
+        } else {
+          alert("Les questions existent en base mais le texte (intitule) est vide !");
+        }
+      } else {
+        alert("Strapi ne renvoie rien. Vérifie les permissions PUBLIC -> FIND pour 'Question'");
+      }
+    } catch (err) {
+      console.error("Erreur fetch questions :", err);
+      alert("Impossible de joindre le serveur.");
+    }
   };
 
   const terminerJeu = (scoreFinal) => {
     setTermine(true);
-    enregistrerScore(scoreFinal, niveau);
+    if (niveau) enregistrerScore(scoreFinal, niveau);
   };
 
   const handleAbandon = () => {
@@ -129,7 +166,7 @@ function App() {
     }
   };
 
-  // --- COMPOSANT INTERNE : LEADERBOARD ---
+  // --- LEADERBOARD ---
   const renderLeaderboard = () => (
     <div className="history-section">
       <h3>🏆 Voici les légendes de ce jeu !! 🏆</h3>
@@ -138,9 +175,7 @@ function App() {
           const data = h.attributes ? h.attributes : h;
           const dateBrute = new Date(data.createdAt);
           const dateFormatee = dateBrute.toLocaleDateString('fr-FR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
+            day: '2-digit', month: '2-digit', year: 'numeric'
           });
           return (
             <li key={h.id} className="history-item">
@@ -153,9 +188,7 @@ function App() {
               </div>
               <div className="history-details">
                 <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
-                <strong className="points">
-                    {data.points}/{data.total}
-                </strong>
+                <strong className="points">{data.points}/{data.total}</strong>
               </div>
             </li>
           );
@@ -176,18 +209,13 @@ function App() {
             <input name="username" className="input-field" placeholder="Ton pseudo..." required autoFocus />
             <button type="submit" className="btn-primary">ENTRER</button>
           </form>
-          
-          {/* LEADERBOARD SUR LA PAGE DE LOGIN */}
-          <div style={{ marginTop: '30px' }}>
-            {renderLeaderboard()}
-          </div>
+          <div style={{ marginTop: '30px' }}>{renderLeaderboard()}</div>
         </div>
       </div>
     );
   }
 
   if (termine) {
-    const isParfait = score === questionsDuNiveau.length;
     return (
       <div className="app-container">
         <div className="logout-banner">
@@ -195,11 +223,9 @@ function App() {
           <button onClick={handleLogout} className="btn-logout">Quitter</button>
         </div>
         <div className="card">
-          <h1 className="main-title">{isParfait ? "👑 BRAVO !" : "FIN !"}</h1>
+          <h1 className="main-title">{score === questionsDuNiveau.length ? "👑 BRAVO !" : "FIN !"}</h1>
           <p className="subtitle">{user}, tu as obtenu {score} / {questionsDuNiveau.length}</p>
-          
           {renderLeaderboard()}
-          
           <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
         </div>
       </div>
@@ -218,7 +244,7 @@ function App() {
           <h1 className="main-title">QUIZZY!</h1>
           <p className="subtitle">Salut {user} ! Choisis ton niveau :</p>
           <div className="level-grid">
-            {Object.keys(questions).map((lv) => (
+            {['facile', 'moyen', 'difficile'].map((lv) => (
               <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
                 {lv.toUpperCase()}
               </button>
@@ -228,6 +254,8 @@ function App() {
       </div>
     );
   }
+
+  if (questionsDuNiveau.length === 0) return <div className="app-container">Chargement...</div>;
 
   return (
     <div className="app-container">
@@ -239,14 +267,11 @@ function App() {
       <div className="card">
         <span className={`level-badge ${niveau}`}>{niveau}</span>
         <p className="subtitle">Question {indexQuestion + 1} / {questionsDuNiveau.length}</p>
-        <p className="question-text">{questionsDuNiveau[indexQuestion].q}</p>
+        <p className="question-text">{questionsDuNiveau[indexQuestion]?.q}</p>
         <form onSubmit={validerReponse}>
           <input 
-            autoFocus
-            className="input-field"
-            type="text" 
-            value={reponse} 
-            onChange={(e) => setReponse(e.target.value)} 
+            autoFocus className="input-field" type="text" 
+            value={reponse} onChange={(e) => setReponse(e.target.value)} 
             placeholder="Ta réponse..."
           />
           <button type="submit" className="btn-primary">VALIDER</button>

@@ -1,3 +1,15 @@
+# Empêcher l'envoi du script d'importation (sécurité)
+import_questions.js
+
+# Empêcher l'envoi de fichiers de données locaux
+data.js
+
+# Dossier de données locales de Strapi (si tu as un dossier backend dans le même dépôt)
+.tmp
+.cache
+build/
+public/uploads
+
 # Logs
 logs
 *.log
