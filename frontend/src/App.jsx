@@ -15,7 +15,7 @@ function App() {
   const [termine, setTermine] = useState(false);
   const [reponse, setReponse] = useState("");
   const [historique, setHistorique] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(5);
 
   const chargerScores = useCallback(async () => {
     try {
@@ -57,7 +57,7 @@ function App() {
     if (indexQuestion + 1 < questionsDuNiveau.length) {
       setIndexQuestion(i => i + 1);
       setReponse("");
-      setTimeLeft(10); 
+      setTimeLeft(5); 
     } else {
       terminerJeu(nouveauScore);
     }
@@ -108,31 +108,44 @@ function App() {
 
   const resetQuizz = () => {
     setNiveau(null); setQuestionsDuNiveau([]); setIndexQuestion(0);
-    setScore(0); setTermine(false); setReponse(""); setTimeLeft(10);
+    setScore(0); setTermine(false); setReponse(""); setTimeLeft(5);
     chargerScores();
   };
 
   const handleDemarrer = async (choix) => {
     try {
-      const res = await fetch(`${API_URL_QUESTIONS}?filters[niveau][$eq]=${choix.toLowerCase()}&pagination[limit]=100`);
+      const res = await fetch(`${API_URL_QUESTIONS}?filters[niveau][$eq]=${choix.toLowerCase()}&pagination[limit]=1000`);
       const result = await res.json();
+      
       if (result.data?.length > 0) {
         const selection = result.data.map(item => {
           const rawData = item.attributes ? item.attributes : item;
           return { q: rawData.intitule, a: rawData.reponse };
-        }).filter(q => q.q).sort(() => Math.random() - 0.5).slice(0, 10);
+        })
+        .filter(q => q.q)
+        .sort(() => Math.random() - 0.5);
+
         setQuestionsDuNiveau(selection);
         setNiveau(choix);
         setIndexQuestion(0);
         setReponse("");
-        setTimeLeft(10);
+        setTimeLeft(5); 
       }
-    } catch (err) { console.error(err); }
+    } catch (err) { console.error("Erreur lors du chargement des questions:", err); }
   };
+            <div className="timer-wrapper">
+               <div className="timer-text">⏱ {timeLeft}s</div>
+               <div className="timer-bar-bg">
+                 <div 
+                    className={`timer-bar-fill ${timeLeft <= 3 ? 'danger' : ''}`}
+                    style={{ '--progress': `${timeLeft * 20}%` }}
+                 ></div>
+               </div>
+            </div>
 
   const renderLeaderboard = () => (
     <div className="history-section">
-      <h3>🏆 HALL OF FAME 🏆</h3>
+      <h3>🏆 Le tableau des légendes 🏆</h3>
       <ul className="history-list">
         {historique.map((h, i) => {
           const data = h.attributes ? h.attributes : h;
@@ -181,7 +194,7 @@ function App() {
         <>
           <h1 className="welcome-text">Résultats</h1>
           <div className="card">
-            <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "FIN !"}</h2>
+            <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
             <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
             <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
             {renderLeaderboard()}
@@ -208,7 +221,7 @@ function App() {
                <div className="timer-bar-bg">
                  <div 
                     className={`timer-bar-fill ${timeLeft <= 3 ? 'danger' : ''}`}
-                    style={{ '--progress': `${timeLeft * 10}%` }}
+                    style={{ '--progress': `${timeLeft * 20}%` }}
                  ></div>
                </div>
             </div>
