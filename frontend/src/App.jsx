@@ -2,12 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import './App.css';
 
-// URL de ton API Strapi
 const API_URL_SCORES = "http://localhost:1337/api/scores";
 const API_URL_QUESTIONS = "http://localhost:1337/api/questions";
 
 function App() {
-  // --- ÉTATS ---
   const [user, setUser] = useState(localStorage.getItem("quizzUser") || "");
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("quizzUser"));
   const [niveau, setNiveau] = useState(null);
@@ -17,30 +15,20 @@ function App() {
   const [termine, setTermine] = useState(false);
   const [reponse, setReponse] = useState("");
   const [historique, setHistorique] = useState([]);
-
-  // --- LOGIQUE API STRAPI ---
+  const [timeLeft, setTimeLeft] = useState(10);
 
   const chargerScores = useCallback(async () => {
     try {
       const res = await fetch(`${API_URL_SCORES}?sort=points:desc&pagination[limit]=5`);
       const result = await res.json();
-      if (result.data) {
-        setHistorique(result.data);
-      }
+      if (result && result.data) setHistorique(result.data);
     } catch (err) {
-      console.error("Erreur de connexion à Strapi (scores) :", err);
+      console.error("Erreur scores:", err);
     }
   }, []);
 
-  const enregistrerScore = async (finalScore, currentLevel) => {
-    const payload = {
-      data: {
-        pseudo: user,
-        points: finalScore,
-        total: questionsDuNiveau.length,
-        difficulte: currentLevel
-      }
-    };
+  const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
+    const payload = { data: { pseudo: user, points: finalScore, total: questionsDuNiveau.length, difficulte: currentLevel } };
     try {
       await fetch(API_URL_SCORES, {
         method: 'POST',
@@ -49,25 +37,56 @@ function App() {
       });
       chargerScores(); 
     } catch (err) {
-      console.error("Erreur d'enregistrement Strapi :", err);
+      console.error("Erreur enregistrement:", err);
     }
-  };
+  }, [user, questionsDuNiveau.length, chargerScores]);
 
-  // --- EFFETS ---
-  
-// Charge les scores une seule fois au montage du composant
-  useEffect(() => {
-    chargerScores();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  
-  useEffect(() => {
-    if (termine && score === questionsDuNiveau.length && score > 0) {
-      confetti(); 
+  const terminerJeu = useCallback((scoreFinal) => {
+    setTermine(true);
+    if (niveau) enregistrerScore(scoreFinal, niveau);
+  }, [niveau, enregistrerScore]);
+
+  const validerReponse = useCallback((e = null) => {
+    if (e) e.preventDefault();
+    const bonneReponse = questionsDuNiveau[indexQuestion]?.a;
+    let nouveauScore = score;
+    if (reponse.trim().toLowerCase() === bonneReponse?.toLowerCase()) {
+      nouveauScore = score + 1;
+      setScore(nouveauScore);
     }
+    if (indexQuestion + 1 < questionsDuNiveau.length) {
+      setIndexQuestion(i => i + 1);
+      setReponse("");
+      setTimeLeft(10); 
+    } else {
+      terminerJeu(nouveauScore);
+    }
+  }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${API_URL_SCORES}?sort=points:desc&pagination[limit]=5`)
+      .then(res => res.json())
+      .then(result => {
+        if (isMounted && result.data) setHistorique(result.data);
+      });
+    return () => { isMounted = false; };
+  }, []);
+
+  useEffect(() => {
+    if (termine && score === questionsDuNiveau.length && score > 0) confetti();
   }, [termine, score, questionsDuNiveau.length]);
 
-  // --- ACTIONS ---
+  useEffect(() => {
+    if (!niveau || termine || questionsDuNiveau.length === 0) return;
+    if (timeLeft === 0) {
+      const timeoutId = setTimeout(() => validerReponse(), 0);
+      return () => clearTimeout(timeoutId);
+    }
+    const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+    return () => clearInterval(interval);
+  }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
+
   const handleLogin = (e) => {
     e.preventDefault();
     const name = e.target.username.value.trim();
@@ -79,116 +98,56 @@ function App() {
   };
 
   const handleLogout = () => {
+    if (niveau && !termine && score > 0) enregistrerScore(score, niveau);
     localStorage.removeItem("quizzUser");
     setUser("");
     setIsLoggedIn(false);
-    resetQuizz();
+    setNiveau(null);
+    setTermine(false);
   };
 
   const resetQuizz = () => {
-    setNiveau(null);
-    setQuestionsDuNiveau([]);
-    setIndexQuestion(0);
-    setScore(0);
-    setTermine(false);
-    setReponse("");
+    setNiveau(null); setQuestionsDuNiveau([]); setIndexQuestion(0);
+    setScore(0); setTermine(false); setReponse(""); setTimeLeft(10);
     chargerScores();
   };
 
   const handleDemarrer = async (choix) => {
     try {
-      const niveauId = choix.toLowerCase();
-      const res = await fetch(`${API_URL_QUESTIONS}?filters[niveau][$eq]=${niveauId}&pagination[limit]=100`);
+      const res = await fetch(`${API_URL_QUESTIONS}?filters[niveau][$eq]=${choix.toLowerCase()}&pagination[limit]=100`);
       const result = await res.json();
-
-      console.log("Réponse brute Strapi :", result);
-
-      if (result.data && result.data.length > 0) {
-        const selection = result.data
-          .map(item => {
-            // Sécurité Strapi v4 vs v5 : on cherche l'intitule là où il se trouve
-            const rawData = item.attributes ? item.attributes : item;
-            return {
-              q: rawData.intitule,
-              a: rawData.reponse
-            };
-          })
-          // On filtre pour être sûr qu'on n'a pas de questions vides (null)
-          .filter(q => q.q !== null && q.q !== undefined)
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 10);
-
-        console.log("Questions traitées :", selection);
-
-        if (selection.length > 0) {
-          setQuestionsDuNiveau(selection);
-          setNiveau(choix);
-          setIndexQuestion(0);
-          setReponse("");
-        } else {
-          alert("Les questions existent en base mais le texte (intitule) est vide !");
-        }
-      } else {
-        alert("Strapi ne renvoie rien. Vérifie les permissions PUBLIC -> FIND pour 'Question'");
+      if (result.data?.length > 0) {
+        const selection = result.data.map(item => {
+          const rawData = item.attributes ? item.attributes : item;
+          return { q: rawData.intitule, a: rawData.reponse };
+        }).filter(q => q.q).sort(() => Math.random() - 0.5).slice(0, 10);
+        setQuestionsDuNiveau(selection);
+        setNiveau(choix);
+        setIndexQuestion(0);
+        setReponse("");
+        setTimeLeft(10);
       }
-    } catch (err) {
-      console.error("Erreur fetch questions :", err);
-      alert("Impossible de joindre le serveur.");
-    }
+    } catch (err) { console.error(err); }
   };
 
-  const terminerJeu = (scoreFinal) => {
-    setTermine(true);
-    if (niveau) enregistrerScore(scoreFinal, niveau);
-  };
-
-  const handleAbandon = () => {
-    if (window.confirm("Veux-tu abandonner et enregistrer ton score actuel ?")) {
-      terminerJeu(score);
-    }
-  };
-
-  const validerReponse = (e) => {
-    e.preventDefault();
-    if (!reponse.trim()) return;
-
-    const bonneReponse = questionsDuNiveau[indexQuestion].a;
-    let nouveauScore = score;
-    if (reponse.trim().toLowerCase() === bonneReponse.toLowerCase()) {
-      nouveauScore = score + 1;
-      setScore(nouveauScore);
-    }
-    if (indexQuestion + 1 < questionsDuNiveau.length) {
-      setIndexQuestion(i => i + 1);
-      setReponse("");
-    } else {
-      terminerJeu(nouveauScore);
-    }
-  };
-
-  // --- LEADERBOARD ---
   const renderLeaderboard = () => (
     <div className="history-section">
-      <h3>🏆 Voici les légendes de ce jeu !! 🏆</h3>
+      <h3>🏆 HALL OF FAME 🏆</h3>
       <ul className="history-list">
         {historique.map((h, i) => {
           const data = h.attributes ? h.attributes : h;
-          const dateBrute = new Date(data.createdAt);
-          const dateFormatee = dateBrute.toLocaleDateString('fr-FR', {
-            day: '2-digit', month: '2-digit', year: 'numeric'
-          });
           return (
-            <li key={h.id} className="history-item">
+            <li key={h.id || i} className="history-item">
               <div className="history-user">
                 <span className="rank">#{i + 1}</span>
                 <div className="user-info-stack">
-                  <strong>{data.pseudo}</strong> 
-                  <span className="score-date">{dateFormatee}</span>
+                  <strong>{data.pseudo}</strong>
+                  <span className="score-date">Record</span>
                 </div>
               </div>
               <div className="history-details">
                 <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
-                <strong className="points">{data.points}/{data.total}</strong>
+                <span className="points">{data.points}/{data.total}</span>
               </div>
             </li>
           );
@@ -197,87 +156,71 @@ function App() {
     </div>
   );
 
-  // --- VUES ---
-
-  if (!isLoggedIn) {
-    return (
-      <div className="app-container">
-        <h2 className="welcome-text">Bienvenue sur <br /> mon Quizz !</h2>
-        <div className="card">
-          <h1 className="main-title">IDENTIFICATION</h1>
-          <form onSubmit={handleLogin}>
-            <input name="username" className="input-field" placeholder="Ton pseudo..." required autoFocus />
-            <button type="submit" className="btn-primary">ENTRER</button>
-          </form>
-          <div style={{ marginTop: '30px' }}>{renderLeaderboard()}</div>
-        </div>
+  if (!isLoggedIn) return (
+    <div className="app-container">
+      <h1 className="welcome-text">Bienvenue sur le Quizz !</h1>
+      <div className="card">
+        <h2 className="main-title">Identification</h2>
+        <form onSubmit={handleLogin}>
+          <input name="username" className="input-field" placeholder="Pseudo..." required autoFocus />
+          <button type="submit" className="btn-primary">ENTRER</button>
+        </form>
+        {renderLeaderboard()}
       </div>
-    );
-  }
-
-  if (termine) {
-    return (
-      <div className="app-container">
-        <div className="logout-banner">
-          <span className="user-name">Joueur : {user}</span>
-          <button onClick={handleLogout} className="btn-logout">Quitter</button>
-        </div>
-        <div className="card">
-          <h1 className="main-title">{score === questionsDuNiveau.length ? "👑 BRAVO !" : "FIN !"}</h1>
-          <p className="subtitle">{user}, tu as obtenu {score} / {questionsDuNiveau.length}</p>
-          {renderLeaderboard()}
-          <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!niveau) {
-    return (
-      <div className="app-container">
-        <div className="logout-banner">
-          <span className="user-name">Joueur : {user}</span>
-          <button onClick={handleLogout} className="btn-logout">Quitter</button>
-        </div>
-        <h2 className="welcome-text">Bienvenue sur mon Quizz !</h2>
-        <div className="card">
-          <h1 className="main-title">QUIZZY!</h1>
-          <p className="subtitle">Salut {user} ! Choisis ton niveau :</p>
-          <div className="level-grid">
-            {['facile', 'moyen', 'difficile'].map((lv) => (
-              <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>
-                {lv.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (questionsDuNiveau.length === 0) return <div className="app-container">Chargement...</div>;
+    </div>
+  );
 
   return (
     <div className="app-container">
       <div className="logout-banner">
-        <span className="user-name">Joueur : {user}</span>
+        <span>Joueur : {user}</span>
         <button onClick={handleLogout} className="btn-logout">Quitter</button>
       </div>
-      <h2 className="welcome-text">À toi de jouer !</h2>
-      <div className="card">
-        <span className={`level-badge ${niveau}`}>{niveau}</span>
-        <p className="subtitle">Question {indexQuestion + 1} / {questionsDuNiveau.length}</p>
-        <p className="question-text">{questionsDuNiveau[indexQuestion]?.q}</p>
-        <form onSubmit={validerReponse}>
-          <input 
-            autoFocus className="input-field" type="text" 
-            value={reponse} onChange={(e) => setReponse(e.target.value)} 
-            placeholder="Ta réponse..."
-          />
-          <button type="submit" className="btn-primary">VALIDER</button>
-        </form>
-        <button onClick={handleAbandon} className="btn-abandon">QUITTER</button>
-      </div>
+
+      {termine ? (
+        <>
+          <h1 className="welcome-text">Résultats</h1>
+          <div className="card">
+            <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "FIN !"}</h2>
+            <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
+            <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
+            {renderLeaderboard()}
+          </div>
+        </>
+      ) : !niveau ? (
+        <>
+          <h1 className="welcome-text">Prêt à jouer, {user} ?</h1>
+          <div className="card">
+            <h2 className="main-title">NIVEAUX</h2>
+            <div className="level-grid">
+              {['facile', 'moyen', 'difficile'].map(lv => (
+                <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>{lv.toUpperCase()}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <h1 className="welcome-text">Bonne chance !</h1>
+          <div className="card">
+            <div className="timer-wrapper">
+               <div className="timer-text">⏱ {timeLeft}s</div>
+               <div className="timer-bar-bg">
+                 <div 
+                    className={`timer-bar-fill ${timeLeft <= 3 ? 'danger' : ''}`}
+                    style={{ '--progress': `${timeLeft * 10}%` }}
+                 ></div>
+               </div>
+            </div>
+            <p className="question-text">{questionsDuNiveau[indexQuestion]?.q}</p>
+            <form onSubmit={validerReponse}>
+              <input className="input-field" value={reponse} onChange={e => setReponse(e.target.value)} placeholder="Ta réponse..." autoFocus />
+              <button type="submit" className="btn-primary">VALIDER</button>
+            </form>
+            <button onClick={() => window.confirm("Quitter et enregistrer le score ?") && terminerJeu(score)} className="btn-abandon">QUITTER</button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

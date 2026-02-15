@@ -287,3 +287,37 @@ html, body, #root {
   background: white;
   color: #764ba2;
 }
+
+/* Couleur de la question dans la carte */
+.question-text {
+  color: white; /* Pour être lisible sur la carte noire */
+  font-size: 1.3rem;
+  margin: 20px 0;
+}
+
+/* Timer styles */
+.timer-text {
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.timer-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.timer-bar-fill {
+  height: 100%;
+  width: var(--progress); /* On utilise la variable passée par React */
+  background-color: #4ade80; /* Vert par défaut */
+  border-radius: 5px;
+  transition: width 1s linear, background-color 0.3s ease;
+}
+
+.timer-bar-fill.danger {
+  background-color: #ff6b6b; /* Rouge quand timeLeft <= 3 */
+}
