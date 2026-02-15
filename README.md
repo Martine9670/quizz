@@ -4,21 +4,21 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 
 ## ✨ Features
 
-- **Massive Database**: 150 questions across 3 difficulty levels (Easy, Medium, Hard).
+- **Dynamic Database**: Fetches **all available questions** from the database without arbitrary limits.
+- **5-Second Blitz Timer**: A high-pressure environment with only 5 seconds to answer each question.
+- **Animated Progress Bar**: Visual feedback using CSS variables to track remaining time accurately.
 - **Persistent Leaderboard**: Global "Hall of Fame" powered by a **Strapi REST API** to save scores permanently.
-- **Smart Sampling**: Randomly picks 10 unique questions per session for high replayability.
-- **Diverse Topics**: Includes Video Games, Web Development, Music, and General Culture.
-- **Progress Tracking**: Real-time score and question counter.
-- **Immersive UI**: Full-screen vibrant design with a floating card effect and decorative background.
+- **Diverse Topics**: Includes Video Games, Web Development, Music, and General Culture across 3 difficulty levels.
+- **Immersive UI**: Full-screen vibrant design with floating card effects and a strictly external CSS architecture.
 - **Celebration**: Interactive confetti effects powered by `canvas-confetti` for perfect scores.
-- **Zero Inline Styles**: 100% of the styling is strictly handled via external CSS files.
+- **Zero Inline Styles**: 100% of the styling is handled via external CSS and CSS variables for dynamic elements.
 
 ## 🚀 Tech Stack
 
 - **Frontend**: React (Hooks: `useState`, `useEffect`, `useCallback`)
 - **Backend**: Strapi CMS (Headless CMS)
 - **Build Tool**: Vite
-- **Styling**: CSS3 (Flexbox, Animations, Pseudo-elements)
+- **Styling**: CSS3 (Flexbox, Animations, CSS Variables)
 - **Library**: [canvas-confetti](https://www.npmjs.com/package/canvas-confetti)
 
 ## 🛠️ Installation & Setup
@@ -31,40 +31,46 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
     Install dependencies
     Bash
 
-    npm install
+    # Install for both frontend and backend
+    cd frontend && npm install
+    cd ../backend && npm install
 
     Backend Setup (Strapi)
 
-        Ensure your Strapi server is running on http://localhost:1337.
+        Ensure your Strapi server is configured on http://localhost:1337.
 
-        Permissions for the Score collection must be set to find and create for the Public role.
+        Permissions for the Score and Question collections must be set to find and create for the Public role.
 
-    Run the development server
-    Bash
+-----
 
-    npm run dev
+⚡ Quick Start (VS Code)
 
-    Build for production
-    Bash
+This project includes a .vscode/launch.json configuration to start the full stack in one click:
 
-    npm run build
+    Open the Run and Debug tab (Ctrl+Shift+D).
+
+    Select 🚀 TOUT LANCER (Quizz).
+
+    Press F5 to start both the Strapi backend and Vite frontend in synchronized terminals.
 
 -----
 
 🧠 Logic Highlights
 
+    Dynamic Timer Logic: Uses a combination of useEffect and setInterval to manage a 5-second countdown, triggering an automatic submission when time reaches zero.
+
+    CSS Variables Integration: Leverages --progress CSS variables updated by React state to animate the timer bar without using inline style attributes.
+
     Fullstack Integration: Uses asynchronous fetch calls to synchronize local state with the Strapi database, ensuring a persistent and shared Hall of Fame.
 
-    Security Hardening: Administrative actions (like resetting scores) are decoupled from the frontend and managed directly through the Strapi Admin Dashboard to prevent unauthorized client-side access.
+    Shuffle Algorithm: Randomizes the entire question pool fetched from the API to ensure a fresh experience every game.
 
-    Shuffle & Slice Algorithm: Uses a localized Fisher-Yates shuffle to randomize the entire pool before slicing the top 10 questions, ensuring a fresh experience every game.
-
-    State Management: Centralized React state to handle level selection, real-time scoring, and seamless game resets.
-
-    Dynamic Layout: Fully responsive design using min-height: 100vh and Flexbox to keep the UI perfectly centered on any screen.
+    Clean Architecture: Decouples logic from presentation, maintaining a highly readable and maintainable codebase.
 
 -----
 
 Developed as part of the THP (The Hacking Project) curriculum.
 
-## Author : Martine PINNA
+-----
+
+## Author : Martine
