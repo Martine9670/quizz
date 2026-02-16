@@ -1,7 +1,7 @@
 const LevelSelector = ({ handleDemarrer }) => {
   return (
     <div className="card">
-      <h2 className="main-title">NIVEAUX</h2>
+      <h2 className="main-title">CHOISIS TON NIVEAU DE DIFFICULTÉ</h2>
       <div className="level-grid">
         {['facile', 'moyen', 'difficile'].map(lv => (
           <button 

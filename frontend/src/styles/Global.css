@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+.app-container {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Décorations d'arrière-plan */
+.app-container::before, .app-container::after {
+  content: "?";
+  position: absolute;
+  font-size: 15rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+  line-height: 1;
+  pointer-events: none;
+}
+.app-container::before { top: -20px; left: 50px; transform: rotate(-15deg); }
+.app-container::after { bottom: -20px; right: 50px; content: "!"; transform: rotate(15deg); }
+
+/* --- CARDS --- */
+.card {
+  background: black;
+  padding: 40px;
+  border-radius: 40px;
+  text-align: center;
+  width: 100%;     
+  max-width: 500px; 
+  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+  border: 8px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 5;
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Boutons Communs */
+.btn-primary, .btn-abandon {
+  width: 220px;
+  height: 50px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+
+
+.auth-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.input-field {
+  width: 80%;
+  padding: 15px;
+  border-radius: 50px;
+  border: 3px solid #e2e8f0;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-align: center;
+  outline: none;
+  background: white; /* Assure-toi qu'ils sont visibles sur fond noir */
+  color: #1e293b;
+}
+
+.card h2 {
+  color: #646cff;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* --- LE LIEN "S'INSCRIRE / SE CONNECTER" --- */
+.toggle-auth {
+  color: #646cff;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 20px;
+  display: inline-block;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.toggle-auth:hover {
+  color: #4ade80;
+  text-decoration: underline;
+  transform: scale(1.05);
+}
+
+/* --- STYLE MACHINE À ÉCRIRE (RETRO GAMING) --- */
+.welcome-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: #4ade80;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 900;
+  text-align: center;
+  margin: 0 auto 40px auto;
+  
+  /* Logique de l'animation */
+  display: block;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  
+  /* On combine les deux animations : l'écriture et le clignotement du curseur */
+  animation: 
+    typing 5s steps(22) infinite,
+    blink 0.5s step-end infinite;
+}
+
+/* L'effet de dévoilement du texte */
+@keyframes typing {
+  0% { width: 0; }
+  50% { width: 100%; }
+  90% { width: 100%; }
+  100% { width: 0; }
+}

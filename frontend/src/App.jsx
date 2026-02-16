@@ -1,17 +1,21 @@
 import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 
-// Layout
+// Composants - Layout
 import Navbar from './components/Layout/Navbar';
 import Leaderboard from './components/Layout/Leaderboard';
-// Auth
+// Composants - Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
-// Game
+// Composants - Game
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
 
-import './App.css';
+// Styles (importés après les composants)
+import './styles/Global.css';
+import './styles/Navbar.css';
+import './styles/Game.css';
+import './styles/Leaderboard.css';
 
 // --- CONFIGURATION ---
 const API_URL_SCORES = "http://localhost:1337/api/scores";
