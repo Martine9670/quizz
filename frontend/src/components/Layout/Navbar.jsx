@@ -6,7 +6,7 @@ const Navbar = ({
     <nav className="navbar">
       <div className="nav-left">
         <div className="nav-logo">🕹️ QUIZZY</div>
-        <div className="status-dot"></div>
+        <div className={`status-dot ${isLoggedIn ? 'online' : 'offline'}`}></div>
         
         {!niveau ? (
           <span className="nav-slogan">Prêt à relever le défi ?</span>
