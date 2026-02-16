@@ -6,7 +6,7 @@ const Navbar = ({
   return (
     <nav className="navbar" aria-label="Navigation principale">
       <div className="nav-left">
-        <h1 className="nav-logo">QUIZZY</h1>
+        <h1 className="nav-logo">🕹️ QUIZZY</h1>
         
         {/* --- LE PULSE DE CONNEXION --- */}
         <div className="nav-status" title={isLoggedIn ? "Connecté" : "Hors-ligne"}>
@@ -31,7 +31,7 @@ const Navbar = ({
           className="btn-nav"
           data-mode={isDyslexic ? "dys" : "normal"}
         >
-          {isDyslexic ? "Revenir au mode normal" : "Passer en mode Dys"}
+          {isDyslexic ? "Mode normal" : "Mode Dys"}
         </button>
 
         {isLoggedIn ? (

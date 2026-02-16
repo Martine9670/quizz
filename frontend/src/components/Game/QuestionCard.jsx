@@ -38,9 +38,9 @@ const QuestionCard = ({
       </form>
       
       <button 
-        onClick={() => window.confirm("Es-tu sûr de vouloir abandonner la partie ?") && terminerJeu(score)} 
+        onClick={() => window.confirm("Quitter la partie et enregistrer le score ?") && terminerJeu(score)} 
         className="btn-abandon"
-        aria-label="Quitter et abandonner la partie en cours"
+        aria-label="Quitter et enregistrer le score"
       >
         QUITTER
       </button>

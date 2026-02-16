@@ -35,6 +35,6 @@ dist-ssr
 *.sln
 *.sw?
 
-.envo
+.env
 
 .vscode/
