@@ -210,66 +210,70 @@ function App() {
   return (
     <>
       {/* NAVBAR */}
-    <nav className="navbar">
-      <div className="nav-left">
-        <div className="nav-logo">🧠 QUIZZY</div>
-        <div className="nav-status">
-          <span className="status-dot"></span>
-          <span className="status-text">Live: {historique.length * 3 + 7} joueurs</span>
+      <nav className="navbar">
+        <div className="nav-left">
+          <div className="nav-logo">🧠 QUIZZY</div>
+          <div className="status-dot"></div>
+          
+          {!niveau ? (
+            <span className="nav-slogan">Prêt à relever le défi ?</span>
+          ) : (
+            !termine && (
+              <div className="nav-game-info">
+                Partie en cours : <span className={`badge-mini ${niveau}`}>{niveau}</span>
+              </div>
+            )
+          )}
         </div>
-      </div>
 
-      <div className="nav-links">
-        {!isLoggedIn ? (
-          <button onClick={() => setIsRegistering(!isRegistering)} className="nav-item">
-            {isRegistering ? "Se connecter" : "S'inscrire"}
-          </button>
-        ) : (
-          <>
-            <button onClick={resetQuizz} className="nav-item">Accueil</button>
-            <button onClick={handleLogout} className="nav-logout-btn">Quitter ({user})</button>
-          </>
-        )}
-      </div>
-    </nav>
-    
+        <div className="nav-links">
+          {isLoggedIn ? (
+            <>
+              <button onClick={resetQuizz} className="nav-item">Accueil</button>
+              <button onClick={handleLogout} className="nav-logout-btn">Quitter ({user})</button>
+            </>
+          ) : (
+            <button onClick={() => setIsRegistering(!isRegistering)} className="nav-item">
+              {isRegistering ? "Se connecter" : "S'inscrire"}
+            </button>
+          )}
+        </div>
+      </nav>
+
       {/* CONTENU PRINCIPAL */}
       <div className="app-container">
-{!isLoggedIn ? (
-  <div className="game-layout">
-    {/* Nouveau conteneur pour empiler le titre et la carte verticalement */}
-    <div className="auth-container">
-      <h1 className="welcome-text">Bienvenue sur QUIZZY !</h1>
-      
-      <div className="card">
-        {isRegistering ? (
-          <>
-            <h2 className="main-title">Inscription</h2>
-            <form onSubmit={handleRegister}>
-              <input name="username" className="input-field" placeholder="Pseudo..." required />
-              <input name="email" type="email" className="input-field" placeholder="Email..." required />
-              <input name="password" type="password" className="input-field" placeholder="Mot de passe..." required />
-              <button type="submit" className="btn-primary">CRÉER MON COMPTE</button>
-            </form>
-            <p onClick={() => setIsRegistering(false)} className="toggle-auth">Déjà un compte ? Se connecter</p>
-          </>
-        ) : (
-          <>
-            <h2 className="main-title">Identification</h2>
-            <form onSubmit={handleLogin}>
-              <input name="username" className="input-field" placeholder="Pseudo..." required autoFocus />
-              <button type="submit" className="btn-primary">ENTRER</button>
-            </form>
-            <p onClick={() => setIsRegistering(true)} className="toggle-auth">Pas de compte ? S'inscrire</p>
-          </>
-        )}
-      </div>
-    </div>
-
-    <aside className="sidebar-leaderboard">
-      {renderLeaderboard()}
-    </aside>
-  </div>
+        {!isLoggedIn ? (
+          <div className="game-layout">
+            <div className="auth-container">
+              <h1 className="welcome-text">Bienvenue sur Quizzy !</h1>
+              <div className="card">
+                {isRegistering ? (
+                  <>
+                    <h2 className="main-title">Inscription</h2>
+                    <form onSubmit={handleRegister}>
+                      <input name="username" className="input-field" placeholder="Pseudo..." required />
+                      <input name="email" type="email" className="input-field" placeholder="Email..." required />
+                      <input name="password" type="password" className="input-field" placeholder="Mot de passe..." required />
+                      <button type="submit" className="btn-primary">CRÉER MON COMPTE</button>
+                    </form>
+                    <p onClick={() => setIsRegistering(false)} className="toggle-auth">Déjà un compte ? Se connecter</p>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="main-title">Identification</h2>
+                    <form onSubmit={handleLogin}>
+                      <input name="username" className="input-field" placeholder="Pseudo..." required autoFocus />
+                      <button type="submit" className="btn-primary">ENTRER</button>
+                    </form>
+                    <p onClick={() => setIsRegistering(true)} className="toggle-auth">Pas de compte ? S'inscrire</p>
+                  </>
+                )}
+              </div>
+            </div>
+            <aside className="sidebar-leaderboard">
+              {renderLeaderboard()}
+            </aside>
+          </div>
         ) : (
           <>
             {termine ? (
