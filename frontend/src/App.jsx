@@ -178,6 +178,8 @@ useEffect(() => {
     </div>
   );
 
+// ... (imports et fonctions inchangés jusqu'au return)
+
   return (
     <>
       <nav className="navbar">
@@ -192,74 +194,82 @@ useEffect(() => {
         </div>
       </nav>
 
-      {!isLoggedIn ? (
-        <div className="app-container">
-          <h1 className="welcome-text">Bienvenue sur le Quizz !</h1>
-          <div className="card">
-            {isRegistering ? (
-              <>
-                <h2 className="main-title">Inscription</h2>
-                <form onSubmit={handleRegister}>
-                  <input name="username" className="input-field" placeholder="Pseudo..." required />
-                  <input name="email" type="email" className="input-field" placeholder="Email..." required />
-                  <input name="password" type="password" className="input-field" placeholder="Mot de passe..." required />
-                  <button type="submit" className="btn-primary">CRÉER MON COMPTE</button>
-                </form>
-                <p onClick={() => setIsRegistering(false)} style={{cursor:'pointer', marginTop:'10px', textDecoration:'underline', color: 'white'}}>Déjà un compte ? Se connecter</p>
-              </>
-            ) : (
-              <>
-                <h2 className="main-title">Identification</h2>
-                <form onSubmit={handleLogin}>
-                  <input name="username" className="input-field" placeholder="Pseudo..." required autoFocus />
-                  <button type="submit" className="btn-primary">ENTRER</button>
-                </form>
-                <p onClick={() => setIsRegistering(true)} style={{cursor:'pointer', marginTop:'10px', textDecoration:'underline', color: 'white'}}>Pas de compte ? S'inscrire</p>
-              </>
-            )}
-            {renderLeaderboard()}
+      <div className="app-container">
+        {!isLoggedIn ? (
+          <div className="game-layout"> {/* Nouveau conteneur flex */}
+            <div className="card">
+              <h1 className="welcome-text">Bienvenue !</h1>
+              {isRegistering ? (
+                <>
+                  <h2 className="main-title">Inscription</h2>
+                  <form onSubmit={handleRegister}>
+                    <input name="username" className="input-field" placeholder="Pseudo..." required />
+                    <input name="email" type="email" className="input-field" placeholder="Email..." required />
+                    <input name="password" type="password" className="input-field" placeholder="Mot de passe..." required />
+                    <button type="submit" className="btn-primary">CRÉER MON COMPTE</button>
+                  </form>
+                  <p onClick={() => setIsRegistering(false)} className="toggle-auth">Déjà un compte ? Se connecter</p>
+                </>
+              ) : (
+                <>
+                  <h2 className="main-title">Identification</h2>
+                  <form onSubmit={handleLogin}>
+                    <input name="username" className="input-field" placeholder="Pseudo..." required autoFocus />
+                    <button type="submit" className="btn-primary">ENTRER</button>
+                  </form>
+                  <p onClick={() => setIsRegistering(true)} className="toggle-auth">Pas de compte ? S'inscrire</p>
+                </>
+              )}
+            </div>
+            <aside className="sidebar-leaderboard">
+              {renderLeaderboard()}
+            </aside>
           </div>
-        </div>
-      ) : (
-        <div className="app-container">
-          {termine ? (
-            <div className="card">
-              <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
-              <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
-              <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
-              {renderLeaderboard()}
-            </div>
-          ) : !niveau ? (
-            <div className="card">
-              <h2 className="main-title">NIVEAUX</h2>
-              <div className="level-grid">
-                {['facile', 'moyen', 'difficile'].map(lv => (
-                  <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>{lv.toUpperCase()}</button>
-                ))}
+        ) : (
+          <>
+            {termine ? (
+              <div className="card">
+                <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
+                <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
+                <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
+                {renderLeaderboard()}
               </div>
-              {renderLeaderboard()}
-            </div>
-          ) : (
-            <div className="card">
-              <div className="timer-wrapper">
-                 <div className="timer-text">⏱ {timeLeft}s</div>
-                 <div className="timer-bar-bg">
-                   <div 
-                      className={`timer-bar-fill ${timeLeft <= 3 ? 'danger' : ''}`}
-                      style={{ width: `${timeLeft * 20}%` }}
-                   ></div>
-                 </div>
+            ) : !niveau ? (
+              <div className="game-layout"> {/* Nouveau conteneur flex */}
+                <div className="card">
+                  <h2 className="main-title">NIVEAUX</h2>
+                  <div className="level-grid">
+                    {['facile', 'moyen', 'difficile'].map(lv => (
+                      <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>{lv.toUpperCase()}</button>
+                    ))}
+                  </div>
+                </div>
+                <aside className="sidebar-leaderboard">
+                  {renderLeaderboard()}
+                </aside>
               </div>
-              <p className="question-text">{questionsDuNiveau[indexQuestion]?.q}</p>
-              <form onSubmit={validerReponse}>
-                <input className="input-field" value={reponse} onChange={e => setReponse(e.target.value)} placeholder="Ta réponse..." autoFocus />
-                <button type="submit" className="btn-primary">VALIDER</button>
-              </form>
-              <button onClick={() => window.confirm("Quitter ?") && terminerJeu(score)} className="btn-abandon">QUITTER</button>
-            </div>
-          )}
-        </div>
-      )}
+            ) : (
+              <div className="card">
+                <div className="timer-wrapper">
+                   <div className="timer-text">⏱ {timeLeft}s</div>
+                   <div className="timer-bar-bg">
+                     <div 
+                        className={`timer-bar-fill ${timeLeft <= 3 ? 'danger' : ''}`}
+                        style={{ width: `${timeLeft * 20}%` }}
+                     ></div>
+                   </div>
+                </div>
+                <p className="question-text">{questionsDuNiveau[indexQuestion]?.q}</p>
+                <form onSubmit={validerReponse}>
+                  <input className="input-field" value={reponse} onChange={e => setReponse(e.target.value)} placeholder="Ta réponse..." autoFocus />
+                  <button type="submit" className="btn-primary">VALIDER</button>
+                </form>
+                <button onClick={() => window.confirm("Quitter ?") && terminerJeu(score)} className="btn-abandon">QUITTER</button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 }
