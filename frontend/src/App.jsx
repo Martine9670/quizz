@@ -2,11 +2,13 @@ import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import './App.css';
 
+// --- CONFIGURATION ---
 const API_URL_SCORES = "http://localhost:1337/api/scores";
 const API_URL_QUESTIONS = "http://localhost:1337/api/questions";
 const API_URL_REGISTER = "http://localhost:1337/api/auth/local/register";
 
 function App() {
+  // --- ÉTATS (STATES) ---
   const [user, setUser] = useState(localStorage.getItem("quizzUser") || "");
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("quizzUser"));
   const [isRegistering, setIsRegistering] = useState(false);
@@ -19,12 +21,15 @@ function App() {
   const [historique, setHistorique] = useState([]);
   const [timeLeft, setTimeLeft] = useState(5);
 
+  // --- ACTIONS API ---
   const chargerScores = useCallback(async () => {
     try {
       const res = await fetch(`${API_URL_SCORES}?sort=points:desc&pagination[limit]=5`);
       const result = await res.json();
       if (result && result.data) setHistorique(result.data);
-    } catch (err) { console.error("Erreur scores:", err); }
+    } catch (err) {
+      console.error("Erreur scores:", err);
+    }
   }, []);
 
   const handleRegister = async (e) => {
@@ -48,21 +53,33 @@ function App() {
       } else {
         alert(data.error.message);
       }
-    } catch (err) { console.error("Erreur register:", err); }
+    } catch (err) {
+      console.error("Erreur register:", err);
+    }
   };
 
   const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
-    const payload = { data: { pseudo: user, points: finalScore, total: questionsDuNiveau.length, difficulte: currentLevel } };
+    const payload = {
+      data: {
+        pseudo: user,
+        points: finalScore,
+        total: questionsDuNiveau.length,
+        difficulte: currentLevel
+      }
+    };
     try {
       await fetch(API_URL_SCORES, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      chargerScores(); 
-    } catch (err) { console.error("Erreur enregistrement:", err); }
+      chargerScores();
+    } catch (err) {
+      console.error("Erreur enregistrement:", err);
+    }
   }, [user, questionsDuNiveau.length, chargerScores]);
 
+  // --- LOGIQUE DU JEU ---
   const terminerJeu = useCallback((scoreFinal) => {
     setTermine(true);
     if (niveau) enregistrerScore(scoreFinal, niveau);
@@ -79,35 +96,33 @@ function App() {
     if (indexQuestion + 1 < questionsDuNiveau.length) {
       setIndexQuestion(i => i + 1);
       setReponse("");
-      setTimeLeft(5); 
-    } else { terminerJeu(nouveauScore); }
+      setTimeLeft(5);
+    } else {
+      terminerJeu(nouveauScore);
+    }
   }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
-useEffect(() => {
-  const timeoutId = setTimeout(() => {
-    chargerScores();
-  }, 0);
-  return () => clearTimeout(timeoutId);
-}, [chargerScores]);
+  const handleDemarrer = async (choix) => {
+    try {
+      const res = await fetch(`${API_URL_QUESTIONS}?filters[niveau][$eq]=${choix.toLowerCase()}&pagination[limit]=1000`);
+      const result = await res.json();
+      if (result.data?.length > 0) {
+        const selection = result.data.map(item => {
+          const rawData = item.attributes ? item.attributes : item;
+          return { q: rawData.intitule, a: rawData.reponse };
+        }).filter(q => q.q).sort(() => Math.random() - 0.5);
+        setQuestionsDuNiveau(selection);
+        setNiveau(choix);
+        setIndexQuestion(0);
+        setReponse("");
+        setTimeLeft(5);
+      }
+    } catch (err) {
+      console.error("Erreur:", err);
+    }
+  };
 
-  useEffect(() => {
-    if (termine && score === questionsDuNiveau.length && score > 0) confetti();
-  }, [termine, score, questionsDuNiveau.length]);
-
-useEffect(() => {
-  if (!niveau || termine || questionsDuNiveau.length === 0) return;
-  
-  if (timeLeft === 0) {
-    const timeoutId = setTimeout(() => {
-      validerReponse();
-    }, 0);
-    return () => clearTimeout(timeoutId);
-  }
-
-  const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-    return () => clearInterval(interval);
-    }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
-
+  // --- AUTHENTIFICATION & NAVIGATION ---
   const handleLogin = (e) => {
     e.preventDefault();
     const name = e.target.username.value.trim();
@@ -129,29 +144,43 @@ useEffect(() => {
   };
 
   const resetQuizz = () => {
-    setNiveau(null); setQuestionsDuNiveau([]); setIndexQuestion(0);
-    setScore(0); setTermine(false); setReponse(""); setTimeLeft(5);
+    setNiveau(null);
+    setQuestionsDuNiveau([]);
+    setIndexQuestion(0);
+    setScore(0);
+    setTermine(false);
+    setReponse("");
+    setTimeLeft(5);
     chargerScores();
   };
 
-  const handleDemarrer = async (choix) => {
-    try {
-      const res = await fetch(`${API_URL_QUESTIONS}?filters[niveau][$eq]=${choix.toLowerCase()}&pagination[limit]=1000`);
-      const result = await res.json();
-      if (result.data?.length > 0) {
-        const selection = result.data.map(item => {
-          const rawData = item.attributes ? item.attributes : item;
-          return { q: rawData.intitule, a: rawData.reponse };
-        }).filter(q => q.q).sort(() => Math.random() - 0.5);
-        setQuestionsDuNiveau(selection);
-        setNiveau(choix);
-        setIndexQuestion(0);
-        setReponse("");
-        setTimeLeft(5); 
-      }
-    } catch (err) { console.error("Erreur:", err); }
-  };
+  // --- EFFETS (SIDE EFFECTS) ---
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      chargerScores();
+    }, 0);
+    return () => clearTimeout(timeoutId);
+  }, [chargerScores]);
 
+  useEffect(() => {
+    if (termine && score === questionsDuNiveau.length && score > 0) confetti();
+  }, [termine, score, questionsDuNiveau.length]);
+
+  useEffect(() => {
+    if (!niveau || termine || questionsDuNiveau.length === 0) return;
+
+    if (timeLeft === 0) {
+      const timeoutId = setTimeout(() => {
+        validerReponse();
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    }
+
+    const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+    return () => clearInterval(interval);
+  }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
+
+  // --- RENDU DES COMPOSANTS ---
   const renderLeaderboard = () => (
     <div className="history-section">
       <h3>🏆 Le tableau des légendes 🏆</h3>
@@ -178,10 +207,9 @@ useEffect(() => {
     </div>
   );
 
-// ... (imports et fonctions inchangés jusqu'au return)
-
   return (
     <>
+      {/* NAVBAR */}
       <nav className="navbar">
         <div className="nav-logo">🧠 QUIZZY</div>
         <div className="nav-links">
@@ -194,37 +222,43 @@ useEffect(() => {
         </div>
       </nav>
 
+      {/* CONTENU PRINCIPAL */}
       <div className="app-container">
-        {!isLoggedIn ? (
-          <div className="game-layout"> {/* Nouveau conteneur flex */}
-            <div className="card">
-              <h1 className="welcome-text">Bienvenue !</h1>
-              {isRegistering ? (
-                <>
-                  <h2 className="main-title">Inscription</h2>
-                  <form onSubmit={handleRegister}>
-                    <input name="username" className="input-field" placeholder="Pseudo..." required />
-                    <input name="email" type="email" className="input-field" placeholder="Email..." required />
-                    <input name="password" type="password" className="input-field" placeholder="Mot de passe..." required />
-                    <button type="submit" className="btn-primary">CRÉER MON COMPTE</button>
-                  </form>
-                  <p onClick={() => setIsRegistering(false)} className="toggle-auth">Déjà un compte ? Se connecter</p>
-                </>
-              ) : (
-                <>
-                  <h2 className="main-title">Identification</h2>
-                  <form onSubmit={handleLogin}>
-                    <input name="username" className="input-field" placeholder="Pseudo..." required autoFocus />
-                    <button type="submit" className="btn-primary">ENTRER</button>
-                  </form>
-                  <p onClick={() => setIsRegistering(true)} className="toggle-auth">Pas de compte ? S'inscrire</p>
-                </>
-              )}
-            </div>
-            <aside className="sidebar-leaderboard">
-              {renderLeaderboard()}
-            </aside>
-          </div>
+{!isLoggedIn ? (
+  <div className="game-layout">
+    {/* Nouveau conteneur pour empiler le titre et la carte verticalement */}
+    <div className="auth-container">
+      <h1 className="welcome-text">Bienvenue sur QUIZZY !</h1>
+      
+      <div className="card">
+        {isRegistering ? (
+          <>
+            <h2 className="main-title">Inscription</h2>
+            <form onSubmit={handleRegister}>
+              <input name="username" className="input-field" placeholder="Pseudo..." required />
+              <input name="email" type="email" className="input-field" placeholder="Email..." required />
+              <input name="password" type="password" className="input-field" placeholder="Mot de passe..." required />
+              <button type="submit" className="btn-primary">CRÉER MON COMPTE</button>
+            </form>
+            <p onClick={() => setIsRegistering(false)} className="toggle-auth">Déjà un compte ? Se connecter</p>
+          </>
+        ) : (
+          <>
+            <h2 className="main-title">Identification</h2>
+            <form onSubmit={handleLogin}>
+              <input name="username" className="input-field" placeholder="Pseudo..." required autoFocus />
+              <button type="submit" className="btn-primary">ENTRER</button>
+            </form>
+            <p onClick={() => setIsRegistering(true)} className="toggle-auth">Pas de compte ? S'inscrire</p>
+          </>
+        )}
+      </div>
+    </div>
+
+    <aside className="sidebar-leaderboard">
+      {renderLeaderboard()}
+    </aside>
+  </div>
         ) : (
           <>
             {termine ? (
@@ -235,7 +269,7 @@ useEffect(() => {
                 {renderLeaderboard()}
               </div>
             ) : !niveau ? (
-              <div className="game-layout"> {/* Nouveau conteneur flex */}
+              <div className="game-layout">
                 <div className="card">
                   <h2 className="main-title">NIVEAUX</h2>
                   <div className="level-grid">
@@ -251,17 +285,23 @@ useEffect(() => {
             ) : (
               <div className="card">
                 <div className="timer-wrapper">
-                   <div className="timer-text">⏱ {timeLeft}s</div>
-                   <div className="timer-bar-bg">
-                     <div 
-                        className={`timer-bar-fill ${timeLeft <= 3 ? 'danger' : ''}`}
-                        style={{ width: `${timeLeft * 20}%` }}
-                     ></div>
-                   </div>
+                  <div className="timer-text">⏱ {timeLeft}s</div>
+                  <div className="timer-bar-bg">
+                    <div
+                      className={`timer-bar-fill ${timeLeft <= 3 ? 'danger' : ''}`}
+                      style={{ width: `${timeLeft * 20}%` }}
+                    ></div>
+                  </div>
                 </div>
                 <p className="question-text">{questionsDuNiveau[indexQuestion]?.q}</p>
                 <form onSubmit={validerReponse}>
-                  <input className="input-field" value={reponse} onChange={e => setReponse(e.target.value)} placeholder="Ta réponse..." autoFocus />
+                  <input
+                    className="input-field"
+                    value={reponse}
+                    onChange={e => setReponse(e.target.value)}
+                    placeholder="Ta réponse..."
+                    autoFocus
+                  />
                   <button type="submit" className="btn-primary">VALIDER</button>
                 </form>
                 <button onClick={() => window.confirm("Quitter ?") && terminerJeu(score)} className="btn-abandon">QUITTER</button>
