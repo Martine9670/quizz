@@ -5,7 +5,7 @@ const Navbar = ({
   return (
     <nav className="navbar">
       <div className="nav-left">
-        <div className="nav-logo">🧠 QUIZZY</div>
+        <div className="nav-logo">🕹️ QUIZZY</div>
         <div className="status-dot"></div>
         
         {!niveau ? (
