@@ -210,18 +210,29 @@ function App() {
   return (
     <>
       {/* NAVBAR */}
-      <nav className="navbar">
+    <nav className="navbar">
+      <div className="nav-left">
         <div className="nav-logo">🧠 QUIZZY</div>
-        <div className="nav-links">
-          {isLoggedIn && (
-            <>
-              <button onClick={resetQuizz} className="nav-item">Accueil</button>
-              <button onClick={handleLogout} className="nav-logout-btn">Quitter ({user})</button>
-            </>
-          )}
+        <div className="nav-status">
+          <span className="status-dot"></span>
+          <span className="status-text">Live: {historique.length * 3 + 7} joueurs</span>
         </div>
-      </nav>
+      </div>
 
+      <div className="nav-links">
+        {!isLoggedIn ? (
+          <button onClick={() => setIsRegistering(!isRegistering)} className="nav-item">
+            {isRegistering ? "Se connecter" : "S'inscrire"}
+          </button>
+        ) : (
+          <>
+            <button onClick={resetQuizz} className="nav-item">Accueil</button>
+            <button onClick={handleLogout} className="nav-logout-btn">Quitter ({user})</button>
+          </>
+        )}
+      </div>
+    </nav>
+    
       {/* CONTENU PRINCIPAL */}
       <div className="app-container">
 {!isLoggedIn ? (
