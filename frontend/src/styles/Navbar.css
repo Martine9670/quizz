@@ -98,7 +98,100 @@
   margin-left: 10px;
 }
 
-.nav-links { display: flex; gap: 20px; }
-.nav-item { background: none; border: none; color: rgba(255, 255, 255, 0.8); font-weight: 600; cursor: pointer; transition: 0.3s; }
-.nav-item:hover { color: white; }
-.nav-logout-btn { background: #ff6b6b; color: white; border: none; padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
+.nav-links { 
+    display: flex; 
+    gap: 20px; 
+}
+
+.nav-item { 
+    background: none; 
+    border: none; 
+    color: rgba(255, 255, 255, 0.8); 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+
+.nav-item:hover { 
+    color: white; 
+}
+
+.nav-logout-btn { 
+    background: #ff6b6b; 
+    color: white; 
+    border: none; 
+    padding: 5px 15px; 
+    border-radius: 20px; 
+    font-weight: 700; 
+    font-size: 0.8rem; 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+
+.nav-logout-btn:hover { 
+  background: #ff8787; 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.btn-dys {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.btn-dys:hover {
+  background: white;
+  color: black;
+}
+
+/* Style quand le mode est activé */
+.btn-dys[aria-pressed="true"] {
+  background: #4ade80;
+  color: black;
+  border-color: #4ade80;
+}
+
+/* Le point de base */
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  position: relative;
+}
+
+/* Version ROUGE (Déconnecté) */
+.pulse-red {
+  background-color: #ff4d4d;
+  box-shadow: 0 0 0 rgba(255, 77, 77, 0.7);
+  animation: pulse-red-nav 2s infinite;
+}
+
+/* Version VERTE (Connecté) */
+.pulse-green {
+  background-color: #4ade80;
+  box-shadow: 0 0 0 rgba(74, 222, 128, 0.7);
+  animation: pulse-green-nav 2s infinite;
+}
+
+@keyframes pulse-red-nav {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+}
+
+@keyframes pulse-green-nav {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}

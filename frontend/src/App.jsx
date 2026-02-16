@@ -11,7 +11,7 @@ import Register from './components/Auth/Register';
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
 
-// Styles (importés après les composants)
+// Styles
 import './styles/Global.css';
 import './styles/Navbar.css';
 import './styles/Game.css';
@@ -27,6 +27,9 @@ function App() {
   const [user, setUser] = useState(localStorage.getItem("quizzUser") || "");
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("quizzUser"));
   const [isRegistering, setIsRegistering] = useState(false);
+  const [isDyslexic, setIsDyslexic] = useState(false);
+  const [authError, setAuthError] = useState("");
+
   const [niveau, setNiveau] = useState(null);
   const [questionsDuNiveau, setQuestionsDuNiveau] = useState([]);
   const [indexQuestion, setIndexQuestion] = useState(0);
@@ -42,12 +45,16 @@ function App() {
       const res = await fetch(`${API_URL_SCORES}?sort=points:desc&pagination[limit]=5`);
       const result = await res.json();
       if (result && result.data) setHistorique(result.data);
-    } catch (err) { console.error("Erreur scores:", err); }
+    } catch (err) { 
+      console.error("Erreur scores:", err); 
+    }
   }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setAuthError("");
     const { username, email, password } = e.target;
+    
     try {
       const res = await fetch(API_URL_REGISTER, {
         method: 'POST',
@@ -60,8 +67,13 @@ function App() {
         localStorage.setItem("token", data.jwt);
         setUser(data.user.username);
         setIsLoggedIn(true);
-      } else { alert(data.error.message); }
-    } catch (err) { console.error("Erreur register:", err); }
+      } else { 
+        setAuthError(data.error.message); 
+      }
+    } catch (err) { 
+      setAuthError("Erreur de connexion au serveur.");
+      console.error("Register Error:", err);
+    }
   };
 
   const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
@@ -73,7 +85,9 @@ function App() {
         body: JSON.stringify(payload)
       });
       chargerScores();
-    } catch (err) { console.error("Erreur enregistrement:", err); }
+    } catch (err) { 
+      console.error("Erreur enregistrement:", err); 
+    }
   }, [user, questionsDuNiveau.length, chargerScores]);
 
   // --- LOGIQUE DU JEU ---
@@ -113,17 +127,25 @@ function App() {
         setTimeLeft(5);
         setTermine(false);
       }
-    } catch (err) { console.error("Erreur:", err); }
+    } catch (err) { 
+      console.error("Erreur fetch questions:", err); 
+    }
   };
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setAuthError("");
     const name = e.target.username.value.trim();
-    if (name) {
-      localStorage.setItem("quizzUser", name);
-      setUser(name);
-      setIsLoggedIn(true);
+    const pseudoRegex = /^[a-zA-Z0-9]{3,15}$/;
+
+    if (!pseudoRegex.test(name)) {
+      setAuthError("Pseudo invalide : 3 à 15 caractères (sans symboles).");
+      return;
     }
+
+    localStorage.setItem("quizzUser", name);
+    setUser(name);
+    setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
@@ -134,6 +156,7 @@ function App() {
     setIsLoggedIn(false);
     setNiveau(null);
     setTermine(false);
+    setAuthError("");
   };
 
   const resetQuizz = () => {
@@ -147,94 +170,90 @@ function App() {
     chargerScores();
   };
 
-  // --- EFFETS (SIDE EFFECTS) ---
-
-  // 1. Chargement initial des scores
+  // --- EFFETS ---
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      chargerScores();
-    }, 0);
-    return () => clearTimeout(timeoutId);
+    const fetchData = async () => { await chargerScores(); };
+    fetchData();
   }, [chargerScores]); 
 
-  // 2. Gestion des confettis
   useEffect(() => {
     if (termine && score === questionsDuNiveau.length && score > 0) {
       confetti();
     }
   }, [termine, score, questionsDuNiveau.length]);
 
-  // 3. Gestion du Timer
   useEffect(() => {
     if (!niveau || termine || questionsDuNiveau.length === 0) return;
-
     if (timeLeft === 0) {
-      const timeoutId = setTimeout(() => {
-        validerReponse();
-      }, 0); 
-      return () => clearTimeout(timeoutId);
+      const timerId = setTimeout(() => { validerReponse(); }, 0); 
+      return () => clearTimeout(timerId);
     }
-
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
+    const interval = setInterval(() => { setTimeLeft((prev) => prev - 1); }, 1000);
     return () => clearInterval(interval);
   }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
 
-  // --- RENDU (UI) ---
+  // --- RENDU ---
   return (
-    <>
-      <Navbar {...{isLoggedIn, user, niveau, termine, resetQuizz, handleLogout, setIsRegistering, isRegistering}} />
+    <main className={`app-container ${isDyslexic ? 'dyslexic-mode' : ''}`}>      
+    <Navbar {...{
+        isLoggedIn, user, niveau, termine, resetQuizz, handleLogout, 
+        setIsRegistering, isRegistering, isDyslexic, setIsDyslexic 
+      }} />
 
-      <div className="app-container">
-        {!isLoggedIn ? (
-          <div className="game-layout">
-            <div className="auth-container">
-              <h1 className="welcome-text">Bienvenue sur Quizzy !</h1>
-              <div className="card">
-                {isRegistering ? (
-                  <Register handleRegister={handleRegister} setIsRegistering={setIsRegistering} />
-                ) : (
-                  <Login handleLogin={handleLogin} setIsRegistering={setIsRegistering} />
-                )}
-              </div>
+      {!isLoggedIn ? (
+        <div className="game-layout">
+          <div className="auth-container">
+            <h1 className="welcome-text">Bienvenue sur Quizzy !</h1>
+            <div className="card">
+              {isRegistering ? (
+                <Register 
+                  handleRegister={handleRegister} 
+                  setIsRegistering={setIsRegistering} 
+                  authError={authError} 
+                />
+              ) : (
+                <Login 
+                  handleLogin={handleLogin} 
+                  setIsRegistering={setIsRegistering} 
+                  authError={authError} 
+                />
+              )}
             </div>
-            <aside className="sidebar-leaderboard">
-              <Leaderboard historique={historique} />
-            </aside>
           </div>
-        ) : (
-          <>
-            {termine ? (
-              <div className="card">
-                <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
-                <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
-                <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
+          <aside className="sidebar-leaderboard">
+            <Leaderboard historique={historique} />
+          </aside>
+        </div>
+      ) : (
+        <>
+          {termine ? (
+            <div className="card">
+              <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
+              <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
+              <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
+              <Leaderboard historique={historique} />
+            </div>
+          ) : !niveau ? (
+            <div className="game-layout">
+              <LevelSelector handleDemarrer={handleDemarrer} />
+              <aside className="sidebar-leaderboard">
                 <Leaderboard historique={historique} />
-              </div>
-            ) : !niveau ? (
-              <div className="game-layout">
-                <LevelSelector handleDemarrer={handleDemarrer} />
-                <aside className="sidebar-leaderboard">
-                  <Leaderboard historique={historique} />
-                </aside>
-              </div>
-            ) : (
-              <QuestionCard 
-                timeLeft={timeLeft}
-                question={questionsDuNiveau[indexQuestion]?.q}
-                reponse={reponse}
-                setReponse={setReponse}
-                validerReponse={validerReponse}
-                terminerJeu={terminerJeu}
-                score={score}
-              />
-            )}
-          </>
-        )}
-      </div>
-    </>
+              </aside>
+            </div>
+          ) : (
+            <QuestionCard 
+              timeLeft={timeLeft}
+              question={questionsDuNiveau[indexQuestion]?.q}
+              reponse={reponse}
+              setReponse={setReponse}
+              validerReponse={validerReponse}
+              terminerJeu={terminerJeu}
+              score={score}
+            />
+          )}
+        </>
+      )}
+    </main>
   );
 }
 

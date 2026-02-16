@@ -1,11 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic.min.css');
+
+/* --- RESET & BASE --- */
+* { box-sizing: border-box; }
 
 html, body, #root {
   height: 100%;
   margin: 0;
+  font-family: 'Poppins', sans-serif; /* Police de secours */
 }
 
+/* --- LOGIQUE DYSLEXIQUE CIBLÉE --- */
+/* On ne force QUE quand la classe est présente sur le parent */
+.dyslexic-mode, 
+.dyslexic-mode * {
+  font-family: 'OpenDyslexic', sans-serif !important;
+}
+
+/* --- LE CONTAINER PRINCIPAL --- */
 .app-container {
   min-height: 100vh;
   width: 100vw;
@@ -13,14 +26,21 @@ html, body, #root {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   padding: 20px;
-  box-sizing: border-box;
+  overflow-x: hidden;
+  /* On définit la police ici sans !important pour laisser le mode Dys gagner */
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Décorations d'arrière-plan */
+/* --- NAVBAR & SLOGAN (Pour éviter l'inversion) --- */
+.nav-slogan {
+  font-family: 'Poppins', sans-serif;
+  color: white;
+}
+
+/* --- DECORATIONS & CARTES --- */
 .app-container::before, .app-container::after {
   content: "?";
   position: absolute;
@@ -34,7 +54,6 @@ html, body, #root {
 .app-container::before { top: -20px; left: 50px; transform: rotate(-15deg); }
 .app-container::after { bottom: -20px; right: 50px; content: "!"; transform: rotate(15deg); }
 
-/* --- CARDS --- */
 .card {
   background: black;
   padding: 40px;
@@ -48,65 +67,55 @@ html, body, #root {
   z-index: 5;
   animation: float 4s ease-in-out infinite;
 }
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
 }
 
-/* Boutons Communs */
-.btn-primary, .btn-abandon {
-  width: 220px;
-  height: 50px;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px auto;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-
-
-.auth-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.input-field {
-  width: 80%;
-  padding: 15px;
-  border-radius: 50px;
-  border: 3px solid #e2e8f0;
-  font-size: 1.1rem;
-  margin-bottom: 20px;
-  text-align: center;
-  outline: none;
-  background: white; /* Assure-toi qu'ils sont visibles sur fond noir */
-  color: #1e293b;
-}
-
-.card h2 {
-  color: #646cff;
-  text-transform: uppercase;
-  margin-bottom: 20px;
+/* --- TITRES & TEXTES SPECIAUX --- */
+.card h2, .welcome-text, .nav-logo {
   font-family: 'Orbitron', sans-serif;
 }
 
-/* --- LE LIEN "S'INSCRIRE / SE CONNECTER" --- */
+.welcome-text {
+  font-size: 2rem;
+  color: #4ade80;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  margin: 0 auto 40px auto;
+  display: block;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 5s steps(22) infinite;
+}
+
+@keyframes typing {
+  0% { width: 0; }
+  50% { width: 100%; }
+  90% { width: 100%; }
+  100% { width: 0; }
+}
+
+/* --- BOUTONS & INPUTS --- */
+.btn-primary, .btn-abandon {
+  width: 220px; height: 50px; border-radius: 50px;
+  font-size: 0.85rem; font-weight: 800; cursor: pointer;
+  transition: all 0.3s ease; display: flex;
+  justify-content: center; align-items: center;
+  margin: 10px auto; text-transform: uppercase; letter-spacing: 1px;
+}
+
+.input-field {
+  width: 80%; padding: 15px; border-radius: 50px;
+  border: 3px solid #e2e8f0; font-size: 1.1rem;
+  margin-bottom: 20px; text-align: center;
+  background: white; color: #1e293b;
+}
+
+/* --- AUTH TOGGLE (RETOUR DU HOVER) --- */
 .toggle-auth {
   color: #646cff;
   font-weight: 700;
@@ -115,41 +124,19 @@ form {
   display: inline-block;
   transition: all 0.3s ease;
   font-size: 0.9rem;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .toggle-auth:hover {
-  color: #4ade80;
+  color: #4ade80 !important; /* Le !important ici assure que le hover gagne */
   text-decoration: underline;
   transform: scale(1.05);
 }
 
-/* --- STYLE MACHINE À ÉCRIRE (RETRO GAMING) --- */
-.welcome-text {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 2rem;
-  color: #4ade80;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 900;
-  text-align: center;
-  margin: 0 auto 40px auto;
-  
-  /* Logique de l'animation */
-  display: block;
-  width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  
-  /* On combine les deux animations : l'écriture et le clignotement du curseur */
-  animation: 
-    typing 5s steps(22) infinite,
-    blink 0.5s step-end infinite;
-}
-
-/* L'effet de dévoilement du texte */
-@keyframes typing {
-  0% { width: 0; }
-  50% { width: 100%; }
-  90% { width: 100%; }
-  100% { width: 0; }
+/* ACCESSIBILITÉ */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }

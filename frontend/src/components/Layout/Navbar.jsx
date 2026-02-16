@@ -1,14 +1,20 @@
 const Navbar = ({ 
   isLoggedIn, user, niveau, termine, 
-  resetQuizz, handleLogout, setIsRegistering, isRegistering 
+  resetQuizz, handleLogout, setIsRegistering, isRegistering,
+  isDyslexic, setIsDyslexic
 }) => {
   return (
-    <nav className="navbar">
+    <nav className="navbar" aria-label="Navigation principale">
       <div className="nav-left">
-        <div className="nav-logo">🕹️ QUIZZY</div>
-        <div className={`status-dot ${isLoggedIn ? 'online' : 'offline'}`}></div>
+        <h1 className="nav-logo">QUIZZY</h1>
         
-        {!niveau ? (
+        {/* --- LE PULSE DE CONNEXION --- */}
+        <div className="nav-status" title={isLoggedIn ? "Connecté" : "Hors-ligne"}>
+          <span className={`status-indicator ${isLoggedIn ? 'pulse-green' : 'pulse-red'}`}></span>
+        </div>
+        {/* ----------------------------- */}
+
+        {niveau === null ? (
           <span className="nav-slogan">Prêt à relever le défi ?</span>
         ) : (
           !termine && (
@@ -20,6 +26,14 @@ const Navbar = ({
       </div>
 
       <div className="nav-links">
+        <button 
+          onClick={() => setIsDyslexic(!isDyslexic)}
+          className="btn-nav"
+          data-mode={isDyslexic ? "dys" : "normal"}
+        >
+          {isDyslexic ? "Revenir au mode normal" : "Passer en mode Dys"}
+        </button>
+
         {isLoggedIn ? (
           <>
             <button onClick={resetQuizz} className="nav-item">Accueil</button>
@@ -27,7 +41,7 @@ const Navbar = ({
           </>
         ) : (
           <button onClick={() => setIsRegistering(!isRegistering)} className="nav-item">
-            {isRegistering ? (isLoggedIn ? "" : "Se connecter") : "S'inscrire"}
+            {isRegistering ? "Se connecter" : "S'inscrire"}
           </button>
         )}
       </div>
