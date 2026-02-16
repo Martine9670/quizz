@@ -1,5 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
+
+// Layout
+import Navbar from './components/Layout/Navbar';
+import Leaderboard from './components/Layout/Leaderboard';
+// Auth
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+// Game
+import LevelSelector from './components/Game/LevelSelector';
+import QuestionCard from './components/Game/QuestionCard';
+
 import './App.css';
 
 // --- CONFIGURATION ---
@@ -27,22 +38,17 @@ function App() {
       const res = await fetch(`${API_URL_SCORES}?sort=points:desc&pagination[limit]=5`);
       const result = await res.json();
       if (result && result.data) setHistorique(result.data);
-    } catch (err) {
-      console.error("Erreur scores:", err);
-    }
+    } catch (err) { console.error("Erreur scores:", err); }
   }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const username = e.target.username.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-
+    const { username, email, password } = e.target;
     try {
       const res = await fetch(API_URL_REGISTER, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username: username.value, email: email.value, password: password.value }),
       });
       const data = await res.json();
       if (data.jwt) {
@@ -50,23 +56,12 @@ function App() {
         localStorage.setItem("token", data.jwt);
         setUser(data.user.username);
         setIsLoggedIn(true);
-      } else {
-        alert(data.error.message);
-      }
-    } catch (err) {
-      console.error("Erreur register:", err);
-    }
+      } else { alert(data.error.message); }
+    } catch (err) { console.error("Erreur register:", err); }
   };
 
   const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
-    const payload = {
-      data: {
-        pseudo: user,
-        points: finalScore,
-        total: questionsDuNiveau.length,
-        difficulte: currentLevel
-      }
-    };
+    const payload = { data: { pseudo: user, points: finalScore, total: questionsDuNiveau.length, difficulte: currentLevel } };
     try {
       await fetch(API_URL_SCORES, {
         method: 'POST',
@@ -74,9 +69,7 @@ function App() {
         body: JSON.stringify(payload)
       });
       chargerScores();
-    } catch (err) {
-      console.error("Erreur enregistrement:", err);
-    }
+    } catch (err) { console.error("Erreur enregistrement:", err); }
   }, [user, questionsDuNiveau.length, chargerScores]);
 
   // --- LOGIQUE DU JEU ---
@@ -97,9 +90,7 @@ function App() {
       setIndexQuestion(i => i + 1);
       setReponse("");
       setTimeLeft(5);
-    } else {
-      terminerJeu(nouveauScore);
-    }
+    } else { terminerJeu(nouveauScore); }
   }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
   const handleDemarrer = async (choix) => {
@@ -116,13 +107,11 @@ function App() {
         setIndexQuestion(0);
         setReponse("");
         setTimeLeft(5);
+        setTermine(false);
       }
-    } catch (err) {
-      console.error("Erreur:", err);
-    }
+    } catch (err) { console.error("Erreur:", err); }
   };
 
-  // --- AUTHENTIFICATION & NAVIGATION ---
   const handleLogin = (e) => {
     e.preventDefault();
     const name = e.target.username.value.trim();
@@ -155,92 +144,45 @@ function App() {
   };
 
   // --- EFFETS (SIDE EFFECTS) ---
+
+  // 1. Chargement initial des scores
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       chargerScores();
     }, 0);
     return () => clearTimeout(timeoutId);
-  }, [chargerScores]);
+  }, [chargerScores]); 
 
+  // 2. Gestion des confettis
   useEffect(() => {
-    if (termine && score === questionsDuNiveau.length && score > 0) confetti();
+    if (termine && score === questionsDuNiveau.length && score > 0) {
+      confetti();
+    }
   }, [termine, score, questionsDuNiveau.length]);
 
+  // 3. Gestion du Timer
   useEffect(() => {
     if (!niveau || termine || questionsDuNiveau.length === 0) return;
 
     if (timeLeft === 0) {
       const timeoutId = setTimeout(() => {
         validerReponse();
-      }, 0);
+      }, 0); 
       return () => clearTimeout(timeoutId);
     }
 
-    const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
     return () => clearInterval(interval);
   }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
 
-  // --- RENDU DES COMPOSANTS ---
-  const renderLeaderboard = () => (
-    <div className="history-section">
-      <h3>🏆 Le tableau des légendes 🏆</h3>
-      <ul className="history-list">
-        {historique.map((h, i) => {
-          const data = h.attributes ? h.attributes : h;
-          return (
-            <li key={h.id || i} className="history-item">
-              <div className="history-user">
-                <span className="rank">#{i + 1}</span>
-                <div className="user-info-stack">
-                  <strong>{data.pseudo || data.username}</strong>
-                  <span className="score-date">Record</span>
-                </div>
-              </div>
-              <div className="history-details">
-                <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
-                <span className="points">{data.points}/{data.total}</span>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-
+  // --- RENDU (UI) ---
   return (
     <>
-      {/* NAVBAR */}
-      <nav className="navbar">
-        <div className="nav-left">
-          <div className="nav-logo">🧠 QUIZZY</div>
-          <div className="status-dot"></div>
-          
-          {!niveau ? (
-            <span className="nav-slogan">Prêt à relever le défi ?</span>
-          ) : (
-            !termine && (
-              <div className="nav-game-info">
-                Partie en cours : <span className={`badge-mini ${niveau}`}>{niveau}</span>
-              </div>
-            )
-          )}
-        </div>
+      <Navbar {...{isLoggedIn, user, niveau, termine, resetQuizz, handleLogout, setIsRegistering, isRegistering}} />
 
-        <div className="nav-links">
-          {isLoggedIn ? (
-            <>
-              <button onClick={resetQuizz} className="nav-item">Accueil</button>
-              <button onClick={handleLogout} className="nav-logout-btn">Quitter ({user})</button>
-            </>
-          ) : (
-            <button onClick={() => setIsRegistering(!isRegistering)} className="nav-item">
-              {isRegistering ? "Se connecter" : "S'inscrire"}
-            </button>
-          )}
-        </div>
-      </nav>
-
-      {/* CONTENU PRINCIPAL */}
       <div className="app-container">
         {!isLoggedIn ? (
           <div className="game-layout">
@@ -248,30 +190,14 @@ function App() {
               <h1 className="welcome-text">Bienvenue sur Quizzy !</h1>
               <div className="card">
                 {isRegistering ? (
-                  <>
-                    <h2 className="main-title">Inscription</h2>
-                    <form onSubmit={handleRegister}>
-                      <input name="username" className="input-field" placeholder="Pseudo..." required />
-                      <input name="email" type="email" className="input-field" placeholder="Email..." required />
-                      <input name="password" type="password" className="input-field" placeholder="Mot de passe..." required />
-                      <button type="submit" className="btn-primary">CRÉER MON COMPTE</button>
-                    </form>
-                    <p onClick={() => setIsRegistering(false)} className="toggle-auth">Déjà un compte ? Se connecter</p>
-                  </>
+                  <Register handleRegister={handleRegister} setIsRegistering={setIsRegistering} />
                 ) : (
-                  <>
-                    <h2 className="main-title">Identification</h2>
-                    <form onSubmit={handleLogin}>
-                      <input name="username" className="input-field" placeholder="Pseudo..." required autoFocus />
-                      <button type="submit" className="btn-primary">ENTRER</button>
-                    </form>
-                    <p onClick={() => setIsRegistering(true)} className="toggle-auth">Pas de compte ? S'inscrire</p>
-                  </>
+                  <Login handleLogin={handleLogin} setIsRegistering={setIsRegistering} />
                 )}
               </div>
             </div>
             <aside className="sidebar-leaderboard">
-              {renderLeaderboard()}
+              <Leaderboard historique={historique} />
             </aside>
           </div>
         ) : (
@@ -281,46 +207,25 @@ function App() {
                 <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
                 <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
                 <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
-                {renderLeaderboard()}
+                <Leaderboard historique={historique} />
               </div>
             ) : !niveau ? (
               <div className="game-layout">
-                <div className="card">
-                  <h2 className="main-title">NIVEAUX</h2>
-                  <div className="level-grid">
-                    {['facile', 'moyen', 'difficile'].map(lv => (
-                      <button key={lv} onClick={() => handleDemarrer(lv)} className={`btn-level ${lv}`}>{lv.toUpperCase()}</button>
-                    ))}
-                  </div>
-                </div>
+                <LevelSelector handleDemarrer={handleDemarrer} />
                 <aside className="sidebar-leaderboard">
-                  {renderLeaderboard()}
+                  <Leaderboard historique={historique} />
                 </aside>
               </div>
             ) : (
-              <div className="card">
-                <div className="timer-wrapper">
-                  <div className="timer-text">⏱ {timeLeft}s</div>
-                  <div className="timer-bar-bg">
-                    <div
-                      className={`timer-bar-fill ${timeLeft <= 3 ? 'danger' : ''}`}
-                      style={{ width: `${timeLeft * 20}%` }}
-                    ></div>
-                  </div>
-                </div>
-                <p className="question-text">{questionsDuNiveau[indexQuestion]?.q}</p>
-                <form onSubmit={validerReponse}>
-                  <input
-                    className="input-field"
-                    value={reponse}
-                    onChange={e => setReponse(e.target.value)}
-                    placeholder="Ta réponse..."
-                    autoFocus
-                  />
-                  <button type="submit" className="btn-primary">VALIDER</button>
-                </form>
-                <button onClick={() => window.confirm("Quitter ?") && terminerJeu(score)} className="btn-abandon">QUITTER</button>
-              </div>
+              <QuestionCard 
+                timeLeft={timeLeft}
+                question={questionsDuNiveau[indexQuestion]?.q}
+                reponse={reponse}
+                setReponse={setReponse}
+                validerReponse={validerReponse}
+                terminerJeu={terminerJeu}
+                score={score}
+              />
             )}
           </>
         )}
