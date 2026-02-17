@@ -78,12 +78,17 @@
 }
 
 .nav-slogan {
+  font-family: 'OpenDyslexic'; /* La police spéciale est mise par défaut ! */
   font-size: 1.5rem;
   color: rgba(255, 255, 255, 0.4);
   font-style: italic;
   letter-spacing: 1px;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   padding-left: 15px;
+}
+
+.nav-slogan.dyslexic-mode {
+  font-family: 'Poppins'; /* On remet la police normale quand la classe est là ! */
 }
 
 .nav-game-info {
