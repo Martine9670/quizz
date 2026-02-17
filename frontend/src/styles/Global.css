@@ -84,12 +84,19 @@ html, body, #root {
   text-transform: uppercase;
   letter-spacing: 2px;
   text-align: center;
-  margin: 0 auto 40px auto;
+  
+  /* On réinitialise les marges pour ne pas interférer */
+  margin: 0 auto 20px auto; 
+
+  /* --- LA SOLUTION MAGIQUE --- */
+  transform: translateY(-100px); /* Ajuste le chiffre : -50px, -150px... */
+  /* ---------------------------- */
+
   display: block;
-  width: 0;
   overflow: hidden;
   white-space: nowrap;
   animation: typing 5s steps(22) infinite;
+  width: fit-content;
 }
 
 @keyframes typing {
