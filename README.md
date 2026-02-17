@@ -1,4 +1,4 @@
-# 🏆 Quizz - Quizzy App
+# QUIZZY App
 
 A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **JavaScript**. This project was developed with a strict focus on **clean code**, **Service Pattern architecture**, and **separation of concerns**.
 
@@ -74,4 +74,4 @@ Developed as part of the curriculum with a focus on professional software engine
 
 -----
 
-Author: Martine 
+Author: Martine PINNA
