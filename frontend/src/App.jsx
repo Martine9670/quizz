@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 
 // Composants - Layout
@@ -20,7 +20,6 @@ import './styles/Game.css';
 import './styles/Leaderboard.css';
 
 // --- INITIALISATION DES SONS ---
-// Placés ici pour ne pas être recréés à chaque rendu du composant
 const successSound = new Audio('/sounds/correct.mp3');
 const errorSound = new Audio('/sounds/wrong.mp3');
 successSound.volume = 0.5;
@@ -42,6 +41,9 @@ function App() {
   const [reponse, setReponse] = useState("");
   const [historique, setHistorique] = useState([]);
   const [timeLeft, setTimeLeft] = useState(5);
+
+  // --- RÉFÉRENCE MUSIQUE ---
+  const bgMusicRef = useRef(new Audio('/sounds/musicgame.mp3'));
 
   // --- ACTIONS API ---
   const chargerScores = useCallback(async () => {
@@ -123,15 +125,12 @@ function App() {
     const bonneReponse = questionsDuNiveau[indexQuestion]?.a;
     let nouveauScore = score;
 
-    // --- LOGIQUE AUDIO + SCORE ---
     if (reponse.trim().toLowerCase() === bonneReponse?.toLowerCase()) {
-      // Succès
       successSound.currentTime = 0;
       successSound.play().catch(err => console.error("Audio error:", err));
       nouveauScore = score + 1;
       setScore(nouveauScore);
     } else {
-      // Échec (ou temps écoulé)
       errorSound.currentTime = 0;
       errorSound.play().catch(err => console.error("Audio error:", err));
     }
@@ -163,6 +162,24 @@ function App() {
   };
 
   // --- EFFETS ---
+  useEffect(() => {
+    const music = bgMusicRef.current;
+    music.loop = true;
+    music.volume = 0.3;
+
+    const startMusic = () => {
+      music.play().catch(() => console.log("Autoplay blocked, waiting for interaction"));
+      window.removeEventListener('click', startMusic);
+    };
+
+    window.addEventListener('click', startMusic);
+
+    return () => {
+      music.pause();
+      window.removeEventListener('click', startMusic);
+    };
+  }, []);
+
   useEffect(() => {
     const initScores = async () => {
       await chargerScores();

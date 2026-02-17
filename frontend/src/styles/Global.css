@@ -56,7 +56,7 @@ html, body, #root {
   position: absolute;
   font-weight: 900;
   /* On passe à 30% d'opacité pour qu'ils existent enfin ! */
-  color: rgba(182, 8, 8, 0.938); 
+  color: rgba(235, 74, 74, 0.938); 
   z-index: -1;
   pointer-events: none;
   line-height: 1;
