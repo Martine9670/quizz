@@ -243,6 +243,7 @@ function App() {
           )}
         </>
       )}
+      <div className="footer-overlay"></div>
     </main>
   );
 }

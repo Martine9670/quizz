@@ -41,19 +41,49 @@ html, body, #root {
 }
 
 /* --- DECORATIONS & CARTES --- */
-.app-container::before, .app-container::after {
-  content: "?";
-  position: absolute;
-  font-size: 15rem;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.1);
-  z-index: 0;
-  line-height: 1;
-  pointer-events: none;
+/* --- LE CONTENEUR --- */
+.app-container {
+  position: relative;
+  background-color: #121212; /* Ta couleur de base */
+  z-index: 1; /* Crée un nouveau contexte d'empilement */
+  min-height: 100vh;
+  overflow-x: hidden; /* Évite le scroll horizontal dû à la rotation des symboles */
 }
-.app-container::before { top: -20px; left: 50px; transform: rotate(-15deg); }
-.app-container::after { bottom: -20px; right: 50px; content: "!"; transform: rotate(15deg); }
 
+/* --- LES SYMBOLES --- */
+/* --- SYMBOLES DE FOND (DÉCOR) --- */
+.app-container::before, .app-container::after {
+  position: absolute;
+  font-weight: 900;
+  /* On passe à 30% d'opacité pour qu'ils existent enfin ! */
+  color: rgba(182, 8, 8, 0.938); 
+  z-index: -1;
+  pointer-events: none;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Le gros "?" en haut à gauche */
+.app-container::before {
+  content: "?";
+  font-size: 20rem;
+  top: 10%;
+  left: 10%; /* On l'écarte du bord gauche */
+  transform: rotate(-15deg);
+  /* On lui ajoute un petit frère via text-shadow, mais bien placé */
+  text-shadow: 60vw 25vh 0px rgb(111, 212, 128); 
+}
+
+/* Le gros "!" en bas à droite */
+.app-container::after {
+  content: "!";
+  font-size: 25rem;
+  bottom: 15%; /* On le remonte pour qu'il ne disparaisse pas dans le noir */
+  right: 12%;  /* On l'écarte du bord droit */
+  transform: rotate(15deg);
+  /* On lui ajoute un petit frère en haut à droite */
+  text-shadow: -50vw 35vh 0px rgb(71, 168, 233);
+}
 .card {
   background: black;
   padding: 40px;
@@ -146,4 +176,14 @@ html, body, #root {
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+.footer-overlay {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(to top, #000, transparent);
+  z-index: 2; /* Pour être AU-DESSUS des symboles (qui sont à -1) */
+  pointer-events: none;
 }
