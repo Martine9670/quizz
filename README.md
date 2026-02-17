@@ -74,4 +74,4 @@ Developed as part of the curriculum with a focus on professional software engine
 
 -----
 
-Author: Martine PINNA
+Author: Martine 
