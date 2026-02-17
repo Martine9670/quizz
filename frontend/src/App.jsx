@@ -19,6 +19,13 @@ import './styles/Navbar.css';
 import './styles/Game.css';
 import './styles/Leaderboard.css';
 
+// --- INITIALISATION DES SONS ---
+// Placés ici pour ne pas être recréés à chaque rendu du composant
+const successSound = new Audio('/sounds/correct.mp3');
+const errorSound = new Audio('/sounds/wrong.mp3');
+successSound.volume = 0.5;
+errorSound.volume = 0.4;
+
 function App() {
   // --- ÉTATS (STATES) ---
   const [user, setUser] = useState(localStorage.getItem("quizzUser") || "");
@@ -71,7 +78,7 @@ function App() {
       }
     } catch (err) { 
       setAuthError("Erreur de connexion au serveur.");
-      console.error("Erreur inscription:", err); // Corrigé : err est maintenant utilisé
+      console.error("Erreur inscription:", err);
     }
   };
 
@@ -115,15 +122,27 @@ function App() {
     if (e) e.preventDefault();
     const bonneReponse = questionsDuNiveau[indexQuestion]?.a;
     let nouveauScore = score;
+
+    // --- LOGIQUE AUDIO + SCORE ---
     if (reponse.trim().toLowerCase() === bonneReponse?.toLowerCase()) {
+      // Succès
+      successSound.currentTime = 0;
+      successSound.play().catch(err => console.error("Audio error:", err));
       nouveauScore = score + 1;
       setScore(nouveauScore);
+    } else {
+      // Échec (ou temps écoulé)
+      errorSound.currentTime = 0;
+      errorSound.play().catch(err => console.error("Audio error:", err));
     }
+
     if (indexQuestion + 1 < questionsDuNiveau.length) {
       setIndexQuestion(i => i + 1);
       setReponse("");
       setTimeLeft(5);
-    } else { terminerJeu(nouveauScore); }
+    } else { 
+        terminerJeu(nouveauScore); 
+    }
   }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
   const handleLogout = () => {
