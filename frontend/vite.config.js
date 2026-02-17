@@ -15,7 +15,7 @@ export default defineConfig({
       manifest: {
         name: 'Quizzy Pro',
         short_name: 'Quizzy',
-        description: 'Le meilleur quiz pour tester vos connaissances',
+        description: 'Le meilleur quizz pour tester vos connaissances',
         theme_color: '#646cff',
         background_color: '#000000',
         display: 'standalone',
