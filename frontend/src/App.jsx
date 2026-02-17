@@ -103,6 +103,7 @@ function App() {
     try {
       const selection = await fetchQuestions(choix);
       if (selection && selection.length > 0) {
+        bgMusicRef.current.pause();
         setQuestionsDuNiveau(selection);
         setNiveau(choix);
         setIndexQuestion(0);
@@ -152,7 +153,11 @@ function App() {
     setIsLoggedIn(false);
     setNiveau(null);
     setTermine(false);
-  };
+    // RELANCER LA MUSIQUE AU LOGOUT
+    bgMusicRef.current.play().catch(() => {
+    console.log("Lecture bloquée au logout");
+  });
+}
 
   const resetQuizz = () => {
     setNiveau(null);
