@@ -200,3 +200,44 @@
   70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
 }
+
+/* --- RESPONSIVE FIX --- */
+
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column; /* On empile Logo et Boutons */
+    height: auto;           /* La navbar s'adapte à la hauteur du contenu */
+    padding: 15px;
+    gap: 15px;
+    position: relative;     /* On désactive le fixed pour éviter que ça cache le haut de l'appli sur mobile */
+  }
+
+  .nav-left {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  /* On cache le slogan sur mobile pour gagner de la place */
+  .nav-slogan {
+    border-left: none;
+    padding-left: 0;
+    font-size: 1rem;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap; /* Les boutons passent à la ligne si besoin */
+    gap: 10px;
+  }
+
+  .nav-logo {
+    font-size: 1.5rem;
+  }
+
+  /* Ajustement de l'info de jeu (Niveau/Score) */
+  .nav-game-info {
+    margin-left: 0;
+    font-size: 0.75rem;
+  }
+}
