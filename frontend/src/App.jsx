@@ -7,6 +7,8 @@ import Leaderboard from './components/Layout/Leaderboard';
 // Composants - Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import { postRegister, fetchQuestions, fetchLeaderboard, saveScore } from './services/api';
+
 // Composants - Game
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
@@ -16,11 +18,6 @@ import './styles/Global.css';
 import './styles/Navbar.css';
 import './styles/Game.css';
 import './styles/Leaderboard.css';
-
-// --- CONFIGURATION ---
-const API_URL_SCORES = "http://localhost:1337/api/scores";
-const API_URL_QUESTIONS = "http://localhost:1337/api/questions";
-const API_URL_REGISTER = "http://localhost:1337/api/auth/local/register";
 
 function App() {
   // --- ÉTATS (STATES) ---
@@ -42,26 +39,28 @@ function App() {
   // --- ACTIONS API ---
   const chargerScores = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL_SCORES}?sort=points:desc&pagination[limit]=5`);
-      const result = await res.json();
+      const result = await fetchLeaderboard();
       if (result && result.data) setHistorique(result.data);
     } catch (err) { 
       console.error("Erreur scores:", err); 
     }
   }, []);
 
+  const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
+    try {
+      await saveScore(user, finalScore, questionsDuNiveau.length, currentLevel);
+      chargerScores();
+    } catch (err) { 
+      console.error("Erreur enregistrement:", err); 
+    }
+  }, [user, questionsDuNiveau.length, chargerScores]);
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setAuthError("");
     const { username, email, password } = e.target;
-    
     try {
-      const res = await fetch(API_URL_REGISTER, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username.value, email: email.value, password: password.value }),
-      });
-      const data = await res.json();
+      const data = await postRegister(username.value, email.value, password.value);
       if (data.jwt) {
         localStorage.setItem("quizzUser", data.user.username);
         localStorage.setItem("token", data.jwt);
@@ -72,25 +71,41 @@ function App() {
       }
     } catch (err) { 
       setAuthError("Erreur de connexion au serveur.");
-      console.error("Register Error:", err);
+      console.error("Erreur inscription:", err); // Corrigé : err est maintenant utilisé
     }
   };
 
-  const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
-    const payload = { data: { pseudo: user, points: finalScore, total: questionsDuNiveau.length, difficulte: currentLevel } };
-    try {
-      await fetch(API_URL_SCORES, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      chargerScores();
-    } catch (err) { 
-      console.error("Erreur enregistrement:", err); 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setAuthError("");
+    const name = e.target.username.value.trim();
+    const pseudoRegex = /^[a-zA-Z0-9]{3,15}$/;
+    if (!pseudoRegex.test(name)) {
+      setAuthError("Pseudo invalide : 3 à 15 caractères.");
+      return;
     }
-  }, [user, questionsDuNiveau.length, chargerScores]);
+    localStorage.setItem("quizzUser", name);
+    setUser(name);
+    setIsLoggedIn(true);
+  };
 
   // --- LOGIQUE DU JEU ---
+  const handleDemarrer = async (choix) => {
+    try {
+      const selection = await fetchQuestions(choix);
+      if (selection && selection.length > 0) {
+        setQuestionsDuNiveau(selection);
+        setNiveau(choix);
+        setIndexQuestion(0);
+        setReponse("");
+        setTimeLeft(5);
+        setTermine(false);
+      }
+    } catch (err) { 
+      console.error("Erreur questions:", err); 
+    }
+  };
+
   const terminerJeu = useCallback((scoreFinal) => {
     setTermine(true);
     if (niveau) enregistrerScore(scoreFinal, niveau);
@@ -111,43 +126,6 @@ function App() {
     } else { terminerJeu(nouveauScore); }
   }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
-  const handleDemarrer = async (choix) => {
-    try {
-      const res = await fetch(`${API_URL_QUESTIONS}?filters[niveau][$eq]=${choix.toLowerCase()}&pagination[limit]=1000`);
-      const result = await res.json();
-      if (result.data?.length > 0) {
-        const selection = result.data.map(item => {
-          const rawData = item.attributes ? item.attributes : item;
-          return { q: rawData.intitule, a: rawData.reponse };
-        }).filter(q => q.q).sort(() => Math.random() - 0.5);
-        setQuestionsDuNiveau(selection);
-        setNiveau(choix);
-        setIndexQuestion(0);
-        setReponse("");
-        setTimeLeft(5);
-        setTermine(false);
-      }
-    } catch (err) { 
-      console.error("Erreur fetch questions:", err); 
-    }
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    setAuthError("");
-    const name = e.target.username.value.trim();
-    const pseudoRegex = /^[a-zA-Z0-9]{3,15}$/;
-
-    if (!pseudoRegex.test(name)) {
-      setAuthError("Pseudo invalide : 3 à 15 caractères (sans symboles).");
-      return;
-    }
-
-    localStorage.setItem("quizzUser", name);
-    setUser(name);
-    setIsLoggedIn(true);
-  };
-
   const handleLogout = () => {
     if (niveau && !termine && score > 0) enregistrerScore(score, niveau);
     localStorage.removeItem("quizzUser");
@@ -156,48 +134,49 @@ function App() {
     setIsLoggedIn(false);
     setNiveau(null);
     setTermine(false);
-    setAuthError("");
   };
 
   const resetQuizz = () => {
     setNiveau(null);
-    setQuestionsDuNiveau([]);
-    setIndexQuestion(0);
     setScore(0);
     setTermine(false);
-    setReponse("");
-    setTimeLeft(5);
     chargerScores();
   };
 
   // --- EFFETS ---
   useEffect(() => {
-    const fetchData = async () => { await chargerScores(); };
-    fetchData();
-  }, [chargerScores]); 
+    const initScores = async () => {
+      await chargerScores();
+    };
+    initScores();
+  }, [chargerScores]);
 
   useEffect(() => {
-    if (termine && score === questionsDuNiveau.length && score > 0) {
-      confetti();
-    }
+    if (termine && score === questionsDuNiveau.length && score > 0) confetti();
   }, [termine, score, questionsDuNiveau.length]);
 
   useEffect(() => {
     if (!niveau || termine || questionsDuNiveau.length === 0) return;
+
     if (timeLeft === 0) {
-      const timerId = setTimeout(() => { validerReponse(); }, 0); 
-      return () => clearTimeout(timerId);
+      const timeoutId = setTimeout(() => {
+        validerReponse();
+      }, 0);
+      return () => clearTimeout(timeoutId);
     }
-    const interval = setInterval(() => { setTimeLeft((prev) => prev - 1); }, 1000);
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
     return () => clearInterval(interval);
   }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
 
-  // --- RENDU ---
   return (
     <main className={`app-container ${isDyslexic ? 'dyslexic-mode' : ''}`}>      
-    <Navbar {...{
-        isLoggedIn, user, niveau, termine, resetQuizz, handleLogout, 
-        setIsRegistering, isRegistering, isDyslexic, setIsDyslexic 
+      <Navbar {...{
+          isLoggedIn, user, niveau, termine, resetQuizz, handleLogout, 
+          setIsRegistering, isRegistering, isDyslexic, setIsDyslexic 
       }} />
 
       {!isLoggedIn ? (
@@ -206,17 +185,9 @@ function App() {
             <h1 className="welcome-text">Bienvenue sur Quizzy !</h1>
             <div className="card">
               {isRegistering ? (
-                <Register 
-                  handleRegister={handleRegister} 
-                  setIsRegistering={setIsRegistering} 
-                  authError={authError} 
-                />
+                <Register handleRegister={handleRegister} setIsRegistering={setIsRegistering} authError={authError} />
               ) : (
-                <Login 
-                  handleLogin={handleLogin} 
-                  setIsRegistering={setIsRegistering} 
-                  authError={authError} 
-                />
+                <Login handleLogin={handleLogin} setIsRegistering={setIsRegistering} authError={authError} />
               )}
             </div>
           </div>
