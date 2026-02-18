@@ -170,7 +170,7 @@ function App() {
   useEffect(() => {
     const music = bgMusicRef.current;
     music.loop = true;
-    music.volume = 0.3;
+    music.volume = 0.1;
 
     const startMusic = () => {
       music.play().catch(() => console.log("Autoplay blocked, waiting for interaction"));

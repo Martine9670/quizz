@@ -50,12 +50,10 @@ html, body, #root {
   overflow-x: hidden; /* Évite le scroll horizontal dû à la rotation des symboles */
 }
 
-/* --- LES SYMBOLES --- */
 /* --- SYMBOLES DE FOND (DÉCOR) --- */
 .app-container::before, .app-container::after {
   position: absolute;
   font-weight: 900;
-  /* On passe à 30% d'opacité pour qu'ils existent enfin ! */
   color: rgba(235, 74, 74, 0.938); 
   z-index: -1;
   pointer-events: none;
@@ -152,7 +150,7 @@ html, body, #root {
   background: white; color: #1e293b;
 }
 
-/* --- AUTH TOGGLE (RETOUR DU HOVER) --- */
+/* --- AUTH TOGGLE --- */
 .toggle-auth {
   color: #646cff;
   font-weight: 700;
