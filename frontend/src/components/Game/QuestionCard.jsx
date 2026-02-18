@@ -32,14 +32,14 @@ const QuestionCard = ({
           aria-required="true" // Indique que le champ est obligatoire
         />
         
-        <button type="submit" className="btn-primary" aria-label="Valider ma réponse">
-          VALIDER
-        </button>
+      <button type="submit" className="btn-primary answer-btn" aria-label="Valider ma réponse">
+        VALIDER
+      </button>
       </form>
       
       <button 
         onClick={() => window.confirm("Quitter la partie et enregistrer le score ?") && terminerJeu(score)} 
-        className="btn-abandon"
+        className="btn-abandon answer-btn-exit"
         aria-label="Quitter et enregistrer le score"
       >
         QUITTER

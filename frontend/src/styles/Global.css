@@ -185,3 +185,24 @@ html, body, #root {
   z-index: 2; /* Pour être AU-DESSUS des symboles (qui sont à -1) */
   pointer-events: none;
 }
+
+/* --- STYLE DES QUESTIONS (À AJOUTER) --- */
+.question-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f1dddd !important; /* Force le blanc pour la PWA */
+  margin-bottom: 25px;
+  line-height: 1.4;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ombre pour détacher du fond */
+  text-align: center;
+  display: block;
+}
+
+/* --- AJUSTEMENT POUR LE TIMER (PUISQU'IL EST SOMBRE AUSSI) --- */
+.timer-text {
+  color: #4ade80 !important; /* Vert fluo pour bien le voir */
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.2rem;
+}
