@@ -40,7 +40,7 @@ function App() {
   const [termine, setTermine] = useState(false);
   const [reponse, setReponse] = useState("");
   const [historique, setHistorique] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(15);
 
   // --- RÉFÉRENCE MUSIQUE ---
   const bgMusicRef = useRef(new Audio('/sounds/musicgame.mp3'));
@@ -108,7 +108,7 @@ function App() {
         setNiveau(choix);
         setIndexQuestion(0);
         setReponse("");
-        setTimeLeft(5);
+        setTimeLeft(15);
         setTermine(false);
       }
     } catch (err) { 
@@ -139,7 +139,7 @@ function App() {
     if (indexQuestion + 1 < questionsDuNiveau.length) {
       setIndexQuestion(i => i + 1);
       setReponse("");
-      setTimeLeft(5);
+      setTimeLeft(15);
     } else { 
         terminerJeu(nouveauScore); 
     }
