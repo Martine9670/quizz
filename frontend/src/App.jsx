@@ -1,3 +1,4 @@
+/* --- IMPORTS --- */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 
@@ -19,20 +20,21 @@ import './styles/Navbar.css';
 import './styles/Game.css';
 import './styles/Leaderboard.css';
 
-// --- INITIALISATION DES SONS ---
+/* --- INITIALISATION DES ASSETS AUDIO --- */
 const successSound = new Audio('/sounds/correct.mp3');
 const errorSound = new Audio('/sounds/wrong.mp3');
 successSound.volume = 0.5;
 errorSound.volume = 0.4;
 
 function App() {
-  // --- ÉTATS (STATES) ---
+  /* --- ÉTATS (STATES) - AUTHENTICATION & UI --- */
   const [user, setUser] = useState(localStorage.getItem("quizzUser") || "");
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("quizzUser"));
   const [isRegistering, setIsRegistering] = useState(false);
   const [isDyslexic, setIsDyslexic] = useState(false);
   const [authError, setAuthError] = useState("");
 
+  /* --- ÉTATS (STATES) - LOGIQUE DE JEU --- */
   const [niveau, setNiveau] = useState(null);
   const [questionsDuNiveau, setQuestionsDuNiveau] = useState([]);
   const [indexQuestion, setIndexQuestion] = useState(0);
@@ -42,10 +44,11 @@ function App() {
   const [historique, setHistorique] = useState([]);
   const [timeLeft, setTimeLeft] = useState(15);
 
-  // --- RÉFÉRENCE MUSIQUE ---
+  /* --- RÉFÉRENCES (REFS) --- */
   const bgMusicRef = useRef(new Audio('/sounds/musicgame.mp3'));
 
-  // --- ACTIONS API ---
+  /* --- ACTIONS API (SERVICES) --- */
+  // Récupération du classement mondial
   const chargerScores = useCallback(async () => {
     try {
       const result = await fetchLeaderboard();
@@ -55,6 +58,7 @@ function App() {
     }
   }, []);
 
+  // Enregistrement du score final en base de données
   const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
     try {
       await saveScore(user, finalScore, questionsDuNiveau.length, currentLevel);
@@ -64,6 +68,7 @@ function App() {
     }
   }, [user, questionsDuNiveau.length, chargerScores]);
 
+  /* --- GESTIONNAIRES D'ÉVÉNEMENTS - AUTH --- */
   const handleRegister = async (e) => {
     e.preventDefault();
     setAuthError("");
@@ -98,12 +103,27 @@ function App() {
     setIsLoggedIn(true);
   };
 
-  // --- LOGIQUE DU JEU ---
+  const handleLogout = () => {
+    if (niveau && !termine && score > 0) enregistrerScore(score, niveau);
+    localStorage.removeItem("quizzUser");
+    localStorage.removeItem("token");
+    setUser("");
+    setIsLoggedIn(false);
+    setNiveau(null);
+    setTermine(false);
+    // Relance la musique d'ambiance après déconnexion
+    bgMusicRef.current.play().catch(() => {
+      console.log("Lecture bloquée au logout");
+    });
+  }
+
+  /* --- GESTIONNAIRES D'ÉVÉNEMENTS - GAME LOGIC --- */
+  // Initialisation d'une nouvelle partie
   const handleDemarrer = async (choix) => {
     try {
       const selection = await fetchQuestions(choix);
       if (selection && selection.length > 0) {
-        bgMusicRef.current.pause();
+        bgMusicRef.current.pause(); // Coupe la musique d'ambiance pendant le jeu
         setQuestionsDuNiveau(selection);
         setNiveau(choix);
         setIndexQuestion(0);
@@ -116,11 +136,13 @@ function App() {
     }
   };
 
+  // Fin de session
   const terminerJeu = useCallback((scoreFinal) => {
     setTermine(true);
     if (niveau) enregistrerScore(scoreFinal, niveau);
   }, [niveau, enregistrerScore]);
 
+  // Vérification de la réponse saisie
   const validerReponse = useCallback((e = null) => {
     if (e) e.preventDefault();
     const bonneReponse = questionsDuNiveau[indexQuestion]?.a;
@@ -145,20 +167,6 @@ function App() {
     }
   }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
-  const handleLogout = () => {
-    if (niveau && !termine && score > 0) enregistrerScore(score, niveau);
-    localStorage.removeItem("quizzUser");
-    localStorage.removeItem("token");
-    setUser("");
-    setIsLoggedIn(false);
-    setNiveau(null);
-    setTermine(false);
-    // RELANCER LA MUSIQUE AU LOGOUT
-    bgMusicRef.current.play().catch(() => {
-    console.log("Lecture bloquée au logout");
-  });
-}
-
   const resetQuizz = () => {
     setNiveau(null);
     setScore(0);
@@ -166,7 +174,8 @@ function App() {
     chargerScores();
   };
 
-  // --- EFFETS ---
+  /* --- EFFETS (USEEFFECT) --- */
+  // Gestion de la musique de fond et de l'interaction utilisateur
   useEffect(() => {
     const music = bgMusicRef.current;
     music.loop = true;
@@ -185,6 +194,7 @@ function App() {
     };
   }, []);
 
+  // Chargement initial des scores
   useEffect(() => {
     const initScores = async () => {
       await chargerScores();
@@ -192,10 +202,12 @@ function App() {
     initScores();
   }, [chargerScores]);
 
+  // Déclenchement des confettis en cas de victoire parfaite
   useEffect(() => {
     if (termine && score === questionsDuNiveau.length && score > 0) confetti();
   }, [termine, score, questionsDuNiveau.length]);
 
+  // Logique du Timer (Compte à rebours)
   useEffect(() => {
     if (!niveau || termine || questionsDuNiveau.length === 0) return;
 
@@ -213,13 +225,16 @@ function App() {
     return () => clearInterval(interval);
   }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
 
+  /* --- RENDU (JSX) --- */
   return (
     <main className={`app-container ${isDyslexic ? 'dyslexic-mode' : ''}`}>      
+      {/* Barre de navigation haute */}
       <Navbar {...{
           isLoggedIn, user, niveau, termine, resetQuizz, handleLogout, 
           setIsRegistering, isRegistering, isDyslexic, setIsDyslexic 
       }} />
 
+      {/* Vue : Connexion / Inscription */}
       {!isLoggedIn ? (
         <div className="game-layout">
           <div className="auth-container">
@@ -238,6 +253,7 @@ function App() {
         </div>
       ) : (
         <>
+          {/* Vue : Écran de fin de partie */}
           {termine ? (
             <div className="card">
               <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
@@ -246,6 +262,7 @@ function App() {
               <Leaderboard historique={historique} />
             </div>
           ) : !niveau ? (
+            /* Vue : Sélection de la difficulté */
             <div className="game-layout">
               <LevelSelector handleDemarrer={handleDemarrer} />
               <aside className="sidebar-leaderboard">
@@ -253,6 +270,7 @@ function App() {
               </aside>
             </div>
           ) : (
+            /* Vue : Interface de jeu active */
             <QuestionCard 
               timeLeft={timeLeft}
               question={questionsDuNiveau[indexQuestion]?.q}

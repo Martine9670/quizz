@@ -1,5 +1,7 @@
+/* --- IMPORTS --- */
 import Timer from './Timer';
 
+/* --- COMPOSANT QUESTION CARD --- */
 const QuestionCard = ({ 
   timeLeft, 
   question, 
@@ -10,13 +12,18 @@ const QuestionCard = ({
   score 
 }) => {
   return (
+    /* --- STRUCTURE PRINCIPALE --- */
     /* Utilisation de <article> au lieu de <div> pour la sémantique (C1.e) */
     <article className="card">
+      
+      {/* COMPOSANT TIMER */}
       <Timer timeLeft={timeLeft} />
       
+      {/* SECTION QUESTION */}
       {/* On utilise une balise <h2> pour la hiérarchie des titres (C1.e) */}
       <h2 className="question-text">{question}</h2>
       
+      {/* SECTION FORMULAIRE DE RÉPONSE */}
       <form onSubmit={validerReponse}>
         {/* LABEL OBLIGATOIRE pour l'accessibilité (C1.c) 
             sr-only est une classe pour cacher le texte visuellement mais le laisser pour les malvoyants */}
@@ -32,11 +39,12 @@ const QuestionCard = ({
           aria-required="true" // Indique que le champ est obligatoire
         />
         
-      <button type="submit" className="btn-primary answer-btn" aria-label="Valider ma réponse">
-        VALIDER
-      </button>
+        <button type="submit" className="btn-primary answer-btn" aria-label="Valider ma réponse">
+          VALIDER
+        </button>
       </form>
       
+      {/* SECTION ACTIONS DE SORTIE */}
       <button 
         onClick={() => window.confirm("Quitter la partie et enregistrer le score ?") && terminerJeu(score)} 
         className="btn-abandon answer-btn-exit"
@@ -44,8 +52,10 @@ const QuestionCard = ({
       >
         QUITTER
       </button>
+      
     </article>
   );
 };
 
+/* --- EXPORT --- */
 export default QuestionCard;

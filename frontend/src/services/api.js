@@ -1,6 +1,8 @@
+/* --- CONFIGURATION --- */
 // src/services/api.js
 const API_URL = "http://localhost:1337/api";
 
+/* --- AUTHENTIFICATION --- */
 export const postRegister = async (username, email, password) => {
   const res = await fetch(`${API_URL}/auth/local/register`, {
     method: 'POST',
@@ -10,6 +12,7 @@ export const postRegister = async (username, email, password) => {
   return await res.json();
 };
 
+/* --- GESTION DES QUESTIONS --- */
 export const fetchQuestions = async (niveau) => {
   const res = await fetch(`${API_URL}/questions?filters[niveau][$eq]=${niveau.toLowerCase()}&pagination[limit]=1000`);
   const result = await res.json();
@@ -24,6 +27,7 @@ export const fetchQuestions = async (niveau) => {
   return [];
 };
 
+/* --- GESTION DES SCORES (LEADERBOARD) --- */
 // Récupérer le TOP 5 des scores
 export const fetchLeaderboard = async () => {
   const res = await fetch(`${API_URL}/scores?sort=points:desc&pagination[limit]=5`);

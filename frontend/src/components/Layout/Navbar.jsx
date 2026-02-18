@@ -1,3 +1,4 @@
+/* --- COMPOSANT NAVBAR --- */
 const Navbar = ({ 
   isLoggedIn, user, niveau, termine, 
   resetQuizz, handleLogout, setIsRegistering, isRegistering,
@@ -5,6 +6,8 @@ const Navbar = ({
 }) => {
   return (
     <nav className="navbar" aria-label="Navigation principale">
+      
+      {/* --- SECTION GAUCHE : LOGO & STATUT --- */}
       <div className="nav-left">
         <h1 className="nav-logo">🕹️ QUIZZY</h1>
         
@@ -12,6 +15,7 @@ const Navbar = ({
           <span className={`status-indicator ${isLoggedIn ? 'pulse-green' : 'pulse-red'}`}></span>
         </div>
 
+        {/* --- AFFICHAGE DYNAMIQUE (SLOGAN OU INFOS JEU) --- */}
         {niveau === null ? (
           /* ICI : On applique la classe SEULEMENT si isDyslexic est vrai */
           <span className={`nav-slogan ${isDyslexic ? 'dyslexic-mode' : ''}`}>
@@ -27,7 +31,9 @@ const Navbar = ({
         )}      
       </div>
 
+      {/* --- SECTION DROITE : LIENS & ACTIONS --- */}
       <div className="nav-links">
+        {/* BOUTON ACCESSIBILITÉ */}
         <button 
           onClick={() => setIsDyslexic(!isDyslexic)}
           className="btn-nav"
@@ -36,6 +42,7 @@ const Navbar = ({
           {isDyslexic ? "Désactiver Mode Dys" : "Activer Mode Dys"}
         </button>
 
+        {/* ACTIONS D'AUTHENTIFICATION / NAVIGATION */}
         {isLoggedIn ? (
           <>
             <button onClick={resetQuizz} className="nav-item">Accueil</button>
@@ -51,4 +58,5 @@ const Navbar = ({
   );
 };
 
+/* --- EXPORT --- */
 export default Navbar;

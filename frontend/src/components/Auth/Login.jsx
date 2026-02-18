@@ -1,9 +1,12 @@
+/* --- COMPOSANT DE CONNEXION --- */
 // On ajoute "authError" dans les props récupérées
 const Login = ({ handleLogin, setIsRegistering, authError }) => {
   return (
     <section aria-labelledby="login-title">
+      {/* --- TITRE DE LA SECTION --- */}
       <h2 id="login-title" className="main-title">Identification</h2>
       
+      {/* --- FORMULAIRE DE CONNEXION --- */}
       <form onSubmit={handleLogin} aria-label="Formulaire de connexion">
         <label htmlFor="login-username" className="sr-only">Votre Pseudo</label>
         <input 
@@ -16,6 +19,7 @@ const Login = ({ handleLogin, setIsRegistering, authError }) => {
           aria-required="true"
         />
 
+        {/* --- SECTION GESTION D'ERREUR --- */}
         {/* --- CRITÈRE C2.b : AFFICHAGE DE L'ERREUR REGEX --- */}
         {authError && (
           <p style={{ color: '#ff4d4d', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '15px' }} role="alert">
@@ -23,11 +27,13 @@ const Login = ({ handleLogin, setIsRegistering, authError }) => {
           </p>
         )}
         
+        {/* --- BOUTON DE VALIDATION --- */}
         <button type="submit" className="btn-primary" aria-label="Se connecter au jeu">
           ENTRER
         </button>
       </form>
 
+      {/* --- LIEN DE BASCULE VERS INSCRIPTION --- */}
       <button 
         onClick={() => setIsRegistering(true)} 
         className="toggle-auth"
@@ -40,4 +46,5 @@ const Login = ({ handleLogin, setIsRegistering, authError }) => {
   );
 };
 
+/* --- EXPORT --- */
 export default Login;

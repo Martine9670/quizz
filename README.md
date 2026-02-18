@@ -9,6 +9,7 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 - **Dynamic Database**: Fetches questions based on difficulty levels with a custom **Shuffle & Mapping** algorithm.
 - **5-Second Blitz Timer**: A high-pressure environment with automated answer validation using optimized React hooks.
 - **Inclusive Design (Dyslexic Mode)**: A specialized accessibility toggle that adjusts typography and spacing across the entire application.
+- **Full Keyboard Navigation**: Designed for accessibility and speed; players can navigate through levels, inputs, and buttons using only the `TAB` and `ENTER` keys (WCAG compliant).
 - **Persistent Leaderboard**: Global "Hall of Fame" fetching the Top 5 scores in real-time from the **Strapi REST API**.
 - **Immersive UI**: 100% external CSS architecture with floating card effects and `canvas-confetti` celebrations for perfect scores.
 

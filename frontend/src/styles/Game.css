@@ -1,3 +1,4 @@
+/* --- SÉLECTEUR DE NIVEAUX --- */
 .level-grid {
   display: flex;
   flex-direction: column;
@@ -15,6 +16,7 @@
 .moyen { background: #facc15; color: #713f12; }
 .difficile { background: #f87171; color: #7f1d1d; }
 
+/* --- LOGIQUE DU TIMER (BARRE DE PROGRESSION) --- */
 /* Timer */
 .timer-bar-bg { 
   width: 100%; 
@@ -38,6 +40,7 @@
   box-shadow: 0 0 10px #ff6b6b;
 }
 
+/* --- BOUTONS D'ACTION DU JEU --- */
 /* --- BOUTONS DE RÉPONSES --- */
 .answer-btn {
   background: rgba(74, 222, 128, 0.1) !important; /* Fond vert très léger */
@@ -65,6 +68,7 @@
   box-shadow: 0 0 20px rgba(248, 113, 113, 0.4) !important;
 }
 
+/* --- ÉLÉMENTS DE TEXTE DU JEU --- */
 /* --- TITRE DE FIN --- */
 .card .main-title {
   color: #4ade80 !important; 
@@ -82,7 +86,7 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* --- LE SCORE (BLANC) --- */
+/* --- AFFICHAGE DU SCORE --- */
 .card .subtitle {
   color: #e34cf7 !important;
   font-size: 1.2rem;

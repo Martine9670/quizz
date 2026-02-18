@@ -1,3 +1,4 @@
+/* --- CONTENEUR PRINCIPAL DU CLASSEMENT --- */
 .sidebar-leaderboard {
   position: fixed;
   right: 40px;
@@ -12,6 +13,7 @@
   z-index: 100;
 }
 
+/* --- TITRE ET ENTÊTE --- */
 .history-section h3 {
   font-size: 0.9rem;
   margin-bottom: 20px;
@@ -22,6 +24,7 @@
   font-weight: 900;
 }
 
+/* --- LISTE ET SCROLLBAR --- */
 .history-list {
   list-style: none;
   padding: 0;
@@ -33,6 +36,7 @@
 .history-list::-webkit-scrollbar { width: 4px; }
 .history-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
 
+/* --- ÉLÉMENTS DE LA LISTE (LIGNES) --- */
 .history-item {
   display: flex;
   justify-content: space-between;
@@ -46,13 +50,13 @@
 
 .history-item:hover { transform: translateX(-5px); background: rgba(255, 255, 255, 0.07); }
 
+/* --- INFORMATIONS UTILISATEUR --- */
 .history-user { display: flex; align-items: center; gap: 12px; }
 .history-user strong { font-size: 0.95rem; color: white !important; }
 
-/* --- SUPPRESSION DU MOT RECORD --- */
-.score-date { display: none; }
+/* --- DÉTAILS DU SCORE --- */
+.score-date { display: none; } /* Suppression du mot Record */
 
-/* --- ESPACEMENT BADGE / POINTS --- */
 .history-details {
   display: flex;
   align-items: center;
@@ -68,6 +72,7 @@
 
 .rank { color: rgba(255, 255, 255, 0.3) !important; font-size: 0.8rem; font-weight: 900; }
 
+/* --- BADGES DE DIFFICULTÉ --- */
 .badge-mini {
   font-size: 0.6rem;
   padding: 3px 10px;
@@ -77,11 +82,23 @@
   border: 1px solid transparent;
 }
 
-.badge-mini.facile { background: rgba(74, 222, 128, 0.1); color: #4ade80; border-color: rgba(74, 222, 128, 0.3); }
-.badge-mini.moyen { background: rgba(250, 204, 21, 0.1); color: #facc15; border-color: rgba(250, 204, 21, 0.3); }
-.badge-mini.difficile { background: rgba(248, 113, 113, 0.1); color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+.badge-mini.facile { 
+  background: rgba(74, 222, 128, 0.1); 
+  color: #4ade80; 
+  border-color: rgba(74, 222, 128, 0.3); 
+}
+.badge-mini.moyen { 
+  background: rgba(250, 204, 21, 0.1); 
+  color: #facc15; 
+  border-color: rgba(250, 204, 21, 0.3); 
+}
+.badge-mini.difficile { 
+  background: rgba(248, 113, 113, 0.1); 
+  color: #f87171; 
+  border-color: rgba(248, 113, 113, 0.3); 
+}
 
-/* --- RESPONSIVE --- */
+/* --- CONFIGURATION RESPONSIVE --- */
 @media (max-width: 1100px) {
   .sidebar-leaderboard {
     position: static;
