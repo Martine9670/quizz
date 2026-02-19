@@ -22,7 +22,7 @@ const Login = ({ handleLogin, setIsRegistering, authError }) => {
         {/* --- SECTION GESTION D'ERREUR --- */}
         {/* --- AFFICHAGE DE L'ERREUR REGEX --- */}
         {authError && (
-          <p style={{ color: '#ff4d4d', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '15px' }} role="alert">
+          <p className="error-message" role="alert"> 
             {authError}
           </p>
         )}
@@ -37,7 +37,7 @@ const Login = ({ handleLogin, setIsRegistering, authError }) => {
       <button 
         onClick={() => setIsRegistering(true)} 
         className="toggle-auth"
-        style={{ background: 'none', border: 'none', font: 'inherit' }}
+        aria-label="Aller à la page d'inscription"
         type="button"
       >
         Pas de compte ? S'inscrire

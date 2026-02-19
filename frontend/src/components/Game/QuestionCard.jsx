@@ -36,6 +36,7 @@ const QuestionCard = ({
           onChange={e => setReponse(e.target.value)}
           placeholder="Ta réponse..."
           autoFocus
+          required
           aria-required="true" // Indique que le champ est obligatoire
         />
         

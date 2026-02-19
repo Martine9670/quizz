@@ -32,7 +32,7 @@ const Register = ({ handleRegister, setIsRegistering, authError }) => {
       <button 
         onClick={() => setIsRegistering(false)} 
         className="toggle-auth"
-        style={{ background: 'none', border: 'none', font: 'inherit' }}
+        aria-label="Retourner à la page de connexion"
         type="button"
       >
         Déjà un compte ? Se connecter

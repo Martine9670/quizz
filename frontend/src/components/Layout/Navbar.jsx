@@ -9,21 +9,23 @@ const Navbar = ({
       
       {/* --- SECTION GAUCHE : LOGO & STATUT --- */}
       <div className="nav-left">
-        <h1 className="nav-logo">🕹️ QUIZZY</h1>
+        <h1 className="nav-logo" aria-label="Quizzy - Le jeu de quiz">🕹️ QUIZZY</h1>
         
-        <div className="nav-status" title={isLoggedIn ? "Connecté" : "Hors-ligne"}>
-          <span className={`status-indicator ${isLoggedIn ? 'pulse-green' : 'pulse-red'}`}></span>
+        <div className="nav-status">
+          <span 
+            className={`status-indicator ${isLoggedIn ? 'pulse-green' : 'pulse-red'}`}
+            role="img" 
+            aria-label={isLoggedIn ? "Statut : Connecté" : "Statut : Hors-ligne"}
+          ></span>
         </div>
 
-        {/* --- AFFICHAGE DYNAMIQUE (SLOGAN OU INFOS JEU) --- */}
+        {/* --- AFFICHAGE DYNAMIQUE --- */}
         {niveau === null ? (
-          /* ICI : On applique la classe SEULEMENT si isDyslexic est vrai */
           <span className={`nav-slogan ${isDyslexic ? 'dyslexic-mode' : ''}`}>
             Prêt à relever le défi ?
           </span>
         ) : (
           !termine && (
-            /* On l'applique aussi ici pour les infos de jeu */
             <div className={`nav-game-info ${isDyslexic ? 'dyslexic-mode' : ''}`}>
               Partie en cours : <span className={`badge-mini ${niveau}`}>{niveau}</span>
             </div>
@@ -33,20 +35,27 @@ const Navbar = ({
 
       {/* --- SECTION DROITE : LIENS & ACTIONS --- */}
       <div className="nav-links">
-        {/* BOUTON ACCESSIBILITÉ */}
+        {/* BOUTON ACCESSIBILITÉ (C1.c) */}
         <button 
           onClick={() => setIsDyslexic(!isDyslexic)}
           className="btn-nav"
+          aria-pressed={isDyslexic}
+          title="Activer ou désactiver la police dyslexique"
         >
-          {/* Libellé logique : si c'est ON, on propose de mettre OFF */}
           {isDyslexic ? "Désactiver Mode Dys" : "Activer Mode Dys"}
         </button>
 
-        {/* ACTIONS D'AUTHENTIFICATION / NAVIGATION */}
+        {/* ACTIONS D'AUTHENTIFICATION */}
         {isLoggedIn ? (
           <>
             <button onClick={resetQuizz} className="nav-item">Accueil</button>
-            <button onClick={handleLogout} className="nav-logout-btn">Quitter ({user})</button>
+            <button 
+                onClick={handleLogout} 
+                className="nav-logout-btn" 
+                aria-label={`Se déconnecter de ${user}`}
+            >
+                Quitter ({user})
+            </button>
           </>
         ) : (
           <button onClick={() => setIsRegistering(!isRegistering)} className="nav-item">
@@ -58,5 +67,4 @@ const Navbar = ({
   );
 };
 
-/* --- EXPORT --- */
 export default Navbar;
