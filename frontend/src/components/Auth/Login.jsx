@@ -20,7 +20,7 @@ const Login = ({ handleLogin, setIsRegistering, authError }) => {
         />
 
         {/* --- SECTION GESTION D'ERREUR --- */}
-        {/* --- CRITÈRE C2.b : AFFICHAGE DE L'ERREUR REGEX --- */}
+        {/* --- AFFICHAGE DE L'ERREUR REGEX --- */}
         {authError && (
           <p style={{ color: '#ff4d4d', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '15px' }} role="alert">
             {authError}
