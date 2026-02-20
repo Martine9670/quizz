@@ -178,26 +178,31 @@ function App() {
   }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
 const resetQuizz = () => {
-    // 1. On réinitialise la session (Identification)
+    // 1. Reset de la musique (On revient au début du fichier audio)
+    bgMusicRef.current.pause();
+    bgMusicRef.current.currentTime = 0;
+    bgMusicRef.current.play().catch(() => console.log("Musique en attente d'interaction"));
+
+    // 2. Réinitialisation de la session (Identification)
     setUser("");
     setIsLoggedIn(false);
     localStorage.removeItem("quizzUser");
     localStorage.removeItem("token");
 
-    // 2. On réinitialise tout le jeu
+    // 3. Réinitialisation du jeu
     setNiveau(null);
     setScore(0);
     setTermine(false);
     setQuestionsDuNiveau([]);
     setIndexQuestion(0);
     
-    // 3. On s'assure d'être sur la page principale
+    // 4. Retour à la page de garde
     setActivePage("game");
-    setIsRegistering(false); // Pour afficher le Login et non le Register
+    setIsRegistering(false); 
     
     chargerScores();
   };
-  
+    
   /* --- EFFETS (USEEFFECT) --- */
   // Gestion de la musique de fond et de l'interaction utilisateur
   useEffect(() => {
