@@ -6,6 +6,7 @@ import confetti from 'canvas-confetti';
 import Navbar from './components/Layout/Navbar';
 import Leaderboard from './components/Layout/Leaderboard';
 import Footer from './components/Layout/Footer';
+
 // Composants - Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
@@ -20,6 +21,7 @@ import Contact from './components/Legal/Contact';
 import LegalText from './components/Legal/LegalText';
 import CGU from './components/Legal/CGU';
 import Mentions from './components/Legal/Mentions';
+import GDPR from './components/Legal/GDPR';
 
 // Styles
 import './styles/Global.css';
@@ -305,7 +307,10 @@ function App() {
 
       {/* PAGE : MENTIONS LÉGALES */}
       {activePage === "mentions" && <Mentions onBack={() => setActivePage("game")} />}
-        
+      
+      {/* PAGE : RGPD */}
+      {activePage === "gdpr" && <GDPR onBack={() => setActivePage("game")} />}
+
       {/* FOOTER (Toujours visible) */}
       <Footer onNavigate={setActivePage} />
 

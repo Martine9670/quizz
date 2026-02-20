@@ -10,6 +10,7 @@ const Footer = ({ onNavigate }) => {
           <button className="footer-btn" onClick={() => onNavigate('contact')}>Contact</button>
           <button className="footer-btn" onClick={() => onNavigate('cgu')}>CGU</button>
           <button className="footer-btn" onClick={() => onNavigate('mentions')}>Mentions</button>
+          <button className="footer-btn" onClick={() => onNavigate('gdpr')}>RGPD</button>
         </nav>
       </div>
     </footer>
