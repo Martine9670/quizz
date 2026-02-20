@@ -1,6 +1,6 @@
 /* --- CONFIGURATION --- */
-// src/services/api.js
-const API_URL = "http://localhost:1337/api";
+// On utilise la variable d'environnement définie dans .env
+const API_URL = import.meta.env.VITE_API_URL;
 
 /* --- AUTHENTIFICATION --- */
 export const postRegister = async (username, email, password) => {
