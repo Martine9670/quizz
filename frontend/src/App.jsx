@@ -177,6 +177,21 @@ function App() {
     }
   }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
+  const handleRejouer = () => {
+    // On remet à zéro la logique du jeu SANS déconnecter l'utilisateur
+    setNiveau(null);
+    setScore(0);
+    setTermine(false);
+    setQuestionsDuNiveau([]);
+    setIndexQuestion(0);
+    setActivePage("game");
+    
+    // On relance la musique si elle était en pause
+    bgMusicRef.current.play().catch(() => console.log("Musique relancée"));
+    
+    chargerScores();
+  };
+
 const resetQuizz = () => {
     // 1. Reset de la musique (On revient au début du fichier audio)
     bgMusicRef.current.pause();
@@ -202,7 +217,7 @@ const resetQuizz = () => {
     
     chargerScores();
   };
-    
+
   /* --- EFFETS (USEEFFECT) --- */
   // Gestion de la musique de fond et de l'interaction utilisateur
   useEffect(() => {
@@ -289,7 +304,7 @@ const resetQuizz = () => {
                 <div className="card">
                   <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
                   <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
-                  <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
+                  <button onClick={handleRejouer} className="btn-primary">REJOUER</button>
                   <Leaderboard historique={historique} />
                 </div>
               ) : !niveau ? (
