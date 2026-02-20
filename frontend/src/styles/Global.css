@@ -7,9 +7,10 @@
 * { box-sizing: border-box; }
 
 html, body, #root {
-  height: 100%;
+  min-height: 100vh;
   margin: 0;
   background-color: #351b03fb;
+  background-attachment: fixed;
   font-family: 'Poppins', sans-serif; /* Police de secours */
 }
 
@@ -257,12 +258,11 @@ html, body, #root {
   background-color: rgba(0, 0, 0, 0.9);
   border-top: 1px solid #4ade80;
   padding: 15px 0;
-  width: calc(100% + 40px); /* On ajoute les 20px de padding gauche + 20px de droite */
-  margin-left: -20px;       /* On le décale vers la gauche pour annuler le padding */
-  margin-right: -20px;      /* On le décale vers la droite */
-  margin-top: auto;         /* Garde le footer en bas */
+  width: 100%; /* Il prend toute la largeur sans marges négatives */
+  margin-top: auto; 
   z-index: 10;
 }
+
 .footer-content {
   display: flex;
   justify-content: space-around;
