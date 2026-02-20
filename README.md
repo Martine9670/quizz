@@ -6,12 +6,18 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 
 - **Service Layer Architecture**: Complete decoupling of API logic from UI components. All communication with the Strapi backend is centralized in a dedicated service layer.
 - **User Authentication**: Secure registration and login system integrated with Strapi's Auth provider.
+- **Internal Routing System**: Custom state-based navigation allowing seamless transitions between the Game, Contact, and Legal pages without page reloads.
 - **Dynamic Database**: Fetches questions based on difficulty levels with a custom **Shuffle & Mapping** algorithm.
-- **5-Second Blitz Timer**: A high-pressure environment with automated answer validation using optimized React hooks.
 - **Inclusive Design (Dyslexic Mode)**: A specialized accessibility toggle that adjusts typography and spacing across the entire application.
-- **Full Keyboard Navigation**: Designed for accessibility and speed; players can navigate through levels, inputs, and buttons using only the `TAB` and `ENTER` keys (WCAG compliant).
-- **Persistent Leaderboard**: Global "Hall of Fame" fetching the Top 5 scores in real-time from the **Strapi REST API**.
-- **Immersive UI**: 100% external CSS architecture with floating card effects and `canvas-confetti` celebrations for perfect scores.
+- **Persistent Leaderboard**: Global "Hall of Fame" fetching the Top 5 scores in real-time.
+
+## ⚖️ Navigation & Compliance
+
+- **GDPR Ready**: Integrated specialized pages for **CGU** (Terms of Use) and **Legal Mentions** to ensure transparency and user data protection compliance.
+- **Advanced Form Validation**: The Contact form features a **Regex-based validation** system to ensure data integrity (Email format and message length checks) before submission.
+- **Professional Layout**: Implemented a **Full-width Sticky Footer** using advanced CSS (Flexbox & Negative Margins) to maintain a professional look across all screen sizes.
+- **WCAG Compliant**: Full keyboard navigation (TAB/ENTER) and semantic HTML5 tags (`<footer>`, `<nav>`, `<main>`) for better accessibility.
+
 
 ## 🚀 Tech Stack
 
@@ -75,4 +81,4 @@ Developed as part of the curriculum with a focus on professional software engine
 
 -----
 
-Author: Martine PINNA
+Author: Martine
