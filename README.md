@@ -54,31 +54,41 @@ We migrated all technical logic from `App.jsx` to `src/services/api.js`.
     Install dependencies
     Bash
 
-    # From the root
+    # Install Frontend dependencies
+    cd frontend
+    npm install
+
+    # Install Backend dependencies
+    cd ../backend
     npm install
 
     Backend Setup (Strapi)
 
         Ensure Strapi is running on http://localhost:1337.
 
-        Collections: Questions and Scores.
+        Collections: Create Questions and Scores collection types.
 
-        Roles: Ensure Public has permissions for find, create, and register.
+        Permissions: Go to Settings > Roles > Public and enable:
+
+            Questions: find
+
+            Scores: create, find
+
+            Auth: register, callback
 
 ⚡ Quick Start (VS Code)
 
-This project includes a .vscode/launch.json configuration:
+This project includes a .vscode/launch.json configuration to save you time:
 
     Open Run and Debug (Ctrl+Shift+D).
 
     Select 🚀 TOUT LANCER (Quizz).
 
-    Press F5 to start both the Strapi backend and Vite frontend.
-
+    Press F5 to start both the Strapi backend and Vite frontend simultaneously.
 -----
 
 Developed as part of the curriculum with a focus on professional software engineering patterns.
 
 -----
 
-Author: Martine
+Author: Martine PINNA
