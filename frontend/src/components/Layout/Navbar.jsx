@@ -7,9 +7,17 @@ const Navbar = ({
   return (
     <nav className="navbar" aria-label="Navigation principale">
       
-      {/* --- SECTION GAUCHE : LOGO & STATUT --- */}
+{/* --- SECTION GAUCHE : LOGO & STATUT --- */}
       <div className="nav-left">
-        <h1 className="nav-logo" aria-label="Quizzy - Le jeu de quiz">🕹️ QUIZZY</h1>
+        {/* On ajoute onClick et le style cursor pour le retour accueil */}
+        <h1 
+          className="nav-logo" 
+          aria-label="Quizzy - Le jeu de quiz"
+          onClick={resetQuizz}
+          style={{ cursor: 'pointer' }}
+        >
+          🕹️ QUIZZY
+        </h1>
         
         <div className="nav-status">
           <span 

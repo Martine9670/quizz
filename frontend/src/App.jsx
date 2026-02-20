@@ -177,13 +177,27 @@ function App() {
     }
   }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
-  const resetQuizz = () => {
+const resetQuizz = () => {
+    // 1. On réinitialise la session (Identification)
+    setUser("");
+    setIsLoggedIn(false);
+    localStorage.removeItem("quizzUser");
+    localStorage.removeItem("token");
+
+    // 2. On réinitialise tout le jeu
     setNiveau(null);
     setScore(0);
     setTermine(false);
+    setQuestionsDuNiveau([]);
+    setIndexQuestion(0);
+    
+    // 3. On s'assure d'être sur la page principale
+    setActivePage("game");
+    setIsRegistering(false); // Pour afficher le Login et non le Register
+    
     chargerScores();
   };
-
+  
   /* --- EFFETS (USEEFFECT) --- */
   // Gestion de la musique de fond et de l'interaction utilisateur
   useEffect(() => {
@@ -235,7 +249,6 @@ function App() {
     return () => clearInterval(interval);
   }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
 
-  /* --- RENDU (JSX) --- */
 /* --- RENDU (JSX) --- */
   return (
     <main className={`app-container ${isDyslexic ? 'dyslexic-mode' : ''}`}>      
