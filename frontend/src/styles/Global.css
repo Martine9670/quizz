@@ -9,6 +9,7 @@
 html, body, #root {
   height: 100%;
   margin: 0;
+  background-color: #351b03fb;
   font-family: 'Poppins', sans-serif; /* Police de secours */
 }
 
@@ -30,13 +31,11 @@ html, body, #root {
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
+  padding: 0;
   overflow-x: hidden;
-  /* On définit la police ici sans !important pour laisser le mode Dys gagner */
-  font-family: 'Poppins', sans-serif;
+  background: transparent; 
+  z-index: 1;
 }
 
 /* --- NAVBAR & SLOGAN --- */
@@ -46,51 +45,48 @@ html, body, #root {
 }
 
 /* --- DECORATIONS & CARTES --- */
-/* --- LE CONTENEUR (OVERRIDE) --- */
-.app-container {
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column; /* Aligne les éléments verticalement */
-  background-color: #121212;
-  position: relative;
-  padding: 20px;
-  overflow-x: hidden;
-  font-family: 'Poppins', sans-serif;
-  z-index: 1;
-}
 
 /* --- SYMBOLES DE FOND (DÉCOR) --- */
-.app-container::before, .app-container::after {
-  position: absolute;
+.bg-symbol {
+  position: fixed;
+  z-index: 0; 
+  font-family: 'Arial Black', sans-serif;
   font-weight: 900;
-  color: rgba(235, 74, 74, 0.938); 
-  z-index: -1;
+  opacity: 0.60;
   pointer-events: none;
-  line-height: 1;
   user-select: none;
 }
 
-/* Le gros "?" en haut à gauche */
-.app-container::before {
-  content: "?";
+.symbol-1 {
   font-size: 20rem;
   top: 10%;
-  left: 10%; /* On l'écarte du bord gauche */
+  left: 5%;
   transform: rotate(-15deg);
-  /* On lui ajoute un petit frère via text-shadow, mais bien placé */
-  text-shadow: 60vw 25vh 0px rgb(111, 212, 128); 
+  color: #4ade80; 
 }
 
-/* Le gros "!" en bas à droite */
-.app-container::after {
-  content: "!";
+.symbol-2 {
   font-size: 25rem;
-  bottom: 15%; /* On le remonte pour qu'il ne disparaisse pas dans le noir */
-  right: 12%;  /* On l'écarte du bord droit */
+  bottom: 5%;
+  right: 5%;
   transform: rotate(15deg);
-  /* On lui ajoute un petit frère en haut à droite */
-  text-shadow: -50vw 35vh 0px rgb(71, 168, 233);
+  color: #646cff; 
+}
+
+.symbol-3 {
+  font-size: 18rem;
+  top: 55%;
+  right: 60%;
+  transform: rotate(10deg);
+  color: #ff4d4d; 
+}
+
+.symbol-4 {
+  font-size: 18rem;
+  bottom: 60%;
+  right: 20%;
+  transform: rotate(10deg);
+  color: #f2f53e;
 }
 
 /* --- COMPOSANT CARD --- */
@@ -190,16 +186,6 @@ html, body, #root {
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
-}
-
-.footer-overlay {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 100px;
-  background: linear-gradient(to top, #000, transparent);
-  z-index: 2; /* Pour être AU-DESSUS des symboles (qui sont à -1) */
-  pointer-events: none;
 }
 
 /* --- STYLE DES QUESTIONS --- */

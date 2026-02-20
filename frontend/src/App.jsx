@@ -271,7 +271,12 @@ const resetQuizz = () => {
 
 /* --- RENDU (JSX) --- */
   return (
-    <main className={`app-container ${isDyslexic ? 'dyslexic-mode' : ''}`}>      
+    <main className={`app-container ${isDyslexic ? 'dyslexic-mode' : ''}`}>   
+    {/* Symboles décoratifs de fond */}
+      <div className="bg-symbol symbol-1">?</div>
+      <div className="bg-symbol symbol-2">!</div>
+      <div className="bg-symbol symbol-3">+</div>
+      <div className="bg-symbol symbol-4">=</div>
       {/* Barre de navigation haute */}
       <Navbar {...{
           isLoggedIn, user, niveau, termine, 
@@ -354,7 +359,6 @@ const resetQuizz = () => {
       {/* FOOTER (Toujours visible) */}
       <Footer onNavigate={setActivePage} />
 
-      <div className="footer-overlay"></div>
     </main>
   );
 }

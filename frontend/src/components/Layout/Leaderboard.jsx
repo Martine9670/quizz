@@ -3,7 +3,7 @@ const Leaderboard = ({ historique }) => {
   return (
     <div className="history-section">
       {/* --- ENTÊTE --- */}
-      <h3>🏆 Le tableau des légendes 🏆</h3>
+      <h3>🏆 Le tableau des légendes</h3>
       
       {/* --- LISTE DES SCORES --- */}
       <ul className="history-list">
