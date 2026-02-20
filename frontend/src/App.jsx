@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 // Composants - Layout
 import Navbar from './components/Layout/Navbar';
 import Leaderboard from './components/Layout/Leaderboard';
+import Footer from './components/Layout/Footer';
 // Composants - Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
@@ -13,6 +14,12 @@ import { postRegister, fetchQuestions, fetchLeaderboard, saveScore } from './ser
 // Composants - Game
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
+
+// Composants - Legal
+import Contact from './components/Legal/Contact';
+import LegalText from './components/Legal/LegalText';
+import CGU from './components/Legal/CGU';
+import Mentions from './components/Legal/Mentions';
 
 // Styles
 import './styles/Global.css';
@@ -32,6 +39,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("quizzUser"));
   const [isRegistering, setIsRegistering] = useState(false);
   const [isDyslexic, setIsDyslexic] = useState(false);
+  const [activePage, setActivePage] = useState("game"); // "game", "contact", "cgu", ou "mentions"
   const [authError, setAuthError] = useState("");
 
   /* --- ÉTATS (STATES) - LOGIQUE DE JEU --- */
@@ -43,7 +51,7 @@ function App() {
   const [reponse, setReponse] = useState("");
   const [historique, setHistorique] = useState([]);
   const [timeLeft, setTimeLeft] = useState(15);
-
+  
   /* --- RÉFÉRENCES (REFS) --- */
   const bgMusicRef = useRef(new Audio('/sounds/musicgame.mp3'));
 
@@ -226,63 +234,81 @@ function App() {
   }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
 
   /* --- RENDU (JSX) --- */
+/* --- RENDU (JSX) --- */
   return (
     <main className={`app-container ${isDyslexic ? 'dyslexic-mode' : ''}`}>      
       {/* Barre de navigation haute */}
       <Navbar {...{
-          isLoggedIn, user, niveau, termine, resetQuizz, handleLogout, 
-          setIsRegistering, isRegistering, isDyslexic, setIsDyslexic 
+          isLoggedIn, user, niveau, termine, 
+          resetQuizz: () => { resetQuizz(); setActivePage("game"); }, // On s'assure de revenir au jeu
+          handleLogout, setIsRegistering, isRegistering, isDyslexic, setIsDyslexic 
       }} />
 
-      {/* Vue : Connexion / Inscription */}
-      {!isLoggedIn ? (
-        <div className="game-layout">
-          <div className="auth-container">
-            <h1 className="welcome-text">Bienvenue sur Quizzy !</h1>
-            <div className="card">
-              {isRegistering ? (
-                <Register handleRegister={handleRegister} setIsRegistering={setIsRegistering} authError={authError} />
-              ) : (
-                <Login handleLogin={handleLogin} setIsRegistering={setIsRegistering} authError={authError} />
-              )}
-            </div>
-          </div>
-          <aside className="sidebar-leaderboard">
-            <Leaderboard historique={historique} />
-          </aside>
-        </div>
-      ) : (
+      {/* SI ON EST SUR LA PAGE DU JEU */}
+      {activePage === "game" && (
         <>
-          {/* Vue : Écran de fin de partie */}
-          {termine ? (
-            <div className="card">
-              <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
-              <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
-              <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
-              <Leaderboard historique={historique} />
-            </div>
-          ) : !niveau ? (
-            /* Vue : Sélection de la difficulté */
+          {!isLoggedIn ? (
             <div className="game-layout">
-              <LevelSelector handleDemarrer={handleDemarrer} />
+              <div className="auth-container">
+                <h1 className="welcome-text">Bienvenue sur Quizzy !</h1>
+                <div className="card">
+                  {isRegistering ? (
+                    <Register handleRegister={handleRegister} setIsRegistering={setIsRegistering} authError={authError} />
+                  ) : (
+                    <Login handleLogin={handleLogin} setIsRegistering={setIsRegistering} authError={authError} />
+                  )}
+                </div>
+              </div>
               <aside className="sidebar-leaderboard">
                 <Leaderboard historique={historique} />
               </aside>
             </div>
           ) : (
-            /* Vue : Interface de jeu active */
-            <QuestionCard 
-              timeLeft={timeLeft}
-              question={questionsDuNiveau[indexQuestion]?.q}
-              reponse={reponse}
-              setReponse={setReponse}
-              validerReponse={validerReponse}
-              terminerJeu={terminerJeu}
-              score={score}
-            />
+            <>
+              {termine ? (
+                <div className="card">
+                  <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
+                  <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
+                  <button onClick={resetQuizz} className="btn-primary">REJOUER</button>
+                  <Leaderboard historique={historique} />
+                </div>
+              ) : !niveau ? (
+                <div className="game-layout">
+                  <LevelSelector handleDemarrer={handleDemarrer} />
+                  <aside className="sidebar-leaderboard">
+                    <Leaderboard historique={historique} />
+                  </aside>
+                </div>
+              ) : (
+                <QuestionCard 
+                  timeLeft={timeLeft}
+                  question={questionsDuNiveau[indexQuestion]?.q}
+                  reponse={reponse}
+                  setReponse={setReponse}
+                  validerReponse={validerReponse}
+                  terminerJeu={terminerJeu}
+                  score={score}
+                />
+              )}
+            </>
           )}
         </>
       )}
+
+{/* --- FIN DE LA LOGIQUE DU JEU --- */}
+      
+      {/* PAGE : CONTACT */}
+      {activePage === "contact" && <Contact onBack={() => setActivePage("game")} />}
+
+      {/* PAGE : CGU */}
+      {activePage === "cgu" && <CGU onBack={() => setActivePage("game")} />}
+
+      {/* PAGE : MENTIONS LÉGALES */}
+      {activePage === "mentions" && <Mentions onBack={() => setActivePage("game")} />}
+        
+      {/* FOOTER (Toujours visible) */}
+      <Footer onNavigate={setActivePage} />
+
       <div className="footer-overlay"></div>
     </main>
   );

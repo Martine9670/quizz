@@ -19,6 +19,11 @@ html, body, #root {
   font-family: 'OpenDyslexic', sans-serif !important;
 }
 
+/* Cette classe va pousser le footer vers le bas */
+.game-layout, .auth-container, .card {
+  margin: auto; /* Centre l'élément dans l'espace restant */
+}
+
 /* --- LE CONTAINER PRINCIPAL --- */
 .app-container {
   min-height: 100vh;
@@ -44,11 +49,16 @@ html, body, #root {
 /* --- DECORATIONS & CARTES --- */
 /* --- LE CONTENEUR (OVERRIDE) --- */
 .app-container {
-  position: relative;
-  background-color: #121212; /* Ta couleur de base */
-  z-index: 1; /* Crée un nouveau contexte d'empilement */
   min-height: 100vh;
-  overflow-x: hidden; /* Évite le scroll horizontal dû à la rotation des symboles */
+  width: 100vw;
+  display: flex;
+  flex-direction: column; /* Aligne les éléments verticalement */
+  background-color: #121212;
+  position: relative;
+  padding: 20px;
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+  z-index: 1;
 }
 
 /* --- SYMBOLES DE FOND (DÉCOR) --- */
@@ -242,5 +252,88 @@ html, body, #root {
   color: #ff4d4d;
   font-weight: bold;
   font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+/* --- FOOTER STYLE --- */
+.footer {
+  background-color: rgba(0, 0, 0, 0.9);
+  border-top: 1px solid #4ade80;
+  padding: 15px 0;
+  width: calc(100% + 40px); /* On ajoute les 20px de padding gauche + 20px de droite */
+  margin-left: -20px;       /* On le décale vers la gauche pour annuler le padding */
+  margin-right: -20px;      /* On le décale vers la droite */
+  margin-top: auto;         /* Garde le footer en bas */
+  z-index: 10;
+}
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-btn {
+  background: none;
+  border: none;
+  color: #4ade80;
+  cursor: pointer;
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
+
+.footer-btn:hover {
+  color: white;
+}
+
+/* --- CONTACT STYLE --- */
+.textarea-field {
+  height: 150px;
+  border-radius: 20px !important;
+  resize: none;
+  padding-top: 15px;
+}
+
+.status-success {
+  color: #4ade80;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* --- LEGAL STYLE --- */
+.legal-card {
+  max-width: 700px; /* Un peu plus large pour le texte */
+  text-align: left; /* Plus facile à lire pour du texte long */
+}
+
+.legal-content {
+  margin: 20px 0;
+  max-height: 400px;
+  overflow-y: auto; /* Au cas où le texte est long sur mobile */
+  padding-right: 10px;
+}
+
+.legal-paragraph {
+  color: #ccc;
+  line-height: 1.6;
   margin-bottom: 15px;
 }

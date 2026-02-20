@@ -1,0 +1,59 @@
+import React, { useState } from 'react';
+
+const Contact = ({ onBack }) => {
+  const [status, setStatus] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { email, message } = e.target;
+
+    // Regex simple pour valider l'email (Critère C2.b)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email.value)) {
+      setStatus("Veuillez entrer une adresse email valide.");
+      return;
+    }
+
+    if (message.value.length < 10) {
+      setStatus("Votre message doit faire au moins 10 caractères.");
+      return;
+    }
+
+    // Ici on simule l'envoi
+    setStatus("Succès ! Votre message a été envoyé.");
+    e.target.reset();
+  };
+
+  return (
+    <div className="card animate-fade-in">
+      <h2 className="main-title">Contactez-nous</h2>
+      <p className="subtitle">Une question ? Un bug ? Dis-le nous !</p>
+
+      <form onSubmit={handleSubmit} className="contact-form">
+        <input 
+          type="email" 
+          name="email" 
+          placeholder="Ton email" 
+          className="input-field" 
+          required 
+        />
+        <textarea 
+          name="message" 
+          placeholder="Ton message..." 
+          className="input-field textarea-field" 
+          required
+        ></textarea>
+
+        {status && <p className={status.includes("Succès") ? "status-success" : "error-message"}>{status}</p>}
+
+        <div className="button-group">
+          <button type="submit" className="btn-primary">Envoyer</button>
+          <button type="button" onClick={onBack} className="toggle-auth">Retour au jeu</button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default Contact;
