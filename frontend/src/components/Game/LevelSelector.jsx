@@ -1,5 +1,5 @@
 /* --- COMPOSANT SÉLECTEUR DE NIVEAU --- */
-const LevelSelector = ({ handleDemarrer }) => {
+const LevelSelector = ({ handleDemarrer}) => {
   return (
     <div className="card">
       {/* Utilisation de <h2> pour la hiérarchie sémantique */}
