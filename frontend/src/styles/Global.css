@@ -1,7 +1,7 @@
 /* --- IMPORTS --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-@import url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic.min.css');
+@import url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.min.css');
 
 /* --- RESET & BASE --- */
 * { box-sizing: border-box; }
@@ -16,7 +16,7 @@ html, body, #root {
 /* On ne force QUE quand la classe est présente sur le parent */
 .dyslexic-mode, 
 .dyslexic-mode * {
-  font-family: 'OpenDyslexic', sans-serif !important;
+  font-family: 'OpenDyslexicRegular', sans-serif !important;
 }
 
 /* Cette classe va pousser le footer vers le bas */
@@ -34,7 +34,6 @@ html, body, #root {
   align-items: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
-  padding: 20px;
   overflow-x: hidden;
   /* On définit la police ici sans !important pour laisser le mode Dys gagner */
   font-family: 'Poppins', sans-serif;
@@ -127,11 +126,7 @@ html, body, #root {
   text-align: center;
   
   /* On réinitialise les marges pour ne pas interférer */
-  margin: 0 auto 20px auto; 
-
-  /* --- LA SOLUTION MAGIQUE --- */
-  transform: translateY(-100px); /* Ajuste le chiffre : -50px, -150px... */
-  /* ---------------------------- */
+  margin: 0 auto 60px auto; 
 
   display: block;
   overflow: hidden;
