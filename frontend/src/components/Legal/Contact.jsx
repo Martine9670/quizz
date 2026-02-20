@@ -26,7 +26,7 @@ const Contact = ({ onBack }) => {
   };
 
   return (
-    <div className="card animate-fade-in">
+    <div className="card animate-fade-in contact-card-fix">
       <h2 className="main-title">Contactez-nous</h2>
       <p className="subtitle">Une question ? Un bug ? Dis-le nous !</p>
 

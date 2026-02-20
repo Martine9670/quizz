@@ -3,6 +3,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
 @import url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.min.css');
 
+:root {
+  --navbar-height: 70px;
+
+  @media (max-width: 900px) {
+    --navbar-height: 200px;
+  }
+}
+
 /* --- RESET & BASE --- */
 * { box-sizing: border-box; }
 
@@ -35,7 +43,7 @@ html, body, #root {
   position: relative;
   padding: 0;
   overflow-x: hidden;
-  background: transparent; 
+  background: transparent;
   z-index: 1;
 }
 
@@ -318,15 +326,32 @@ html, body, #root {
 
 /* --- LEGAL STYLE --- */
 .legal-card {
-  max-width: 700px; /* Un peu plus large pour le texte */
-  text-align: left; /* Plus facile à lire pour du texte long */
+  max-width: 700px;
+  text-align: left;
+  /* On force une marge en haut pour passer sous la Navbar (70px + 20px de marge) */
+  margin-top: 100px !important; 
+  margin-bottom: 40px;
 }
 
+/* On sépare bien le scroll du texte du reste */
 .legal-content {
   margin: 20px 0;
   max-height: 400px;
-  overflow-y: auto; /* Au cas où le texte est long sur mobile */
+  overflow-y: auto; 
   padding-right: 10px;
+  /* Assure-toi que la couleur est bien héritée ici */
+  color: #ccc;
+}
+
+/* Nettoyage pour éviter que le scroll ne s'applique à chaque paragraphe */
+.legal-content p, 
+.legal-content span, 
+.legal-content li {
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  /* On retire l'overflow d'ici pour ne le garder que sur le parent .legal-content */
+  overflow: visible; 
 }
 
 .legal-paragraph {
@@ -355,4 +380,28 @@ html, body, #root {
 .welcome-player-title span {
   color: rgba(235, 74, 74, 0.938); 
   text-transform: capitalize;
+}
+
+/* On cible spécifiquement la carte de contact pour la descendre */
+.contact-card-fix {
+  margin-top: 120px !important;
+}
+
+/* La règle magique pour recentrer ta carte Contact sous la Navbar */
+.card.animate-fade-in:has(.contact-form) {
+  margin-top: 120px !important;
+  margin-bottom: 40px !important;
+}
+
+/* On force le container à descendre tout ce qu'il contient */
+.app-container {
+  padding-top: calc(var(--navbar-height) + 20px) !important; 
+  align-items: center !important; /* Pour être SÛR que rien ne part à gauche */
+}
+
+/* On s'assure que les cartes de jeu/contact/quitter ne remontent pas */
+.card, .game-layout-wrapper, .legal-card {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 0 !important; /* Le padding-top du container fait déjà le job */
 }

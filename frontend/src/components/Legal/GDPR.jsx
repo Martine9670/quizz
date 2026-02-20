@@ -1,7 +1,7 @@
 const GDPR = ({ onBack }) => {
   return (
     <div className="game-layout-wrapper"> {/* Pour éviter que ce soit sous la Navbar */}
-      <div className="card" style={{ maxWidth: '800px', textAlign: 'left' }}>
+      <div className="card">
         <h1 className="main-title">Confidentialité & RGPD</h1>
         
         <p>Conformément au RGPD, nous vous informons que :</p>
