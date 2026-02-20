@@ -89,19 +89,35 @@ html, body, #root {
   color: #f2f53e;
 }
 
-/* --- COMPOSANT CARD --- */
 .card {
   background: black;
   padding: 40px;
   border-radius: 40px;
   text-align: center;
-  width: 100%;     
-  max-width: 500px; 
+  
+  /* --- MODIFICATIONS ICI --- */
+  width: 80%;          /* On prend 90% au lieu de 100% pour laisser une marge */
+  max-width: 500px;    
+  box-sizing: border-box; /* Force le calcul (width = contenu + padding + bordures) */
+  /* ------------------------- */
+
   box-shadow: 0 30px 60px rgba(0,0,0,0.3);
   border: 8px solid rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 5;
   animation: float 4s ease-in-out infinite;
+  
+  /* Pour bien centrer sur mobile */
+  margin: 20px auto; 
+}
+
+/* Ajustement spécifique pour les petits écrans (téléphones) */
+@media (max-width: 480px) {
+  .card {
+    padding: 20px;       /* On réduit le padding interne pour gagner de la place */
+    border-width: 4px;   /* On affine un peu la bordure */
+    width: 95%;          /* On occupe un peu plus d'espace */
+  }
 }
 
 @keyframes float {
