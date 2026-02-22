@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Contact = ({ onBack }) => {
   const [status, setStatus] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, message } = e.target;
 
-    // Regex simple pour valider l'email (Critère C2.b)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email.value)) {
@@ -20,9 +20,24 @@ const Contact = ({ onBack }) => {
       return;
     }
 
-    // Ici on simule l'envoi
-    setStatus("Succès ! Votre message a été envoyé.");
-    e.target.reset();
+    try {
+      setStatus("Envoi en cours...");
+
+      // Requête vers Strapi
+      await axios.post('http://localhost:1337/api/messages', {
+        data: {
+          email: email.value,
+          contenu: message.value 
+        }
+      });
+
+      setStatus("Succès ! Votre message a été envoyé.");
+      e.target.reset();
+
+    } catch (error) {
+      console.error("Erreur Strapi:", error);
+      setStatus("Erreur lors de l'envoi. Vérifiez que Strapi est lancé.");
+    }
   };
 
   return (
@@ -45,7 +60,11 @@ const Contact = ({ onBack }) => {
           required
         ></textarea>
 
-        {status && <p className={status.includes("Succès") ? "status-success" : "error-message"}>{status}</p>}
+        {status && (
+          <p className={status.includes("Succès") ? "status-success" : "error-message"}>
+            {status}
+          </p>
+        )}
 
         <div className="button-group">
           <button type="submit" className="btn-primary">Envoyer</button>
