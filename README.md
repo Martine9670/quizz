@@ -91,4 +91,10 @@ Developed as part of the curriculum with a focus on professional software engine
 
 -----
 
+## 📁 Project Management
+The development of this project followed an Agile methodology. You can track the progress and task breakdown on my Trello board:
+👉 [View Trello Board](https://trello.com/invite/b/699ad0438f749a0b54728b15/ATTI08c2c24dbb22aa4671b31d90d2f8ec5386F415FE/quizzy)
+
+-----
+
 Author: Martine PINNA

@@ -8,7 +8,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 /* --- CONFIGURATION ESLINT --- */
 export default defineConfig([
   /* IGNORER LES FICHIERS DE BUILD */
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'dev-dist']),
   
   {
     /* FICHIERS CIBLÉS */
