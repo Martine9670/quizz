@@ -10,6 +10,7 @@ A vibrant, modern general knowledge quiz built with **React**, **Vite**, and **J
 - **Dynamic Database**: Fetches questions based on difficulty levels with a custom **Shuffle & Mapping** algorithm.
 - **Inclusive Design (Dyslexic Mode)**: A specialized accessibility toggle that adjusts typography and spacing across the entire application.
 - **Persistent Leaderboard**: Global "Hall of Fame" fetching the Top 5 scores in real-time.
+- **Real-time Feedback**: Système de formulaire de contact asynchrone utilisant Axios pour envoyer des messages directement en base de données Strapi.
 
 ## ⚖️ Navigation & Compliance
 
@@ -51,22 +52,23 @@ We migrated all technical logic from `App.jsx` to `src/services/api.js`.
    git clone <your-repository-url>
    cd quizz
 
-    Install dependencies
+2. **Install dependencies**
     Bash
 
-    # Install Frontend dependencies
+    # Frontend
     cd frontend
     npm install
+    npm install axios
 
-    # Install Backend dependencies
+    # Backend
     cd ../backend
     npm install
 
-    Backend Setup (Strapi)
+3.  **Backend Setup (Strapi)**
 
         Ensure Strapi is running on http://localhost:1337.
 
-        Collections: Create Questions and Scores collection types.
+        Collections: Create Questions, Scores, and Messages collection types.
 
         Permissions: Go to Settings > Roles > Public and enable:
 
@@ -74,9 +76,10 @@ We migrated all technical logic from `App.jsx` to `src/services/api.js`.
 
             Scores: create, find
 
-            Auth: register, callback
+            Messages: create (essential for the contact form)
 
-⚡ Quick Start (VS Code)
+            Auth: register, callback⚡ Quick Start (VS Code)
+
 
 This project includes a .vscode/launch.json configuration to save you time:
 
@@ -94,6 +97,10 @@ Developed as part of the curriculum with a focus on professional software engine
 ## 📁 Project Management
 The development of this project followed an Agile methodology. You can track the progress and task breakdown on my Trello board:
 👉 [View Trello Board](https://trello.com/invite/b/699ad0438f749a0b54728b15/ATTI08c2c24dbb22aa4671b31d90d2f8ec5386F415FE/quizzy)
+
+-----
+
+![Architecture Diagram](./diagramme.png)
 
 -----
 
