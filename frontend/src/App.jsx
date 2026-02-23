@@ -313,6 +313,7 @@ const resetQuizz = () => {
                   <Leaderboard historique={historique} />
                 </div>
               ) : !niveau ? (
+
 /* --- ÉCRAN DES NIVEAUX --- */
                 <div className="game-layout-wrapper">
                   <h1 className="welcome-player-title">
@@ -327,15 +328,22 @@ const resetQuizz = () => {
                   </div>
                 </div>
               ) : (
-                <QuestionCard                  
-                timeLeft={timeLeft}
-                  question={questionsDuNiveau[indexQuestion]?.q}
-                  reponse={reponse}
-                  setReponse={setReponse}
-                  validerReponse={validerReponse}
-                  terminerJeu={terminerJeu}
-                  score={score}
-                />
+                <div className="game-container" style={{ textAlign: 'center' }}>
+                  {/* COMPTEUR */}
+                  <div className="question-progress" style={{ marginBottom: '15px', fontWeight: 'bold', fontSize: '1.2rem', color: '#fff' }}>
+                    Question {indexQuestion + 1} / {questionsDuNiveau.length}
+                  </div>
+
+                  <QuestionCard                  
+                    timeLeft={timeLeft}
+                    question={questionsDuNiveau[indexQuestion]?.q}
+                    reponse={reponse}
+                    setReponse={setReponse}
+                    validerReponse={validerReponse}
+                    terminerJeu={terminerJeu}
+                    score={score}
+                  />
+                </div>
               )}
             </>
           )}
