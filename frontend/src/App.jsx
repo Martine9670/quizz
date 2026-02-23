@@ -329,7 +329,8 @@ const resetQuizz = () => {
                 </div>
               ) : (
                 <div className="game-container" style={{ textAlign: 'center' }}>
-                  <QuestionCard                  
+                  <QuestionCard 
+                  className="quizz-card"          
                     timeLeft={timeLeft}
                     question={questionsDuNiveau[indexQuestion]?.q}
                     reponse={reponse}

@@ -19,19 +19,13 @@ html, body, #root {
   margin: 0;
   background-color: #351b03fb;
   background-attachment: fixed;
-  font-family: 'Poppins', sans-serif; /* Police de secours */
+  font-family: 'Poppins', sans-serif;
 }
 
 /* --- LOGIQUE DYSLEXIQUE CIBLÉE --- */
-/* On ne force QUE quand la classe est présente sur le parent */
 .dyslexic-mode, 
 .dyslexic-mode * {
   font-family: 'OpenDyslexicRegular', sans-serif !important;
-}
-
-/* Cette classe va pousser le footer vers le bas */
-.game-layout, .auth-container, .card {
-  margin: auto; /* Centre l'élément dans l'espace restant */
 }
 
 /* --- LE CONTAINER PRINCIPAL --- */
@@ -45,6 +39,9 @@ html, body, #root {
   overflow-x: hidden;
   background: transparent;
   z-index: 1;
+  /* Utilisation du padding-top pour gérer la navbar sans forcer */
+  padding-top: calc(var(--navbar-height) + 20px);
+  align-items: center;
 }
 
 /* --- NAVBAR & SLOGAN --- */
@@ -53,9 +50,7 @@ html, body, #root {
   color: white;
 }
 
-/* --- DECORATIONS & CARTES --- */
-
-/* --- SYMBOLES DE FOND (DÉCOR) --- */
+/* --- SYMBOLES DE FOND --- */
 .bg-symbol {
   position: fixed;
   z-index: 0; 
@@ -66,66 +61,33 @@ html, body, #root {
   user-select: none;
 }
 
-.symbol-1 {
-  font-size: 20rem;
-  top: 10%;
-  left: 5%;
-  transform: rotate(-15deg);
-  color: #4ade80; 
-}
+.symbol-1 { font-size: 20rem; top: 10%; left: 5%; transform: rotate(-15deg); color: #4ade80; }
+.symbol-2 { font-size: 25rem; bottom: 5%; right: 5%; transform: rotate(15deg); color: #646cff; }
+.symbol-3 { font-size: 18rem; top: 55%; right: 60%; transform: rotate(10deg); color: #ff4d4d; }
+.symbol-4 { font-size: 18rem; bottom: 60%; right: 20%; transform: rotate(10deg); color: #f2f53e; }
 
-.symbol-2 {
-  font-size: 25rem;
-  bottom: 5%;
-  right: 5%;
-  transform: rotate(15deg);
-  color: #646cff; 
-}
-
-.symbol-3 {
-  font-size: 18rem;
-  top: 55%;
-  right: 60%;
-  transform: rotate(10deg);
-  color: #ff4d4d; 
-}
-
-.symbol-4 {
-  font-size: 18rem;
-  bottom: 60%;
-  right: 20%;
-  transform: rotate(10deg);
-  color: #f2f53e;
-}
-
+/* --- CARTES --- */
 .card {
   background: black;
   padding: 40px;
   border-radius: 40px;
   text-align: center;
-  
-  /* --- MODIFICATIONS ICI --- */
-  width: 80%;          /* On prend 90% au lieu de 100% pour laisser une marge */
+  width: 80%;
   max-width: 500px;    
-  box-sizing: border-box; /* Force le calcul (width = contenu + padding + bordures) */
-  /* ------------------------- */
-
+  box-sizing: border-box;
   box-shadow: 0 30px 60px rgba(0,0,0,0.3);
   border: 8px solid rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 5;
   animation: float 4s ease-in-out infinite;
-  
-  /* Pour bien centrer sur mobile */
   margin: 20px auto; 
 }
 
-/* Ajustement spécifique pour les petits écrans (téléphones) */
 @media (max-width: 480px) {
   .card {
-    padding: 20px;       /* On réduit le padding interne pour gagner de la place */
-    border-width: 4px;   /* On affine un peu la bordure */
-    width: 95%;          /* On occupe un peu plus d'espace */
+    padding: 20px;
+    border-width: 4px;
+    width: 95%;
   }
 }
 
@@ -145,10 +107,7 @@ html, body, #root {
   text-transform: uppercase;
   letter-spacing: 2px;
   text-align: center;
-  
-  /* On réinitialise les marges pour ne pas interférer */
   margin: 0 auto 60px auto; 
-
   display: block;
   overflow: hidden;
   white-space: nowrap;
@@ -187,221 +146,111 @@ html, body, #root {
   background: white; color: #1e293b;
 }
 
-/* --- AUTH TOGGLE --- */
 .toggle-auth {
-  color: #646cff;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 20px;
-  display: inline-block;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-  background: none;
-  border: none;
-  padding: 0;
+  color: #646cff; font-weight: 700; cursor: pointer; margin-top: 20px;
+  display: inline-block; transition: all 0.3s ease; font-size: 0.9rem;
+  background: none; border: none; padding: 0;
 }
 
 .toggle-auth:hover {
-  color: #4ade80 !important; /* Le !important ici assure que le hover gagne */
+  color: #4ade80;
   text-decoration: underline;
   transform: scale(1.05);
 }
 
-/* --- ACCESSIBILITÉ & OVERLAYS --- */
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-/* --- STYLE DES QUESTIONS --- */
 .question-text {
   font-family: 'Poppins', sans-serif;
   font-size: 1.4rem;
   font-weight: 700;
-  color: #f1dddd !important; /* Force le blanc pour la PWA */
+  color: #f1dddd; 
   margin-bottom: 25px;
   line-height: 1.4;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ombre pour détacher du fond */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   text-align: center;
   display: block;
 }
 
-/* --- AJUSTEMENT POUR LE TIMER --- */
 .timer-text {
-  color: #4ade80 !important; /* Vert fluo pour bien le voir */
+  color: #4ade80;
   font-family: 'Orbitron', sans-serif;
   font-weight: 900;
   font-size: 1.2rem;
 }
 
-/* --- EFFET HOVER BOUTON ENTRER --- */
+/* --- AUTH CONTAINER STYLES --- */
 .auth-container .btn-primary {
-  background-color: #8de7ac !important; /* Vert de base */
-  color: #000 !important; /* Texte noir pour le contraste */
-  transition: all 0.3s ease-in-out !important;
-  border: none !important;
+  background-color: #8de7ac;
+  color: #000;
+  transition: all 0.3s ease-in-out;
+  border: none;
 }
 
 .auth-container .btn-primary:hover {
-  background-color: #2cc880 !important; /* Un vert un peu plus sombre au survol */
-  transform: scale(1.05) translateY(-2px) !important; /* Il grossit et monte un peu */
-  box-shadow: 0 10px 20px rgba(74, 222, 128, 0.4) !important; /* Ombre portée verte */
-  cursor: pointer;
+  background-color: #2cc880;
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 10px 20px rgba(74, 222, 128, 0.4);
 }
 
-.auth-container .btn-primary:active {
-  transform: scale(0.98) !important; /* Effet d'enfoncement au clic */
-}
+.error-message { color: #ff4d4d; font-weight: bold; font-size: 0.9rem; margin-bottom: 15px; }
 
-/* --- MESSAGE ERREUR --- */
-.error-message {
-  color: #ff4d4d;
-  font-weight: bold;
-  font-size: 0.9rem;
-  margin-bottom: 15px;
-}
-
-/* --- FOOTER STYLE --- */
+/* --- FOOTER --- */
 .footer {
   background-color: rgba(0, 0, 0, 0.9);
   border-top: 1px solid #4ade80;
   padding: 15px 0;
-  width: 100%; /* Il prend toute la largeur sans marges négatives */
+  width: 100%;
   margin-top: auto; 
   z-index: 10;
 }
 
 .footer-content {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  max-width: 1200px;
-  margin: 0 auto;
-  color: white;
-  font-size: 0.8rem;
-}
-
-.footer-links {
-  display: flex;
-  gap: 15px;
+  display: flex; justify-content: space-around; align-items: center;
+  flex-wrap: wrap; max-width: 1200px; margin: 0 auto; color: white; font-size: 0.8rem;
 }
 
 .footer-btn {
-  background: none;
-  border: none;
-  color: #4ade80;
-  cursor: pointer;
-  font-size: 0.8rem;
-  text-decoration: underline;
+  background: none; border: none; color: #4ade80; cursor: pointer;
+  font-size: 0.8rem; text-decoration: underline;
 }
 
-.footer-btn:hover {
-  color: white;
-}
+/* --- CONTACT & LEGAL --- */
+.textarea-field { height: 150px; border-radius: 20px; resize: none; padding-top: 15px; }
 
-/* --- CONTACT STYLE --- */
-.textarea-field {
-  height: 150px;
-  border-radius: 20px !important;
-  resize: none;
-  padding-top: 15px;
-}
-
-.status-success {
-  color: #4ade80;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-
-/* --- LEGAL STYLE --- */
 .legal-card {
   max-width: 700px;
   text-align: left;
-  /* On force une marge en haut pour passer sous la Navbar (70px + 20px de marge) */
-  margin-top: 100px !important; 
-  margin-bottom: 40px;
+  margin: 40px auto; 
 }
 
-/* On sépare bien le scroll du texte du reste */
-.legal-content {
-  margin: 20px 0;
-  max-height: 400px;
-  overflow-y: auto; 
-  padding-right: 10px;
-  /* Assure-toi que la couleur est bien héritée ici */
-  color: #ccc;
-}
+.legal-content { margin: 20px 0; max-height: 400px; overflow-y: auto; padding-right: 10px; color: #ccc; }
+.legal-content p { color: #ccc; line-height: 1.6; margin-bottom: 15px; }
 
-/* Nettoyage pour éviter que le scroll ne s'applique à chaque paragraphe */
-.legal-content p, 
-.legal-content span, 
-.legal-content li {
-  color: #ccc;
-  line-height: 1.6;
-  margin-bottom: 15px;
-  /* On retire l'overflow d'ici pour ne le garder que sur le parent .legal-content */
-  overflow: visible; 
-}
-
-.legal-paragraph {
-  color: #ccc;
-  line-height: 1.6;
-  margin-bottom: 15px;
-}
-
-/* --- WELCOME LEVEL STYLE --- */
+/* --- GAME SPECIFIC --- */
 .game-layout-wrapper {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80px;
 }
 
-.welcome-player-title {
-  font-size: 2.5rem;
-  color: #ccc;
-  margin-bottom: 2rem;
-  text-align: center;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+.welcome-player-title { font-size: 2.5rem; color: #ccc; margin-bottom: 2rem; text-align: center; }
+.welcome-player-title span { color: rgba(235, 74, 74, 0.938); text-transform: capitalize; }
+
+/* --- GESTION DES MARGES DE CARTES --- */
+/* On utilise une classe de wrapper pour descendre les cartes spécifiques sans !important */
+.contact-card-fix, 
+.card:has(.contact-form),
+.legal-card {
+  margin-top: 50px;
 }
 
-.welcome-player-title span {
-  color: rgba(235, 74, 74, 0.938); 
-  text-transform: capitalize;
-}
-
-/* On cible spécifiquement la carte de contact pour la descendre */
-.contact-card-fix {
-  margin-top: 120px !important;
-}
-
-/* Recentrer la carte Contact sous la Navbar */
-.card.animate-fade-in:has(.contact-form) {
-  margin-top: 120px !important;
-  margin-bottom: 40px !important;
-}
-
-/* On force le container à descendre tout ce qu'il contient */
-.app-container {
-  padding-top: calc(var(--navbar-height) + 20px) !important; 
-  align-items: center !important; /* Pour être SÛR que rien ne part à gauche */
-}
-
-/* On s'assure que les cartes de jeu/contact/quitter ne remontent pas */
-.card, .game-layout-wrapper, .legal-card {
-  margin-left: auto !important;
-  margin-right: auto !important;
-  margin-top: 0 !important; /* Le padding-top du container fait déjà le job */
+/* On laisse les cartes de jeu (.quizz-card) libres de leurs mouvements pour Game.css */
+.card, .game-layout-wrapper {
+  margin-left: auto;
+  margin-right: auto;
 }
