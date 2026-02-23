@@ -329,11 +329,6 @@ const resetQuizz = () => {
                 </div>
               ) : (
                 <div className="game-container" style={{ textAlign: 'center' }}>
-                  {/* COMPTEUR */}
-                  <div className="question-progress" style={{ marginBottom: '15px', fontWeight: 'bold', fontSize: '1.2rem', color: '#fff' }}>
-                    Question {indexQuestion + 1} / {questionsDuNiveau.length}
-                  </div>
-
                   <QuestionCard                  
                     timeLeft={timeLeft}
                     question={questionsDuNiveau[indexQuestion]?.q}
@@ -343,6 +338,11 @@ const resetQuizz = () => {
                     terminerJeu={terminerJeu}
                     score={score}
                   />
+{/* COMPTEUR */}
+                <div className="question-progress">
+                  Question <span>{indexQuestion + 1}</span> / {questionsDuNiveau.length}
+                </div>
+
                 </div>
               )}
             </>

@@ -98,15 +98,15 @@
   text-align: center;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ffffff; /* Ajuste selon ton fond */
-  background: rgba(241, 77, 77, 0.966);
+  color: #f8e7e7;
+  background:#f87171;
   padding: 5px 15px;
   border-radius: 20px;
   width: fit-content;
   margin: 0 auto 15px auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 4px solid rgba(0, 0, 0, 0.1);
 }
 
 .question-progress span {
-  color: #ffd700; /* Une couleur dorée pour l'index actuel */
+  color:rgba(66, 54, 54, 0.966);
 }
