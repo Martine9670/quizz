@@ -242,7 +242,7 @@ html, body, #root {
 .welcome-player-title span { color: rgba(235, 74, 74, 0.938); text-transform: capitalize; }
 
 /* --- GESTION DES MARGES DE CARTES --- */
-/* On utilise une classe de wrapper pour descendre les cartes spécifiques sans !important */
+/* On utilise une classe de wrapper pour descendre les cartes spécifiques */
 .contact-card-fix, 
 .card:has(.contact-form),
 .legal-card {

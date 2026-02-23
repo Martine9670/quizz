@@ -43,7 +43,7 @@ const Contact = ({ onBack }) => {
   return (
     <div className="card animate-fade-in contact-card-fix">
       <h2 className="main-title">Contactez-nous</h2>
-      <p className="subtitle">Une question ? Un bug ? Dis-le nous !</p>
+      <p className="subtitle">Une question ? Un bug ? Un encouragement ? N'hésitez pas à nous envoyer un message !</p>
 
       <form onSubmit={handleSubmit} className="contact-form">
         <input 
