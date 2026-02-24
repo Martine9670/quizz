@@ -254,3 +254,15 @@ html, body, #root {
   margin-left: auto;
   margin-right: auto;
 }
+
+.legal-notice-simple {
+  font-size: 0.7rem; /* Très petit mais lisible */
+  color: rgba(255, 255, 255, 0.925); /* Très discret sur fond noir */
+  margin-top: 12px;
+  text-align: center;
+  line-height: 1.2;
+  font-family: 'Poppins', sans-serif;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}

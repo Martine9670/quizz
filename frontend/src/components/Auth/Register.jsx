@@ -26,6 +26,9 @@ const Register = ({ handleRegister, setIsRegistering, authError }) => {
         )}
 
         <button type="submit" className="btn-primary">CRÉER MON COMPTE</button>
+        <p className="legal-notice-simple">
+          En entrant, vous acceptez nos conditions et notre politique de confidentialité.
+        </p>
       </form>
 
       {/* --- LIEN DE BASCULE VERS CONNEXION --- */}

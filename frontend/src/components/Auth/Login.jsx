@@ -31,6 +31,9 @@ const Login = ({ handleLogin, setIsRegistering, authError }) => {
         <button type="submit" className="btn-primary" aria-label="Se connecter au jeu">
           ENTRER
         </button>
+        <p className="legal-notice-simple">
+          En entrant, vous acceptez nos conditions et notre politique de confidentialité.
+        </p>
       </form>
 
       {/* --- LIEN DE BASCULE VERS INSCRIPTION --- */}
