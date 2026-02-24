@@ -29,6 +29,34 @@ import './styles/Navbar.css';
 import './styles/Game.css';
 import './styles/Leaderboard.css';
 
+// 1. Place la fonction tout en haut, après tes imports
+const getBadgeData = (score) => {
+  if (score >= 80) return { label: "Légende", icon: "👑", class: "badge-legende" };
+  if (score >= 60) return { label: "Expert", icon: "🏆", class: "badge-expert" };
+  if (score >= 40) return { label: "Guerrier", icon: "⚔️", class: "badge-guerrier" };
+  if (score >= 20) return { label: "Apprenti", icon: "🛡️", class: "badge-apprenti" };
+  return { label: "Novice", icon: "🐣", class: "badge-novice" };
+};
+
+const Home = ({ userStats }) => {
+  // 2. Calcule les données du badge ici
+  const badge = getBadgeData(userStats?.total_points || 0);
+
+  return (
+    <div className="game-layout-wrapper">
+      <h1 className="welcome-player-title">
+        Bienvenue, <span>{userStats?.username}</span>
+      </h1>
+      
+      {/* 3. Utilise la classe dynamique ici au lieu du style inline */}
+      <div className={`badge-container ${badge.class}`}>
+        <span className="badge-icon">{badge.icon}</span>
+        <span className="badge-label">{badge.label}</span>
+      </div>
+    </div>
+  );
+};
+
 /* --- INITIALISATION DES ASSETS AUDIO --- */
 const successSound = new Audio('/sounds/correct.mp3');
 const errorSound = new Audio('/sounds/wrong.mp3');
@@ -316,18 +344,32 @@ const resetQuizz = () => {
 
 /* --- ÉCRAN DES NIVEAUX --- */
                 <div className="game-layout-wrapper">
-                  <h1 className="welcome-player-title">
-                    🚀 À TOI DE JOUER <span>{user}</span> ! 
-                  </h1>
-                  
-                  <div className="game-layout">
-                    <LevelSelector handleDemarrer={handleDemarrer} user={user} />
-                    <aside className="sidebar-leaderboard">
-                      <Leaderboard historique={historique} />
-                    </aside>
-                  </div>
-                </div>
-              ) : (
+                  {/* On calcule le badge juste ici, en utilisant ton score actuel */}
+                  {(() => {
+                    const badge = getBadgeData(score); // On utilise le score pour tester
+                    return (
+                      <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                        <h1 className="welcome-player-title">
+                          🚀 À TOI DE JOUER <span>{user}</span> ! 
+                        </h1>
+                        {/* On affiche le badge juste sous le titre */}
+                        <div className={`badge-container ${badge.class}`}>
+                          <span className="badge-icon">{badge.icon}</span>
+                          <span className="badge-label">{badge.label}</span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+  
+                      <div className="game-layout">
+                        <LevelSelector handleDemarrer={handleDemarrer} user={user} />
+                        <aside className="sidebar-leaderboard">
+                          <Leaderboard historique={historique} />
+                        </aside>
+                      </div>
+                    </div>              
+                  ) : (
+                    
                 <div className="game-container" style={{ textAlign: 'center' }}>
                   <QuestionCard 
                   className="quizz-card"          
