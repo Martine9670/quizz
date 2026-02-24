@@ -3,7 +3,7 @@ const GDPR = ({ onBack }) => {
     <div className="game-layout-wrapper"> {/* Pour éviter que ce soit sous la Navbar */}
       <div className="card">
         <h1 className="main-title">Confidentialité & RGPD</h1>
-        
+      <div className="legal-content">Les données personnelles collectées sont protégées conformément au RGPD.
         <p>Conformément au RGPD, nous vous informons que :</p>
         
         <ul style={{ lineHeight: '2' }}>
@@ -12,7 +12,7 @@ const GDPR = ({ onBack }) => {
           <li><strong>Conservation :</strong> Vos données sont conservées tant que votre compte est actif.</li>
           <li><strong>Vos droits :</strong> Vous pouvez demander la suppression de vos données via l'administration Strapi.</li>
         </ul>
-
+      </div>
         <button 
           onClick={onBack} 
           className="btn-primary" 

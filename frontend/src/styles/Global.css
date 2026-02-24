@@ -225,10 +225,30 @@ html, body, #root {
   max-width: 700px;
   text-align: left;
   margin: 40px auto; 
+  /* Pas besoin de color ici, .card s'en occupe */
 }
 
-.legal-content { margin: 20px 0; max-height: 400px; overflow-y: auto; padding-right: 10px; color: #ccc; }
-.legal-content p { color: #ccc; line-height: 1.6; margin-bottom: 15px; }
+.legal-content { 
+  margin: 20px 0; 
+  max-height: 400px; 
+  overflow-y: auto; 
+  padding-right: 10px; 
+  color: #ccc;
+}
+
+.legal-content ul {
+  list-style-position: inside; /* Les puces restent dans le bloc de texte */
+  padding-left: 0;             /* On enlève le décalage forcé par le navigateur */
+  margin-left: 0;
+  text-align: left;            /* On aligne le texte à gauche */
+}
+
+.legal-content li {
+  text-align: left;
+  list-style-type: disc;       /* On s'assure que les puces sont bien là */
+  margin-bottom: 10px;         /* Un peu d'espace entre les points */
+  color: inherit;
+}
 
 /* --- GAME SPECIFIC --- */
 .game-layout-wrapper {
