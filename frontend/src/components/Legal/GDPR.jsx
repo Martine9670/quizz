@@ -4,7 +4,7 @@ const GDPR = ({ onBack }) => {
       <div className="card">
         <h1 className="main-title">Confidentialité & RGPD</h1>
       <div className="legal-content">Les données personnelles collectées sont protégées conformément au RGPD.
-        <p>Conformément au RGPD, nous vous informons que :</p>
+        <p>Pour votre information :</p>
         
         <ul style={{ lineHeight: '2' }}>
           <li><strong>Données collectées :</strong> Pseudo et Email (uniquement pour le compte utilisateur).</li>
