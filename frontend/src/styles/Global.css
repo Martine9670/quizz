@@ -17,7 +17,7 @@
 html, body, #root {
   min-height: 100vh;
   margin: 0;
-  background-color: #351b03fb;
+  background: radial-gradient(circle at 50% 50%, #6d28d9 0%, #310e5d 30%, #05010d 100%);
   background-attachment: fixed;
   font-family: 'Poppins', sans-serif;
 }
@@ -75,8 +75,8 @@ html, body, #root {
   width: 80%;
   max-width: 500px;    
   box-sizing: border-box;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-  border: 8px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 15px rgba(203, 99, 231, 0.4);
+  border: 4px solid rgb(203, 99, 231);
   position: relative;
   z-index: 5;
   animation: float 4s ease-in-out infinite;
