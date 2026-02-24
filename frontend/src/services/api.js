@@ -46,3 +46,19 @@ export const saveScore = async (pseudo, points, total, difficulte) => {
   });
   return await res.json();
 };
+
+/* --- RÉCUPÉRER LE TOTAL DES POINTS D'UN JOUEUR --- */
+export const fetchUserTotalPoints = async (pseudo) => {
+  const res = await fetch(`${API_URL}/scores?filters[pseudo][$eq]=${pseudo}&pagination[limit]=100`);
+  const result = await res.json();
+  
+  if (result.data?.length > 0) {
+    // On additionne tous les points de chaque partie trouvée
+    const total = result.data.reduce((sum, item) => {
+      const p = item.attributes ? item.attributes.points : item.points;
+      return sum + p;
+    }, 0);
+    return total;
+  }
+  return 0;
+};

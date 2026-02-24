@@ -10,7 +10,7 @@ import Footer from './components/Layout/Footer';
 // Composants - Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
-import { postRegister, fetchQuestions, fetchLeaderboard, saveScore } from './services/api';
+import { postRegister, fetchQuestions, fetchLeaderboard, saveScore, fetchUserTotalPoints } from './services/api';
 
 // Composants - Game
 import LevelSelector from './components/Game/LevelSelector';
@@ -71,6 +71,7 @@ function App() {
   const [isDyslexic, setIsDyslexic] = useState(false);
   const [activePage, setActivePage] = useState("game"); // "game", "contact", "cgu", ou "mentions"
   const [authError, setAuthError] = useState("");
+  const [totalPoints, setTotalPoints] = useState(0);
 
   /* --- ÉTATS (STATES) - LOGIQUE DE JEU --- */
   const [niveau, setNiveau] = useState(null);
@@ -100,6 +101,7 @@ function App() {
   const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
     try {
       await saveScore(user, finalScore, questionsDuNiveau.length, currentLevel);
+      setTotalPoints(prev => prev + finalScore);
       chargerScores();
     } catch (err) { 
       console.error("Erreur enregistrement:", err); 
@@ -127,15 +129,26 @@ function App() {
     }
   };
 
-  const handleLogin = (e) => {
+  // On ajoute "async" devant (e)
+  const handleLogin = async (e) => { 
     e.preventDefault();
     setAuthError("");
     const name = e.target.username.value.trim();
     const pseudoRegex = /^[a-zA-Z0-9]{3,15}$/;
+    
     if (!pseudoRegex.test(name)) {
       setAuthError("Pseudo invalide : 3 à 15 caractères.");
       return;
     }
+
+    // AJOUTE CE BLOC ICI pour charger les points au login
+    try {
+      const points = await fetchUserTotalPoints(name);
+      setTotalPoints(points);
+    } catch (err) {
+      console.error("Erreur points:", err);
+    }
+
     localStorage.setItem("quizzUser", name);
     setUser(name);
     setIsLoggedIn(true);
@@ -266,13 +279,24 @@ const resetQuizz = () => {
     };
   }, []);
 
-  // Chargement initial des scores
+// Chargement initial des scores et des points de l'utilisateur
   useEffect(() => {
-    const initScores = async () => {
+    const initAppData = async () => {
+      // 1. On charge le classement (ce que tu faisais déjà)
       await chargerScores();
+      
+      // 2. Si un utilisateur est connecté, on charge son score total pour le badge
+      if (user) {
+        try {
+          const points = await fetchUserTotalPoints(user);
+          setTotalPoints(points);
+        } catch (err) {
+          console.error("Erreur chargement points user:", err);
+        }
+      }
     };
-    initScores();
-  }, [chargerScores]);
+    initAppData();
+  }, [chargerScores, user]); // On ajoute user ici pour que ça se relance si l'utilisateur change
 
   // Déclenchement des confettis en cas de victoire parfaite
   useEffect(() => {
@@ -346,7 +370,7 @@ const resetQuizz = () => {
                 <div className="game-layout-wrapper">
                   {/* On calcule le badge juste ici, en utilisant ton score actuel */}
                   {(() => {
-                    const badge = getBadgeData(score); // On utilise le score pour tester
+                    const badge = getBadgeData(totalPoints); // On utilise le score pour tester
                     return (
                       <div style={{ textAlign: 'center', marginBottom: '10px' }}>
                         <h1 className="welcome-player-title">
@@ -369,7 +393,7 @@ const resetQuizz = () => {
                       </div>
                     </div>              
                   ) : (
-                    
+
                 <div className="game-container" style={{ textAlign: 'center' }}>
                   <QuestionCard 
                   className="quizz-card"          
