@@ -98,9 +98,9 @@ We migrated all technical logic from App.jsx to src/services/api.js.
 
 If the database is empty, an automation script is provided to seed the questions:
 
-    Start Strapi (npm run develop).
+    Start Strapi (cd backend && npm run develop).
 
-    Open another terminal in the backend directory.
+    Open another terminal at the root of the project.
 
     Run the import script:
     Bash
