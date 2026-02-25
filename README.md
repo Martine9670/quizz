@@ -80,6 +80,14 @@ We migrated all technical logic from `App.jsx` to `src/services/api.js`.
 
             Auth: register, callback⚡ Quick Start (VS Code)
 
+### 🔄 Data Import (Optional)
+If the database is empty, an automation script is provided to seed the questions:
+1. Start Strapi (`npm run develop`).
+2. Open another terminal in the `backend` directory.
+3. Run the import script:
+   ```bash
+   node import_questions.js
+
 
 This project includes a .vscode/launch.json configuration to save you time:
 
