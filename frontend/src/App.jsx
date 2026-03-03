@@ -31,6 +31,7 @@ import './styles/Leaderboard.css';
 
 // 1. Place la fonction tout en haut, après tes imports
 const getBadgeData = (score) => {
+  if (score >= 100) return { label: "LE GOAT", icon: "🐐", class: "badge-goat" };
   if (score >= 80) return { label: "Légende", icon: "👑", class: "badge-legende" };
   if (score >= 60) return { label: "Expert", icon: "🏆", class: "badge-expert" };
   if (score >= 40) return { label: "Guerrier", icon: "⚔️", class: "badge-guerrier" };
