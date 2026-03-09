@@ -16,6 +16,9 @@ import { postRegister, postLogin, fetchQuestions, fetchLeaderboard, saveScore, f
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
 
+// Composant LandingPage (TON COMPOSANT)
+import LandingPage from "./components/Layout/LandingPage";
+
 // Composants - Legal
 import Contact from './components/Legal/Contact';
 import LegalText from './components/Legal/LegalText';
@@ -28,6 +31,7 @@ import './styles/Global.css';
 import './styles/Navbar.css';
 import './styles/Game.css';
 import './styles/Leaderboard.css';
+import './styles/LandingPage.css';
 
 // 1. Place la fonction tout en haut, après tes imports
 const getBadgeData = (score) => {
@@ -73,6 +77,7 @@ function App() {
   const [activePage, setActivePage] = useState("game"); // "game", "contact", "cgu", ou "mentions"
   const [authError, setAuthError] = useState("");
   const [totalPoints, setTotalPoints] = useState(0);
+  const [showLanding, setShowLanding] = useState(!localStorage.getItem("quizzUser"));
 
   /* --- ÉTATS (STATES) - LOGIQUE DE JEU --- */
   const [niveau, setNiveau] = useState(null);
@@ -131,6 +136,7 @@ function App() {
         localStorage.setItem("token", data.jwt);
         setUser(data.user.username);
         setIsLoggedIn(true);
+        setShowLanding(false); // On cache la landing après inscription
       } else { 
         setAuthError(data.error.message); 
       }
@@ -161,6 +167,7 @@ function App() {
         
         setUser(data.user.username);
         setIsLoggedIn(true);
+        setShowLanding(false); // On cache la landing après connexion
 
         const points = await fetchUserTotalPoints(data.user.username);
         setTotalPoints(points);
@@ -181,6 +188,7 @@ function App() {
     setIsLoggedIn(false);
     setNiveau(null);
     setTermine(false);
+    setShowLanding(true); // On réaffiche la landing au logout
     bgMusicRef.current.play().catch(() => console.log("Musique bloquée"));
   };
 
@@ -271,6 +279,7 @@ const resetQuizz = () => {
     // 4. Retour à la page de garde
     setActivePage("game");
     setIsRegistering(false); 
+    setShowLanding(true); // On s'assure de revenir à la landing si on reset tout
     
     chargerScores();
   };
@@ -345,111 +354,88 @@ const resetQuizz = () => {
       <div className="bg-symbol symbol-2">!</div>
       <div className="bg-symbol symbol-3">+</div>
       <div className="bg-symbol symbol-4">=</div>
+      
       {/* Barre de navigation haute */}
       <Navbar {...{
           isLoggedIn, user, niveau, termine, 
-          resetQuizz: () => { resetQuizz(); setActivePage("game"); }, // On s'assure de revenir au jeu
-          handleLogout, setIsRegistering, isRegistering, isDyslexic, setIsDyslexic 
+          resetQuizz: () => { resetQuizz(); setActivePage("game"); }, 
+          handleLogout, 
+          // FIX : Si on clique sur s'inscrire dans la navbar, on masque la landing
+          setIsRegistering: (val) => { setShowLanding(false); setIsRegistering(val); }, 
+          isRegistering, isDyslexic, setIsDyslexic 
       }} />
 
-      {/* SI ON EST SUR LA PAGE DU JEU */}
       {activePage === "game" && (
         <>
-          {!isLoggedIn ? (
-            <div className="game-layout">
-              <div className="auth-container">
-                <h1 className="welcome-text">Bienvenue sur Quizzy !</h1>
-                <div className="card">
-                  {isRegistering ? (
-                    <Register handleRegister={handleRegister} setIsRegistering={setIsRegistering} authError={authError} />
-                  ) : (
-                    <Login handleLogin={handleLogin} setIsRegistering={setIsRegistering} authError={authError} />
-                  )}
-                </div>
-              </div>
-              <aside className="sidebar-leaderboard">
-                <Leaderboard historique={historique} />
-              </aside>
-            </div>
+          {showLanding && !isLoggedIn ? (
+            /* --- APPEL DE TON COMPOSANT LANDINGPAGE --- */
+            <LandingPage 
+               onStart={() => setShowLanding(false)} 
+               historique={historique} 
+            />
           ) : (
-            <>
-              {termine ? (
-                <div className="card">
-                  <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "À BIENTÔT !"}</h2>
-                  <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
-                  <button onClick={handleRejouer} className="btn-primary">REJOUER</button>
-                  <Leaderboard historique={historique} />
+            <div className="game-layout">
+              {!isLoggedIn ? (
+                <div className="auth-container">
+                  <h1 className="welcome-text">Identification</h1>
+                  <div className="card">
+                    {isRegistering ? (
+                      <Register handleRegister={handleRegister} setIsRegistering={setIsRegistering} authError={authError} />
+                    ) : (
+                      <Login handleLogin={handleLogin} setIsRegistering={setIsRegistering} authError={authError} />
+                    )}
+                  </div>
                 </div>
-              ) : !niveau ? (
-
-/* --- ÉCRAN DES NIVEAUX --- */
-                <div className="game-layout-wrapper">
-                  {/* On calcule le badge juste ici, en utilisant ton score actuel */}
-                  {(() => {
-                    const badge = getBadgeData(totalPoints); // On utilise le score pour tester
-                    return (
-                      <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-                        <h1 className="welcome-player-title">
-                          🚀 À TOI DE JOUER <span>{user}</span> ! 
-                        </h1>
-                        {/* On affiche le badge juste sous le titre */}
-                        <div className={`badge-container ${badge.class}`}>
-                          <span className="badge-icon">{badge.icon}</span>
-                          <span className="badge-label">{badge.label}</span>
-                        </div>
-                      </div>
-                    );
-                  })()}
-  
-                      <div className="game-layout">
-                        <LevelSelector handleDemarrer={handleDemarrer} user={user} />
-                        <aside className="sidebar-leaderboard">
-                          <Leaderboard historique={historique} />
-                        </aside>
-                      </div>
+              ) : (
+                <div className="game-content-area" style={{ flex: 1 }}>
+                  {termine ? (
+                    <div className="card">
+                      <h2 className="main-title">{score === questionsDuNiveau.length ? "👑 PARFAIT !" : "VOICI TON RÉSULTAT"}</h2>
+                      <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
+                      <button onClick={handleRejouer} className="btn-primary">REJOUER</button>
+                    </div>
+                  ) : !niveau ? (
+                    <div className="game-layout-wrapper">
+                      {(() => {
+                        const badge = getBadgeData(totalPoints);
+                        return (
+                          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                            <h1 className="welcome-player-title">🚀 À TOI DE JOUER <span>{user}</span> !</h1>
+                            <div className={`badge-container ${badge.class}`}>
+                              <span className="badge-icon">{badge.icon}</span>
+                              <span className="badge-label">{badge.label}</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                      <LevelSelector handleDemarrer={handleDemarrer} user={user} />
                     </div>              
                   ) : (
-
-                <div className="game-container" style={{ textAlign: 'center' }}>
-                  <QuestionCard 
-                  className="quizz-card"          
-                    timeLeft={timeLeft}
-                    question={questionsDuNiveau[indexQuestion]?.q}
-                    reponse={reponse}
-                    setReponse={setReponse}
-                    validerReponse={validerReponse}
-                    terminerJeu={terminerJeu}
-                    score={score}
-                  />
-{/* COMPTEUR */}
-                <div className="question-progress">
-                  Question <span>{indexQuestion + 1}</span> / {questionsDuNiveau.length}
-                </div>
-
+                    <div className="game-container" style={{ textAlign: 'center' }}>
+                      <QuestionCard timeLeft={timeLeft} question={questionsDuNiveau[indexQuestion]?.q} reponse={reponse} setReponse={setReponse} validerReponse={validerReponse} terminerJeu={terminerJeu} score={score} />
+                      <div className="question-progress">Question <span>{indexQuestion + 1}</span> / {questionsDuNiveau.length}</div>
+                    </div>
+                  )}
                 </div>
               )}
-            </>
+
+              {/* Leaderboard affiché uniquement si connecté ou en mode auth */}
+              {(isLoggedIn || (!isLoggedIn && !showLanding)) && (
+                <aside className="sidebar-leaderboard">
+                  <Leaderboard historique={historique} />
+                </aside>
+              )}
+            </div>
           )}
         </>
       )}
 
-{/* --- FIN DE LA LOGIQUE DU JEU --- */}
-      
-      {/* PAGE : CONTACT */}
       {activePage === "contact" && <Contact onBack={() => setActivePage("game")} />}
-
-      {/* PAGE : CGU */}
       {activePage === "cgu" && <CGU onBack={() => setActivePage("game")} />}
-
-      {/* PAGE : MENTIONS LÉGALES */}
       {activePage === "mentions" && <Mentions onBack={() => setActivePage("game")} />}
-      
-      {/* PAGE : RGPD */}
       {activePage === "gdpr" && <GDPR onBack={() => setActivePage("game")} />}
 
-      {/* FOOTER (Toujours visible) */}
       <Footer onNavigate={setActivePage} />
-
     </main>
   );
 }

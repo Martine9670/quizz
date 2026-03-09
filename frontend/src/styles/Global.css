@@ -126,7 +126,8 @@ html, body, #root {
 
 /* --- BOUTONS & INPUTS --- */
 .btn-primary, .btn-abandon {
-  width: 220px; 
+  width: 100%; 
+  max-width: 220px;
   height: 50px; 
   border-radius: 50px;
   font-size: 0.85rem; 
