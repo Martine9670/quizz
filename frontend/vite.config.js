@@ -4,27 +4,20 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 /* --- VITE CONFIGURATION --- */
-// https://vitejs.dev/config/
 export default defineConfig({
-  /* --- PLUGINS --- */
   plugins: [
     react(),
     
-    /* --- PWA CONFIGURATION --- */
     VitePWA({
-      /* Comportement de la mise à jour (automatique) */
       registerType: 'autoUpdate',
-      
-      /* Options pour le développement */
       devOptions: {
         enabled: true 
       },
-      
-      /* Fichiers statiques à inclure dans le cache du Service Worker */
       includeAssets: ['favicon.ico', 'robots.txt', 'sounds/*.mp3'], 
       
       /* --- MANIFEST PWA --- */
       manifest: {
+        id: '/', // <-- Pour identifier l'app de manière unique
         name: 'Quizzy Pro',
         short_name: 'Quizzy',
         description: 'Le meilleur quizz pour tester vos connaissances',
@@ -32,7 +25,6 @@ export default defineConfig({
         background_color: '#000000',
         display: 'standalone',
         
-        /* Icônes de l'application (Android / iOS / Desktop) */
         icons: [
           {
             src: 'https://cdn-icons-png.flaticon.com/512/808/808439.png',
@@ -42,9 +34,25 @@ export default defineConfig({
           },
           {
             src: 'https://cdn-icons-png.flaticon.com/512/808/808439.png', 
-            sizes: '192x192',
+            sizes: '512x512',
             type: 'image/png',
             purpose: 'any'
+          }
+        ],
+        /* --- SCREENSHOTS --- */
+        screenshots: [
+          {
+            src: 'screenshot-desktop.png', 
+            sizes: '1854x1048',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Quizzy sur ordinateur'
+          },
+          {
+            src: 'screenshot-mobile.png', 
+            sizes: '712x1080',
+            type: 'image/png',
+            label: 'Quizzy sur mobile'
           }
         ]
       }
