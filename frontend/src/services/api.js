@@ -12,6 +12,16 @@ export const postRegister = async (username, email, password) => {
   return await res.json();
 };
 
+/* --- CONNEXION (LOGIN) --- */
+export const postLogin = async (identifier, password) => {
+  const res = await fetch(`${API_URL}/auth/local`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ identifier, password }), // Strapi utilise 'identifier' (pseudo ou email)
+  });
+  return await res.json();
+};
+
 /* --- GESTION DES QUESTIONS --- */
 export const fetchQuestions = async (niveau) => {
   const res = await fetch(`${API_URL}/questions?filters[niveau][$eq]=${niveau.toLowerCase()}&pagination[limit]=1000`);

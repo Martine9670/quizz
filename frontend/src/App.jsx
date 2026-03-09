@@ -10,7 +10,7 @@ import Footer from './components/Layout/Footer';
 // Composants - Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
-import { postRegister, fetchQuestions, fetchLeaderboard, saveScore, fetchUserTotalPoints } from './services/api';
+import { postRegister, postLogin, fetchQuestions, fetchLeaderboard, saveScore, fetchUserTotalPoints } from './services/api';
 
 // Composants - Game
 import LevelSelector from './components/Game/LevelSelector';
@@ -109,7 +109,7 @@ function App() {
     }
   }, [user, questionsDuNiveau.length, chargerScores]);
 
-  /* --- GESTIONNAIRES D'ÉVÉNEMENTS - AUTH --- */
+/* --- GESTIONNAIRES D'ÉVÉNEMENTS - AUTH --- */
   const handleRegister = async (e) => {
     e.preventDefault();
     setAuthError("");
@@ -130,29 +130,37 @@ function App() {
     }
   };
 
-  // On ajoute "async" devant (e)
   const handleLogin = async (e) => { 
     e.preventDefault();
     setAuthError("");
-    const name = e.target.username.value.trim();
-    const pseudoRegex = /^[a-zA-Z0-9]{3,15}$/;
     
-    if (!pseudoRegex.test(name)) {
-      setAuthError("Pseudo invalide : 3 à 15 caractères.");
+    const identifier = e.target.username.value.trim();
+    const password = e.target.password.value; 
+
+    if (!identifier || !password) {
+      setAuthError("Pseudo et mot de passe requis.");
       return;
     }
 
-    // Charger les points au login
     try {
-      const points = await fetchUserTotalPoints(name);
-      setTotalPoints(points);
-    } catch (err) {
-      console.error("Erreur points:", err);
-    }
+      const data = await postLogin(identifier, password);
+      
+      if (data.jwt) {
+        localStorage.setItem("token", data.jwt);
+        localStorage.setItem("quizzUser", data.user.username);
+        
+        setUser(data.user.username);
+        setIsLoggedIn(true);
 
-    localStorage.setItem("quizzUser", name);
-    setUser(name);
-    setIsLoggedIn(true);
+        const points = await fetchUserTotalPoints(data.user.username);
+        setTotalPoints(points);
+      } else {
+        setAuthError("Pseudo ou mot de passe incorrect.");
+      }
+    } catch (err) {
+      setAuthError("Erreur de connexion au serveur.");
+      console.error("Erreur login:", err);
+    }
   };
 
   const handleLogout = () => {
@@ -163,12 +171,9 @@ function App() {
     setIsLoggedIn(false);
     setNiveau(null);
     setTermine(false);
-    // Relance la musique d'ambiance après déconnexion
-    bgMusicRef.current.play().catch(() => {
-      console.log("Lecture bloquée au logout");
-    });
-  }
-
+    bgMusicRef.current.play().catch(() => console.log("Musique bloquée"));
+  };
+  
   /* --- GESTIONNAIRES D'ÉVÉNEMENTS - GAME LOGIC --- */
   // Initialisation d'une nouvelle partie
   const handleDemarrer = async (choix) => {
