@@ -31,11 +31,11 @@ import './styles/Leaderboard.css';
 
 // 1. Place la fonction tout en haut, après tes imports
 const getBadgeData = (score) => {
-  if (score >= 100) return { label: "LE GOAT", icon: "🐐", class: "badge-goat" };
-  if (score >= 80) return { label: "Légende", icon: "👑", class: "badge-legende" };
-  if (score >= 60) return { label: "Expert", icon: "🏆", class: "badge-expert" };
-  if (score >= 40) return { label: "Guerrier", icon: "⚔️", class: "badge-guerrier" };
-  if (score >= 20) return { label: "Apprenti", icon: "🛡️", class: "badge-apprenti" };
+  if (score >= 1000) return { label: "LE GOAT", icon: "🐐", class: "badge-goat" };
+  if (score >= 500) return { label: "Légende", icon: "👑", class: "badge-legende" };
+  if (score >= 250) return { label: "Expert", icon: "🏆", class: "badge-expert" };
+  if (score >= 100) return { label: "Guerrier", icon: "⚔️", class: "badge-guerrier" };
+  if (score >= 50) return { label: "Apprenti", icon: "🛡️", class: "badge-apprenti" };
   return { label: "Novice", icon: "🐣", class: "badge-novice" };
 };
 
@@ -142,7 +142,7 @@ function App() {
       return;
     }
 
-    // AJOUTE CE BLOC ICI pour charger les points au login
+    // Charger les points au login
     try {
       const points = await fetchUserTotalPoints(name);
       setTotalPoints(points);
