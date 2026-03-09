@@ -98,17 +98,27 @@ function App() {
     }
   }, []);
 
-  // Enregistrement du score final en base de données
+// Enregistrement du score final en base de données
   const enregistrerScore = useCallback(async (finalScore, currentLevel) => {
+    // On récupère le jeton de sécurité stocké au login
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("Utilisateur non authentifié, score non enregistré.");
+      return;
+    }
+
     try {
-      await saveScore(user, finalScore, questionsDuNiveau.length, currentLevel);
+      // On ajoute le token comme 5ème argument
+      await saveScore(user, finalScore, questionsDuNiveau.length, currentLevel, token);
+      
       setTotalPoints(prev => prev + finalScore);
       chargerScores();
     } catch (err) { 
       console.error("Erreur enregistrement:", err); 
     }
   }, [user, questionsDuNiveau.length, chargerScores]);
-
+  
 /* --- GESTIONNAIRES D'ÉVÉNEMENTS - AUTH --- */
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -173,7 +183,7 @@ function App() {
     setTermine(false);
     bgMusicRef.current.play().catch(() => console.log("Musique bloquée"));
   };
-  
+
   /* --- GESTIONNAIRES D'ÉVÉNEMENTS - GAME LOGIC --- */
   // Initialisation d'une nouvelle partie
   const handleDemarrer = async (choix) => {

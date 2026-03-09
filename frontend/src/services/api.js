@@ -45,13 +45,13 @@ export const fetchLeaderboard = async () => {
 };
 
 // Enregistrer un nouveau score
-export const saveScore = async (pseudo, points, total, difficulte) => {
+export const saveScore = async (pseudo, points, total, difficulte, token) => {
   const payload = { 
     data: { pseudo, points, total, difficulte } 
   };
   const res = await fetch(`${API_URL}/scores`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     body: JSON.stringify(payload)
   });
   return await res.json();
