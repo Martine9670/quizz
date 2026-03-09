@@ -10,7 +10,7 @@ const LandingPage = ({ onStart, historique }) => {
         <div className="landing-text">
           <h1 className="main-title">Devenez le prochain <span>GOAT</span> du Quizz</h1>
           <p className="description-text">
-            Testez vos connaissances, gagnez des points et grimpez dans le classement mondial. 
+            Testez vos connaissances, augmentez vos points, gagnez des badges et grimpez dans le classement mondial.
             Une expérience fluide, inclusive et compétitive.
           </p>
           <button onClick={onStart} className="btn-primary btn-cta">
