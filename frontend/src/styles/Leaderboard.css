@@ -112,3 +112,79 @@
     flex-direction: column;
   }
 }
+
+/* Container des onglets */
+.difficulty-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+/* Style de base des boutons */
+.tab-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif; /* Pour le look gaming */
+  transition: all 0.3s ease;
+}
+
+/* 1. On définit les couleurs de base pour chaque bouton (même non-actif) */
+.tab-btn.facile {
+  border-color: rgba(74, 222, 128, 0.3);
+  color: rgba(74, 222, 128, 0.5);
+}
+
+.tab-btn.moyen {
+  border-color: rgba(250, 204, 21, 0.3);
+  color: rgba(250, 204, 21, 0.5);
+}
+
+.tab-btn.difficile {
+  border-color: rgba(248, 113, 113, 0.3);
+  color: rgba(248, 113, 113, 0.5);
+}
+
+/* 2. On "allume" la couleur à 100% quand la classe .active est présente */
+.tab-btn.facile.active {
+  background: rgba(74, 222, 128, 0.15);
+  border-color: #4ade80;
+  color: #4ade80; /* Vert vif */
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.4);
+  font-weight: bold;
+}
+
+.tab-btn.moyen.active {
+  background: rgba(250, 204, 21, 0.15);
+  border-color: #facc15;
+  color: #facc15; /* Jaune vif */
+  box-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
+  font-weight: bold;
+}
+
+.tab-btn.difficile.active {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: #f87171;
+  color: #f87171; /* Rouge vif */
+  box-shadow: 0 0 12px rgba(248, 113, 113, 0.4);
+  font-weight: bold;
+}
+
+/* 3. Petit effet de survol pour faire comprendre que c'est cliquable */
+.tab-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Message d'absence de score */
+.no-score-message {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 20px;
+}
