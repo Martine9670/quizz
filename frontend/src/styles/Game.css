@@ -199,3 +199,52 @@
   font-weight: bold;
   font-family: 'Orbitron', sans-serif;
 }
+
+/* Titre au-dessus des boutons */
+.mode-selection-title {
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 15px;
+  opacity: 0.9;
+}
+
+/* Container des boutons */
+.game-mode-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* Style de base des boutons de mode */
+.mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.mode-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Style quand le bouton est sélectionné */
+.mode-btn.active {
+  background-color: #4CAF50; /* Ton vert */
+  border-color: #4CAF50;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.mode-count {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}

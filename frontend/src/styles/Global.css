@@ -123,6 +123,29 @@ html, body, #root {
   100% { width: 0; }
 }
 
+/* --- TITRE DU SÉLECTEUR DE CATÉGORIE --- */
+.category-selector .main-title {
+  color: #ffffff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.2rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 40px;
+  margin-top: 10px;
+  
+  /* L'effet Glow pour décoller du fond sombre */
+  text-shadow: 0 0 15px rgba(100, 108, 255, 0.7), 
+               0 0 30px rgba(100, 108, 255, 0.3);
+  
+  /* Un léger dégradé pour le relief */
+  background: linear-gradient(to bottom, #ffffff 50%, #c2c5ff 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block; /* S'assure qu'il prend toute la largeur */
+}
+
 /* --- BOUTONS & INPUTS --- */
 .btn-primary, .btn-abandon {
   width: 100%; 
@@ -239,16 +262,16 @@ html, body, #root {
 }
 
 .legal-content ul {
-  list-style-position: inside; /* Les puces restent dans le bloc de texte */
-  padding-left: 0;             /* On enlève le décalage forcé par le navigateur */
+  list-style-position: inside;
+  padding-left: 0;   
   margin-left: 0;
-  text-align: left;            /* On aligne le texte à gauche */
+  text-align: left;
 }
 
 .legal-content li {
   text-align: left;
-  list-style-type: disc;       /* On s'assure que les puces sont bien là */
-  margin-bottom: 10px;         /* Un peu d'espace entre les points */
+  list-style-type: disc;
+  margin-bottom: 10px; 
   color: inherit;
 }
 

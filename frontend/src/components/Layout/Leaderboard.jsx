@@ -2,74 +2,85 @@ import { useState } from 'react';
 
 /* --- COMPOSANT LEADERBOARD --- */
 const Leaderboard = ({ historique }) => {
-  /* --- LOGIQUE DE FILTRAGE PAR DIFFICULTÉ --- */
+  /* --- LOGIQUE DE FILTRAGE --- */
   const [ongletDifficulte, setOngletDifficulte] = useState('facile');
+  const [ongletFormat, setOngletFormat] = useState(10); // 10, 50 ou 100
 
-  // Filtrage et tri des scores selon le niveau exact choisi
+  // On filtre par FORMAT (nb questions) ET par DIFFICULTÉ
   const scoresFiltres = historique
     .map(h => h.attributes ? { ...h.attributes, id: h.id } : h)
-    .filter(data => (data.difficulte || 'facile') === ongletDifficulte)
+    .filter(data => 
+      (data.difficulte || 'facile') === ongletDifficulte && 
+      (data.total === ongletFormat) // On filtre sur la colonne "total"
+    )
     .sort((a, b) => b.points - a.points);
 
   return (
     <div className="history-section">
-      {/* --- ENTÊTE --- */}
       <h3>🏆 Le tableau des légendes</h3>
 
-      {/* --- ONGLETS DE SÉLECTION DE NIVEAU --- */}
-      <div className="difficulty-tabs">
+      {/* --- 1. SÉLECTION DU FORMAT (Rapide, Standard, Marathon) --- */}
+      <div className="format-tabs">
         <button 
-          className={`tab-btn facile ${ongletDifficulte === 'facile' ? 'active' : ''}`} 
-          onClick={() => setOngletDifficulte('facile')}
+          className={`tab-btn ${ongletFormat === 10 ? 'active' : ''}`} 
+          onClick={() => setOngletFormat(10)}
         >
-          Facile
+          ⚡ 10
         </button>
         <button 
-          className={`tab-btn moyen ${ongletDifficulte === 'moyen' ? 'active' : ''}`} 
-          onClick={() => setOngletDifficulte('moyen')}
+          className={`tab-btn ${ongletFormat === 50 ? 'active' : ''}`} 
+          onClick={() => setOngletFormat(50)}
         >
-          Moyen
+          🏆 50
         </button>
         <button 
-          className={`tab-btn difficile ${ongletDifficulte === 'difficile' ? 'active' : ''}`} 
-          onClick={() => setOngletDifficulte('difficile')}
+          className={`tab-btn ${ongletFormat === 100 ? 'active' : ''}`} 
+          onClick={() => setOngletFormat(100)}
         >
-          Difficile
+          🏁 100
         </button>
       </div>
-      
-      {/* --- LISTE DES SCORES FILTRÉS --- */}
-      <ul className="history-list">
-        {scoresFiltres.map((data, i) => {
-          return (
-            <li key={data.id || i} className="history-item">
-              
-              <div className="history-user">
-                <span className="rank">#{i + 1}</span>
-                <div className="user-info-stack">
-                  <strong>{data.pseudo || data.username}</strong>
-                  <span className="score-date">Record</span>
-                </div>
-              </div>
 
-              <div className="history-details">
-                <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
-                <span className="points">{data.points}/{data.total}</span>
+      {/* --- 2. SÉLECTION DE LA DIFFICULTÉ --- */}
+      <div className="difficulty-tabs">
+        {['facile', 'moyen', 'difficile'].map((niv) => (
+          <button 
+            key={niv}
+            className={`tab-btn ${niv} ${ongletDifficulte === niv ? 'active' : ''}`} 
+            onClick={() => setOngletDifficulte(niv)}
+          >
+            {niv.charAt(0).toUpperCase() + niv.slice(1)}
+          </button>
+        ))}
+      </div>
+      
+      {/* --- 3. LISTE DES SCORES FILTRÉS --- */}
+      <ul className="history-list">
+        {scoresFiltres.map((data, i) => (
+          <li key={data.id || i} className="history-item">
+            <div className="history-user">
+              <span className="rank">#{i + 1}</span>
+              <div className="user-info-stack">
+                <strong>{data.pseudo || data.username}</strong>
+                <span className="score-date">Mode {ongletFormat} q.</span>
               </div>
-              
-            </li>
-          );
-        })}
+            </div>
+
+            <div className="history-details">
+              <span className={`badge-mini ${data.difficulte}`}>{data.difficulte}</span>
+              <span className="points">{data.points}/{data.total}</span>
+            </div>
+          </li>
+        ))}
       </ul>
       
       {scoresFiltres.length === 0 && (
         <p className="no-score-message">
-          Aucun score enregistré en niveau {ongletDifficulte}.
+          Aucun record en {ongletDifficulte} ({ongletFormat} questions).
         </p>
       )}
     </div>
   );
 };
 
-/* --- EXPORT --- */
 export default Leaderboard;

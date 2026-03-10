@@ -15,7 +15,8 @@ import { postRegister, postLogin, fetchQuestions, fetchLeaderboard, saveScore, f
 // Composants - Game
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
-import CategorySelector from './components/Game/CategorySelector'; // AJOUT CATEGORIES
+import CategorySelector from './components/Game/CategorySelector';
+import GameModeSelector from './components/Game/GameModeSelector';
 
 // Composant LandingPage (TON COMPOSANT)
 import LandingPage from "./components/Layout/LandingPage";
@@ -33,6 +34,20 @@ import './styles/Navbar.css';
 import './styles/Game.css';
 import './styles/Leaderboard.css';
 import './styles/LandingPage.css';
+
+/* --- DICTIONNAIRE DES CATÉGORIES --- */
+const labelsCategories = {
+  tech: 'Tech & Code',
+  espace: 'Espace',
+  cine: 'Cinéma',
+  gaming: 'Gaming',
+  monde: 'Monde',
+  cuisine: 'Cuisine',
+  sport: 'Sport',
+  musique: 'Musique',
+  histoire: 'Histoire',
+  geographie: 'Géographie'
+};
 
 // 1. Place la fonction tout en haut, après tes imports
 const getBadgeData = (score) => {
@@ -81,6 +96,7 @@ function App() {
   const [showLanding, setShowLanding] = useState(!localStorage.getItem("quizzUser"));
 
   /* --- ÉTATS (STATES) - LOGIQUE DE JEU --- */
+  const [nbQuestions, setNbQuestions] = useState(10); // 10 par défaut
   const [categorie, setCategorie] = useState(null); // NOUVEL ÉTAT POUR LES CATÉGORIES
   const [niveau, setNiveau] = useState(null);
   const [questionsDuNiveau, setQuestionsDuNiveau] = useState([]);
@@ -199,8 +215,7 @@ function App() {
   // Initialisation d'une nouvelle partie
   const handleDemarrer = async (choix) => {
     try {
-      // NOTE: On passe maintenant le choix (niveau) et on pourrait aussi passer la catégorie si ton API le supporte
-      const selection = await fetchQuestions(categorie, choix);
+      const selection = await fetchQuestions(categorie, choix, nbQuestions);
       if (selection && selection.length > 0) {
         bgMusicRef.current.pause(); // Coupe la musique d'ambiance pendant le jeu
         setQuestionsDuNiveau(selection);
@@ -374,7 +389,7 @@ const resetQuizz = () => {
       {activePage === "game" && (
         <>
           {showLanding && !isLoggedIn ? (
-            /* --- APPEL DE TON COMPOSANT LANDINGPAGE --- */
+            /* --- APPEL DU COMPOSANT LANDINGPAGE --- */
             <LandingPage 
                onStart={() => setShowLanding(false)} 
                historique={historique} 
@@ -418,15 +433,31 @@ const resetQuizz = () => {
                       <CategorySelector onSelectCategory={(cat) => setCategorie(cat)} />
                     </div>
                   ) : !niveau ? (
-                    /* --- ETAPE 2 : CHOIX DU NIVEAU --- */
+                    /* --- ETAPE 2 : CHOIX DU FORMAT PUIS DU NIVEAU --- */
                     <div className="game-layout-wrapper">
-                      <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-                        <h1 className="welcome-player-title">Niveau pour : <span>{categorie.toUpperCase()}</span></h1>
-                        <button onClick={() => setCategorie(null)} className="answer-btn-exit" style={{ width: 'auto', padding: '5px 15px', fontSize: '0.8rem' }}>← Changer de thème</button>
+                      <div className="game-header-selection">
+                        <h1 className="welcome-player-title">
+                          Thème : <span>{labelsCategories[categorie] || categorie}</span>
+                        </h1>
+                        <button 
+                          onClick={() => setCategorie(null)} 
+                          className="answer-btn-exit btn-small"
+                        >
+                          ← Retour au choix du thème
+                        </button>
                       </div>
+
+                      <GameModeSelector 
+                        selectedNb={nbQuestions} 
+                        onSelect={setNbQuestions} 
+                      />
+                      
+                      <div className="separator"></div>
+
                       <LevelSelector handleDemarrer={handleDemarrer} user={user} />
                     </div>              
-                  ) : (
+                  ) : (       
+                                 
                     /* --- ETAPE 3 : LE QUIZZ --- */
                     <div className="game-container" style={{ textAlign: 'center' }}>
                       <QuestionCard timeLeft={timeLeft} question={questionsDuNiveau[indexQuestion]?.q} reponse={reponse} setReponse={setReponse} validerReponse={validerReponse} terminerJeu={terminerJeu} score={score} />

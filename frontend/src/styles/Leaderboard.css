@@ -2,13 +2,16 @@
 .sidebar-leaderboard {
   position: fixed;
   right: 40px;
-  top: 50%;
-  transform: translateY(-80%);
-  width: 320px;
+  top: 55%; /* Légèrement descendu pour ne pas coller la navbar */
+  transform: translateY(-50%); /* Centrage vertical corrigé */
+  width: 340px; /* Élargi pour éviter les scores tronqués sur 100 */
+  max-height: 85vh; /* Empêche de sortir de l'écran */
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 15px rgba(203, 99, 231, 0.4);
   border: 4px solid rgb(125, 44, 148);
   border-radius: 20px;
-  background: rgba(15, 15, 15, 0.7);
+  background: rgba(15, 15, 15, 0.85);
   backdrop-filter: blur(20px);
   padding: 20px;
   z-index: 100;
@@ -32,6 +35,7 @@
   margin: 0;
   overflow-y: auto;
   padding-right: 5px;
+  flex-grow: 1; /* Permet à la liste d'occuper l'espace restant */
 }
 
 .history-list::-webkit-scrollbar { width: 4px; }
@@ -47,31 +51,39 @@
   background: rgba(255, 255, 255, 0.03);
   border-radius: 15px;
   transition: transform 0.2s ease;
+  border-left: 4px solid transparent;
 }
 
 .history-item:hover { transform: translateX(-5px); background: rgba(255, 255, 255, 0.07); }
 
+/* Bordure colorée selon le rang pour le Top 3 */
+.history-item:nth-child(1) { border-left-color: #ffd700; background: rgba(255, 215, 0, 0.05); }
+.history-item:nth-child(2) { border-left-color: #c0c0c0; }
+.history-item:nth-child(3) { border-left-color: #cd7f32; }
+
 /* --- INFORMATIONS UTILISATEUR --- */
 .history-user { display: flex; align-items: center; gap: 12px; }
 .history-user strong { font-size: 0.95rem; color: white !important; }
+.rank { color: #4CAF50 !important; font-size: 0.8rem; font-weight: 900; min-width: 25px; }
 
 /* --- DÉTAILS DU SCORE --- */
-.score-date { display: none; } /* Suppression du mot Record */
+.score-date { font-size: 0.7rem; opacity: 0.5; } 
 
 .history-details {
   display: flex;
-  align-items: center;
-  gap: 15px; /* Espace entre le badge et le résultat */
+  flex-direction: column; /* Badge et score l'un sur l'autre pour gagner de la place */
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 90px; /* Empêche le texte d'être tronqué */
 }
 
 .points { 
   font-family: 'monospace';
   font-size: 1.1rem; 
   color: #4ade80 !important; 
-  font-weight: 900; 
+  font-weight: 900;
+  white-space: nowrap; 
 }
-
-.rank { color: rgba(255, 255, 255, 0.3) !important; font-size: 0.8rem; font-weight: 900; }
 
 /* --- BADGES DE DIFFICULTÉ --- */
 .badge-mini {
@@ -83,20 +95,52 @@
   border: 1px solid transparent;
 }
 
-.badge-mini.facile { 
-  background: rgba(74, 222, 128, 0.1); 
-  color: #4ade80; 
-  border-color: rgba(74, 222, 128, 0.3); 
+.badge-mini.facile { background: rgba(74, 222, 128, 0.1); color: #4ade80; border-color: rgba(74, 222, 128, 0.3); }
+.badge-mini.moyen { background: rgba(250, 204, 21, 0.1); color: #facc15; border-color: rgba(250, 204, 21, 0.3); }
+.badge-mini.difficile { background: rgba(248, 113, 113, 0.1); color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+
+/* --- ONGLETS (FORMATS & DIFFICULTÉ) --- */
+.format-tabs, .difficulty-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  justify-content: center;
 }
-.badge-mini.moyen { 
-  background: rgba(250, 204, 21, 0.1); 
-  color: #facc15; 
-  border-color: rgba(250, 204, 21, 0.3); 
+
+.tab-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 8px 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
 }
-.badge-mini.difficile { 
-  background: rgba(248, 113, 113, 0.1); 
-  color: #f87171; 
-  border-color: rgba(248, 113, 113, 0.3); 
+
+.tab-btn:hover:not(.active) { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+/* États Actifs */
+.tab-btn.active { font-weight: bold; color: white; }
+
+/* Couleurs spécifiques Difficulté Active */
+.tab-btn.facile.active { background: rgba(74, 222, 128, 0.15); border-color: #4ade80; color: #4ade80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
+.tab-btn.moyen.active { background: rgba(250, 204, 21, 0.15); border-color: #facc15; color: #facc15; box-shadow: 0 0 10px rgba(250, 204, 21, 0.3); }
+.tab-btn.difficile.active { background: rgba(248, 113, 113, 0.15); border-color: #f87171; color: #f87171; box-shadow: 0 0 10px rgba(248, 113, 113, 0.3); }
+
+/* Couleur spécifique Format Active (10, 50, 100) */
+.format-tabs .tab-btn.active { background: rgba(100, 108, 255, 0.2); border-color: #646cff; color: #fff; box-shadow: 0 0 10px rgba(100, 108, 255, 0.3); }
+
+/* --- MESSAGES --- */
+.no-score-message {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 20px;
 }
 
 /* --- CONFIGURATION RESPONSIVE --- */
@@ -108,83 +152,4 @@
     max-width: 450px;
     margin: 30px auto;
   }
-  .game-layout {
-    flex-direction: column;
-  }
-}
-
-/* Container des onglets */
-.difficulty-tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  justify-content: center;
-}
-
-/* Style de base des boutons */
-.tab-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
-  padding: 8px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-family: 'Orbitron', sans-serif; /* Pour le look gaming */
-  transition: all 0.3s ease;
-}
-
-/* 1. On définit les couleurs de base pour chaque bouton (même non-actif) */
-.tab-btn.facile {
-  border-color: rgba(74, 222, 128, 0.3);
-  color: rgba(74, 222, 128, 0.5);
-}
-
-.tab-btn.moyen {
-  border-color: rgba(250, 204, 21, 0.3);
-  color: rgba(250, 204, 21, 0.5);
-}
-
-.tab-btn.difficile {
-  border-color: rgba(248, 113, 113, 0.3);
-  color: rgba(248, 113, 113, 0.5);
-}
-
-/* 2. On "allume" la couleur à 100% quand la classe .active est présente */
-.tab-btn.facile.active {
-  background: rgba(74, 222, 128, 0.15);
-  border-color: #4ade80;
-  color: #4ade80; /* Vert vif */
-  box-shadow: 0 0 12px rgba(74, 222, 128, 0.4);
-  font-weight: bold;
-}
-
-.tab-btn.moyen.active {
-  background: rgba(250, 204, 21, 0.15);
-  border-color: #facc15;
-  color: #facc15; /* Jaune vif */
-  box-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
-  font-weight: bold;
-}
-
-.tab-btn.difficile.active {
-  background: rgba(248, 113, 113, 0.15);
-  border-color: #f87171;
-  color: #f87171; /* Rouge vif */
-  box-shadow: 0 0 12px rgba(248, 113, 113, 0.4);
-  font-weight: bold;
-}
-
-/* 3. Petit effet de survol pour faire comprendre que c'est cliquable */
-.tab-btn:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-/* Message d'absence de score */
-.no-score-message {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.85rem;
-  font-style: italic;
-  margin-top: 20px;
 }

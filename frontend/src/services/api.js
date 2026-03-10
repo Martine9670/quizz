@@ -22,21 +22,25 @@ export const postLogin = async (identifier, password) => {
   return await res.json();
 };
 
-/* --- GESTION DES QUESTIONS --- */
-// MISE À JOUR : On accepte maintenant categorie et niveau
-export const fetchQuestions = async (categorie, niveau) => {
-  // On construit l'URL avec un double filtre Strapi : catégorie ET niveau
-  const res = await fetch(
-    `${API_URL}/questions?filters[categorie][$eq]=${categorie.toLowerCase()}&filters[niveau][$eq]=${niveau.toLowerCase()}&pagination[limit]=1000`
-  );
-  const result = await res.json();
-  
-  if (result.data?.length > 0) {
-    // On fait le "nettoyage" des données Strapi ici
-    return result.data.map(item => {
-      const rawData = item.attributes ? item.attributes : item;
-      return { q: rawData.intitule, a: rawData.reponse };
-    }).filter(q => q.q).sort(() => Math.random() - 0.5);
+/* --- GESTION DES QUESTIONS (Version Optimisée) --- */
+// On ajoute 'limit' en paramètre avec une valeur par défaut (ex: 50)
+export const fetchQuestions = async (categorie, niveau, limit = 50) => {
+  try {
+    // Ajout du paramètre &limit dans l'URL
+    const res = await fetch(
+      `${API_URL}/questions/random?categorie=${categorie.toLowerCase()}&niveau=${niveau.toLowerCase()}&limit=${limit}`
+    );
+    
+    const result = await res.json();
+    
+    if (result.data && Array.isArray(result.data)) {
+      return result.data.map(item => ({
+        q: item.intitule, 
+        a: item.reponse 
+      }));
+    }
+  } catch (error) {
+    console.error("Erreur API :", error);
   }
   return [];
 };
