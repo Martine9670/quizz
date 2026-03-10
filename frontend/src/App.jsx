@@ -15,6 +15,7 @@ import { postRegister, postLogin, fetchQuestions, fetchLeaderboard, saveScore, f
 // Composants - Game
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
+import CategorySelector from './components/Game/CategorySelector'; // AJOUT CATEGORIES
 
 // Composant LandingPage (TON COMPOSANT)
 import LandingPage from "./components/Layout/LandingPage";
@@ -80,6 +81,7 @@ function App() {
   const [showLanding, setShowLanding] = useState(!localStorage.getItem("quizzUser"));
 
   /* --- ÉTATS (STATES) - LOGIQUE DE JEU --- */
+  const [categorie, setCategorie] = useState(null); // NOUVEL ÉTAT POUR LES CATÉGORIES
   const [niveau, setNiveau] = useState(null);
   const [questionsDuNiveau, setQuestionsDuNiveau] = useState([]);
   const [indexQuestion, setIndexQuestion] = useState(0);
@@ -186,6 +188,7 @@ function App() {
     localStorage.removeItem("token");
     setUser("");
     setIsLoggedIn(false);
+    setCategorie(null); // Reset catégorie au logout
     setNiveau(null);
     setTermine(false);
     setShowLanding(true); // On réaffiche la landing au logout
@@ -196,6 +199,7 @@ function App() {
   // Initialisation d'une nouvelle partie
   const handleDemarrer = async (choix) => {
     try {
+      // NOTE: On passe maintenant le choix (niveau) et on pourrait aussi passer la catégorie si ton API le supporte
       const selection = await fetchQuestions(choix);
       if (selection && selection.length > 0) {
         bgMusicRef.current.pause(); // Coupe la musique d'ambiance pendant le jeu
@@ -244,6 +248,7 @@ function App() {
 
   const handleRejouer = () => {
     // On remet à zéro la logique du jeu SANS déconnecter l'utilisateur
+    setCategorie(null); // On reset la catégorie pour permettre un nouveau choix
     setNiveau(null);
     setScore(0);
     setTermine(false);
@@ -270,6 +275,7 @@ const resetQuizz = () => {
     localStorage.removeItem("token");
 
     // 3. Réinitialisation du jeu
+    setCategorie(null); // Reset catégorie
     setNiveau(null);
     setScore(0);
     setTermine(false);
@@ -394,13 +400,14 @@ const resetQuizz = () => {
                       <p className="subtitle">Score : {score} / {questionsDuNiveau.length}</p>
                       <button onClick={handleRejouer} className="btn-primary">REJOUER</button>
                     </div>
-                  ) : !niveau ? (
+                  ) : !categorie ? (
+                    /* --- ETAPE 1 : CHOIX DE LA CATEGORIE --- */
                     <div className="game-layout-wrapper">
                       {(() => {
                         const badge = getBadgeData(totalPoints);
                         return (
                           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-                            <h1 className="welcome-player-title">🚀 À TOI DE JOUER <span>{user}</span> !</h1>
+                            <h1 className="welcome-player-title">🚀 PRÊT À JOUER <span>{user}</span> ?</h1>
                             <div className={`badge-container ${badge.class}`}>
                               <span className="badge-icon">{badge.icon}</span>
                               <span className="badge-label">{badge.label}</span>
@@ -408,9 +415,19 @@ const resetQuizz = () => {
                           </div>
                         );
                       })()}
+                      <CategorySelector onSelectCategory={(cat) => setCategorie(cat)} />
+                    </div>
+                  ) : !niveau ? (
+                    /* --- ETAPE 2 : CHOIX DU NIVEAU --- */
+                    <div className="game-layout-wrapper">
+                      <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                        <h1 className="welcome-player-title">Niveau pour : <span>{categorie.toUpperCase()}</span></h1>
+                        <button onClick={() => setCategorie(null)} className="answer-btn-exit" style={{ width: 'auto', padding: '5px 15px', fontSize: '0.8rem' }}>← Changer de thème</button>
+                      </div>
                       <LevelSelector handleDemarrer={handleDemarrer} user={user} />
                     </div>              
                   ) : (
+                    /* --- ETAPE 3 : LE QUIZZ --- */
                     <div className="game-container" style={{ textAlign: 'center' }}>
                       <QuestionCard timeLeft={timeLeft} question={questionsDuNiveau[indexQuestion]?.q} reponse={reponse} setReponse={setReponse} validerReponse={validerReponse} terminerJeu={terminerJeu} score={score} />
                       <div className="question-progress">Question <span>{indexQuestion + 1}</span> / {questionsDuNiveau.length}</div>
