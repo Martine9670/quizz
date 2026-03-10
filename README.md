@@ -69,11 +69,14 @@ Memory Safety: Systematic use of useCallback and cleanup functions to prevent le
 
 PWA Optimization: Manifest configuration matching real asset sizes for a seamless installation experience.
 
-🧠 Game Logic
-Dynamic Timer: CSS variables synced with React state for smooth, hardware-accelerated progress bars.
-Shuffle Algorithm: Real-time randomization of questions to ensure a unique experience every session.
-Audio Logic: Single-instance audio management via useRef to maintain a persistent "Mute" state across the entire application.
-Label Syncing: Centralized dictionary pattern to decouple database IDs from display labels (e.g., "Aléatoire").
+🧠 Game Logic & Performance
+Dynamic Timer : Utilisation de variables CSS synchronisées avec l'état React pour des barres de progression fluides (accélération matérielle).
+
+Shuffle Algorithm : Algorithme de randomisation en temps réel pour garantir une expérience unique à chaque session.
+
+Audio Logic : Gestion audio via useRef (Single-instance) pour maintenir l'état "Mute" persistant sans coupure lors des changements d'état.
+
+Label Syncing : Pattern de dictionnaire centralisé pour décorréler les IDs de la base de données des labels d'affichage (ex: transformation de monde en Aléatoire).
 
 -----
 
@@ -96,13 +99,13 @@ cd ../backend && npm install
 
     Permissions: Enable find (Questions/Scores), create (Scores/Messages), and Auth in Settings > Roles > Public.
 
-🔄 Data Management
+### 🔄 Data Management
 
-Database: Questions are managed via the Strapi Admin panel (http://localhost:1337/admin).
-
-Seeding (Local only): The import_questions.js script is used for initial local database population. Note: This script is excluded from the repository (.gitignore) for data privacy.
-
-Manual Setup: If you are setting up the project for the first time, ensure you create the Questions and Scores collection types in Strapi and set the appropriate Public permissions (find/create).
+* **Database:** Questions are managed via the **Strapi Admin panel** (`http://localhost:1337/admin`).
+* **Seeding (Example):** A template script `import_questions.example.js` is provided to test your local installation.
+  ```bash
+  node import_questions.example.js
+  
 📁 Project Management
 
 Development followed an Agile methodology. Track progress and tasks here:
