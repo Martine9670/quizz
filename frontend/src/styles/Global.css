@@ -63,10 +63,10 @@ html, body, #root {
   user-select: none;
 }
 
-.symbol-1 { font-size: 20rem; top: 10%; left: 5%; transform: rotate(-15deg); color: #4ade80; }
-.symbol-2 { font-size: 25rem; bottom: 5%; right: 5%; transform: rotate(15deg); color: #646cff; }
-.symbol-3 { font-size: 18rem; top: 55%; right: 60%; transform: rotate(10deg); color: #ff4d4d; }
-.symbol-4 { font-size: 18rem; bottom: 60%; right: 20%; transform: rotate(10deg); color: #f2f53e; }
+.symbol-1 { font-size: 20rem; top: 10%; left: 5%; transform: rotate(-15deg); color: black; }
+.symbol-2 { font-size: 25rem; bottom: 5%; right: 5%; transform: rotate(15deg); color: black; }
+.symbol-3 { font-size: 18rem; top: 55%; right: 60%; transform: rotate(10deg); color: black; }
+.symbol-4 { font-size: 18rem; bottom: 60%; right: 20%; transform: rotate(10deg); color: black; }
 
 /* --- CARTES --- */
 .card {
@@ -281,6 +281,8 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 100px; 
+  min-height: 70vh;
 }
 
 .welcome-player-title { font-size: 2.5rem; color: #ccc; margin-bottom: 2rem; text-align: center; }

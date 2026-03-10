@@ -468,7 +468,7 @@ useEffect(() => {
                         const badge = getBadgeData(totalPoints);
                         return (
                           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-                            <h1 className="welcome-player-title">🚀 PRÊT À JOUER <span>{user}</span> ?</h1>
+                            <h1 className="welcome-player-title">À TOI DE JOUER <span>{user}</span> ?</h1>
                             <div className={`badge-container ${badge.class}`}>
                               <span className="badge-icon">{badge.icon}</span>
                               <span className="badge-label">{badge.label}</span>
