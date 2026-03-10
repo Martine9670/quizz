@@ -1,10 +1,12 @@
 import React from 'react';
 
 const categories = [
-  { id: 'mix', label: 'Mélange', icon: '🎲', color: '#a777e3' },
   { id: 'tech', label: 'Tech & Code', icon: '💻', color: '#646cff' },
-  { id: 'science', label: 'Sciences', icon: '🧪', color: '#4ade80' },
-  { id: 'art', label: 'Arts & Culture', icon: '🎨', color: '#ffcc00' },
+  { id: 'espace', label: 'Espace', icon: '🌌', color: '#a777e3' },
+  { id: 'cine', label: 'Cinéma', icon: '🎬', color: '#ff4757' },
+  { id: 'gaming', label: 'Gaming', icon: '🕹️', color: '#2ed573' },
+  { id: 'monde', label: 'Monde', icon: '🌍', color: '#ffa502' },
+  { id: 'cuisine', label: 'Cuisine', icon: '🍳', color: '#ff6b6b' },
 ];
 
 const CategorySelector = ({ onSelectCategory }) => {
