@@ -94,6 +94,7 @@ function App() {
   const [authError, setAuthError] = useState("");
   const [totalPoints, setTotalPoints] = useState(0);
   const [showLanding, setShowLanding] = useState(!localStorage.getItem("quizzUser"));
+  const [isMuted, setIsMuted] = useState(false);
 
   /* --- ÉTATS (STATES) - LOGIQUE DE JEU --- */
   const [nbQuestions, setNbQuestions] = useState(10); // 10 par défaut
@@ -208,7 +209,9 @@ function App() {
     setNiveau(null);
     setTermine(false);
     setShowLanding(true); // On réaffiche la landing au logout
+    if (!isMuted) {
     bgMusicRef.current.play().catch(() => console.log("Musique bloquée"));
+    }
   };
 
   /* --- GESTIONNAIRES D'ÉVÉNEMENTS - GAME LOGIC --- */
@@ -272,7 +275,9 @@ function App() {
     setActivePage("game");
     
     // On relance la musique si elle était en pause
+    if (!isMuted) {
     bgMusicRef.current.play().catch(() => console.log("Musique relancée"));
+    }
     
     chargerScores();
   };
@@ -305,7 +310,46 @@ const resetQuizz = () => {
     chargerScores();
   };
 
-  /* --- EFFETS (USEEFFECT) --- */
+const toggleMute = () => {
+  const music = bgMusicRef.current;
+  if (isMuted) {
+    music.play().catch(() => console.log("Musique bloquée"));
+  } else {
+    music.pause();
+  }
+  setIsMuted(!isMuted);
+};
+
+useEffect(() => {
+  const music = bgMusicRef.current;
+  music.loop = true;
+  music.volume = 0.1;
+
+  // Fonction qui lance la musique au premier clic si pas mute
+  const startMusic = () => {
+    if (!isMuted && music.paused) {
+      music.play().catch(() => console.log("Autoplay bloqué"));
+    }
+    window.removeEventListener('click', startMusic);
+  };
+
+  // Gestion du silence immédiat quand on clique sur le bouton Mute
+  if (isMuted) {
+    music.pause();
+  } else {
+    // Si on n'est pas en jeu (landing ou menu), on peut relancer
+    if (showLanding || !niveau) {
+      music.play().catch(() => {});
+    }
+  }
+
+  window.addEventListener('click', startMusic);
+
+  return () => {
+    window.removeEventListener('click', startMusic);
+  };
+}, [isMuted, showLanding, niveau]);
+
   // Gestion de la musique de fond et de l'interaction utilisateur
   useEffect(() => {
     const music = bgMusicRef.current;
@@ -383,7 +427,8 @@ const resetQuizz = () => {
           handleLogout, 
           // FIX : Si on clique sur s'inscrire dans la navbar, on masque la landing
           setIsRegistering: (val) => { setShowLanding(false); setIsRegistering(val); }, 
-          isRegistering, isDyslexic, setIsDyslexic 
+          isRegistering, isDyslexic, setIsDyslexic, 
+          isMuted, toggleMute
       }} />
 
       {activePage === "game" && (
@@ -393,6 +438,7 @@ const resetQuizz = () => {
             <LandingPage 
                onStart={() => setShowLanding(false)} 
                historique={historique} 
+               isMuted={isMuted}
             />
           ) : (
             <div className="game-layout">
@@ -457,7 +503,7 @@ const resetQuizz = () => {
                       <LevelSelector handleDemarrer={handleDemarrer} user={user} />
                     </div>              
                   ) : (       
-                                 
+
                     /* --- ETAPE 3 : LE QUIZZ --- */
                     <div className="game-container" style={{ textAlign: 'center' }}>
                       <QuestionCard timeLeft={timeLeft} question={questionsDuNiveau[indexQuestion]?.q} reponse={reponse} setReponse={setReponse} validerReponse={validerReponse} terminerJeu={terminerJeu} score={score} />

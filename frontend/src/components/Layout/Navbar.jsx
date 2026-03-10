@@ -2,7 +2,8 @@
 const Navbar = ({ 
   isLoggedIn, user, niveau, termine, 
   resetQuizz, handleLogout, setIsRegistering, isRegistering,
-  isDyslexic, setIsDyslexic
+  isDyslexic, setIsDyslexic,
+  isMuted, toggleMute
 }) => {
   return (
     <nav className="navbar" aria-label="Navigation principale">
@@ -41,16 +42,27 @@ const Navbar = ({
         )}      
       </div>
 
-      {/* --- SECTION DROITE : LIENS & ACTIONS --- */}
+{/* --- SECTION DROITE : LIENS & ACTIONS --- */}
       <div className="nav-links">
-        {/* BOUTON ACCESSIBILITÉ (C1.c) */}
+        
+        {/* BOUTON AUDIO (Nouveau !) */}
+        <button 
+          onClick={toggleMute}
+          className="btn-nav audio-toggle"
+          title={isMuted ? "Activer le son" : "Couper le son"}
+          aria-label={isMuted ? "Activer le son" : "Couper le son"}
+        >
+          {isMuted ? "🔇" : "🔊"}
+        </button>
+
+        {/* BOUTON ACCESSIBILITÉ */}
         <button 
           onClick={() => setIsDyslexic(!isDyslexic)}
           className="btn-nav"
           aria-pressed={isDyslexic}
           title="Activer ou désactiver la police dyslexique"
         >
-          {isDyslexic ? "Désactiver Mode Dys" : "Activer Mode Dys"}
+          {isDyslexic ? "Mode Dys : ON" : "Mode Dys : OFF"}
         </button>
 
         {/* ACTIONS D'AUTHENTIFICATION */}
