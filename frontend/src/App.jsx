@@ -200,7 +200,7 @@ function App() {
   const handleDemarrer = async (choix) => {
     try {
       // NOTE: On passe maintenant le choix (niveau) et on pourrait aussi passer la catégorie si ton API le supporte
-      const selection = await fetchQuestions(choix);
+      const selection = await fetchQuestions(categorie, choix);
       if (selection && selection.length > 0) {
         bgMusicRef.current.pause(); // Coupe la musique d'ambiance pendant le jeu
         setQuestionsDuNiveau(selection);

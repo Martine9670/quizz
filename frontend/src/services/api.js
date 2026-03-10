@@ -23,8 +23,12 @@ export const postLogin = async (identifier, password) => {
 };
 
 /* --- GESTION DES QUESTIONS --- */
-export const fetchQuestions = async (niveau) => {
-  const res = await fetch(`${API_URL}/questions?filters[niveau][$eq]=${niveau.toLowerCase()}&pagination[limit]=1000`);
+// MISE À JOUR : On accepte maintenant categorie et niveau
+export const fetchQuestions = async (categorie, niveau) => {
+  // On construit l'URL avec un double filtre Strapi : catégorie ET niveau
+  const res = await fetch(
+    `${API_URL}/questions?filters[categorie][$eq]=${categorie.toLowerCase()}&filters[niveau][$eq]=${niveau.toLowerCase()}&pagination[limit]=1000`
+  );
   const result = await res.json();
   
   if (result.data?.length > 0) {
