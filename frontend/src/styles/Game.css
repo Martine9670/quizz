@@ -188,7 +188,6 @@
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--cat-color);
   box-shadow: 0 0 15px var(--cat-color);
-  /* Pas de transform: scale ou translateY ici pour rester stable ! */
 }
 
 .category-icon {
