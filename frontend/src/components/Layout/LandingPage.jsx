@@ -19,7 +19,7 @@ const LandingPage = ({ onStart, historique }) => {
         </div>
         
         {/* Rappel du Leaderboard dès l'accueil pour le côté "Compétition" */}
-        <div className="landing-preview">
+        <div className="landing-preview neon-border-card">
           <h3 className="sidebar-title">Top Joueurs 🏆</h3>
           <ul className="leaderboard-mini">
             {historique.slice(0, 3).map((item, index) => (
