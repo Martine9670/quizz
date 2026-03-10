@@ -5,7 +5,7 @@ const categories = [
   { id: 'espace', label: 'Espace', icon: '🌌', color: '#a777e3' },
   { id: 'cine', label: 'Cinéma', icon: '🎬', color: '#ff4757' },
   { id: 'gaming', label: 'Gaming', icon: '🕹️', color: '#2ed573' },
-  { id: 'monde', label: 'Monde', icon: '🌍', color: '#ffa502' },
+  { id: 'monde', label: 'Aléatoire', icon: '🌍', color: '#ffa502' },
   { id: 'cuisine', label: 'Cuisine', icon: '🍳', color: '#ff6b6b' },
   { id: 'sport', label: 'Sport', icon: '⚽', color: '#1e90ff' },
   { id: 'musique', label: 'Musique', icon: '🎵', color: '#ff7f50' },
