@@ -60,11 +60,14 @@
   backdrop-filter: blur(10px);
   padding: 30px;
   border-radius: 20px;
-  border: 1px border rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-title{
   color: #ffcc00;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .leaderboard-mini {
@@ -129,15 +132,19 @@
   .landing-text .main-title { font-size: 2.5rem; }
 }
 
+/* --- NOUVEAUX COMPOSANTS (NÉON) --- */
 .neon-border-card {
   position: relative;
-  padding: 3px; /* Épaisseur de la bordure néon */
+  padding: 2px; 
   background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  overflow: hidden; /* Important pour masquer le surplus du gradient */
+  overflow: hidden;
+  width: fit-content;        
+  min-width: 250px;          
+  max-width: 320px;          
+  margin: 20px auto;         
 }
 
-/* Le pseudo-élément qui crée la lumière tournante */
 .neon-border-card::before {
   content: '';
   position: absolute;
@@ -147,37 +154,35 @@
   height: 200%;
   background: conic-gradient(
     transparent, 
-    rgba(203, 99, 231, 1), /* Ta couleur violette */
-    rgba(100, 108, 255, 1), /* Ta couleur bleue */
+    rgba(203, 99, 231, 1), 
+    rgba(100, 108, 255, 1), 
     transparent 30%
   );
   animation: rotateNeon 4s linear infinite;
 }
 
-/* L'animation de rotation */
 @keyframes rotateNeon {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Le contenu au-dessus pour cacher le centre du gradient */
 .card-content {
   position: relative;
-  background: #0f172a; /* La couleur de fond de tes cartes */
+  background: #0f172a; 
   padding: 20px;
-  border-radius: 17px; /* Un peu moins que le parent pour épouser la forme */
+  border-radius: 17px; 
   z-index: 1;
 }
 
-.leaderboard-mini {
-  list-style: none;
-  padding: 0;
+/* On ré-applique tes styles de liste à la version néon */
+.card-content .leaderboard-mini {
   margin-top: 15px;
 }
 
-.leaderboard-mini li {
-  padding: 10px 0;
+.card-content .leaderboard-mini li {
+  padding: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-family: 'Orbitron', sans-serif;
   font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.2); /* Rappel de ton style */
 }
