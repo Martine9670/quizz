@@ -7,6 +7,10 @@ const categories = [
   { id: 'gaming', label: 'Gaming', icon: '🕹️', color: '#2ed573' },
   { id: 'monde', label: 'Monde', icon: '🌍', color: '#ffa502' },
   { id: 'cuisine', label: 'Cuisine', icon: '🍳', color: '#ff6b6b' },
+  { id: 'sport', label: 'Sport', icon: '⚽', color: '#1e90ff' },
+  { id: 'musique', label: 'Musique', icon: '🎵', color: '#ff7f50' },
+  { id: 'histoire', label: 'Histoire', icon: '📜', color: '#747d8c' },
+  { id: 'geographie', label: 'Géographie', icon: '🗺️', color: '#2ed573' },
 ];
 
 const CategorySelector = ({ onSelectCategory }) => {
