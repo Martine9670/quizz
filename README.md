@@ -1,5 +1,8 @@
 🎮 QUIZZY App
-A vibrant, modern general knowledge quiz built with React, Vite, and Strapi. This project focuses on clean code, Service Pattern architecture, and a highly interactive user experience.
+
+A vibrant, modern general knowledge quiz built with React, Vite, and JavaScript. This project focuses on clean code, Service Pattern architecture, and separation of concerns.
+
+-----
 
 👤 User Stories
 Core Gameplay: En tant que joueur, je veux choisir un thème et un niveau de difficulté pour tester mes connaissances.
@@ -10,64 +13,103 @@ Immersion: En tant qu'utilisateur, je veux une ambiance sonore et visuelle dynam
 
 Inclusion (Accessibilité): En tant qu'utilisateur dyslexique, je veux activer un mode de lecture adapté pour lire les questions confortablement.
 
+-----
+
 ✨ Key Features
+
 Service Layer Architecture: Complete decoupling of API logic from UI components.
 
-Dynamic Audio System: Background music and sound effects with a Global Mute Toggle persistent across the app.
+User Authentication: Secure registration/login system with Strapi Auth.
 
-Advanced UI/UX: * Glitch & Pulse Animations: High-visibility "Call to Action" buttons.
-
-Responsive Layout: Smart spacing to prevent footer overlap on small screens.
-
-Gamification: Dynamic badge system based on total_points (Novice, Apprenti, Guerrier, Expert, Légende, GOAT).
+Internal Routing: Custom state-based navigation (Game, Contact, Legal) without reloads.
 
 Inclusive Design: Specialized Dyslexic Mode toggle for enhanced accessibility.
 
-PWA Ready: Installable on home screens for a native mobile feel.
+Gamification: Dynamic badge system (Novice to GOAT) based on total points.
+
+Persistent Leaderboard: Real-time "Hall of Fame" fetching Top 5 scores.
+
+Real-time Feedback: Asynchronous contact form via Axios.
+
+Audio Immersive System: Background music & SFX with a Global Mute Toggle (persistent state).
+
+Dynamic UI: Glitch & Pulse animations for high-engagement "Call to Action" buttons.
+
+-----
+
+⚖️ Navigation & Compliance
+GDPR Ready: Dedicated pages for Terms of Use (CGU), Legal Mentions and GDPR.
+
+Advanced Validation: Regex-based form checks for data integrity.
+
+WCAG Compliant: Full keyboard navigation (TAB/ENTER) and semantic HTML5.
+
+-----
 
 🚀 Tech Stack
-Frontend: React 18+ (Hooks: useCallback, useRef, useMemo)
+Frontend: React (Advanced Hooks: useState, useEffect, useCallback)
 
 Backend: Strapi CMS (Headless)
 
-Animations: CSS3 Keyframes (Glitch/Pulse), canvas-confetti
+Styling: CSS3 (Variables, Flexbox, Transitions)
 
-State Management: LocalStorage & React State synchronization
+Library: canvas-confetti, vite-plugin-pwa
 
-Environment: Node.js v24 (LTS recommended)
+-----
 
 🛠️ Architecture & Logic
-🎵 Audio Management
-The app uses a Single Source of Truth for audio via useRef in the main App.js. This prevents audio overlap and ensures that the "Mute" state is respected even during page transitions or game resets.
 
-🧠 Game & Category Logic
-Categorization: Fully customizable category labels via a central dictionary.
+📁 The Service Pattern
+Technical logic is isolated in src/services/api.js. UI components remain "dumb" and focus only on rendering, making the app highly scalable.
 
-Memory Safety: Systematic use of cleanup functions in useEffect to prevent memory leaks with timers and event listeners.
+⚡ Performance & Safety
+Cascading Renders Fix: Optimized useEffect hooks with asynchronous wrappers.
 
-Performance: Optimized re-renders using useCallback for API-heavy functions like chargerScores.
+Memory Safety: Systematic use of useCallback and cleanup functions to prevent leaks.
+
+PWA Optimization: Manifest configuration matching real asset sizes for a seamless installation experience.
+
+🧠 Game Logic
+Dynamic Timer: CSS variables synced with React state for smooth, hardware-accelerated progress bars.
+Shuffle Algorithm: Real-time randomization of questions to ensure a unique experience every session.
+Audio Logic: Single-instance audio management via useRef to maintain a persistent "Mute" state across the entire application.
+Label Syncing: Centralized dictionary pattern to decouple database IDs from display labels (e.g., "Aléatoire").
+
+-----
 
 ⚙️ Installation & Setup
-Clone & Install
-
+1. Clone & Install
 Bash
+
 git clone <your-repository-url>
 cd quizz
-# Install Frontend & Backend
+
+# Install Frontend
 cd frontend && npm install
+
+# Install Backend
 cd ../backend && npm install
-Node Version Requirement
-This project requires Node v24. If you use NVM:
 
-Bash
-nvm use 24
-nvm alias default 24
-Backend Setup
-Ensure Strapi runs on http://localhost:1337.
-Permissions: Enable find (Questions/Scores), create (Scores/Messages) in Settings > Roles > Public.
+2. Backend Setup (Strapi)
 
+    Ensure Strapi runs on http://localhost:1337.
+
+    Permissions: Enable find (Questions/Scores), create (Scores/Messages), and Auth in Settings > Roles > Public.
+
+🔄 Data Management
+
+Database: Questions are managed via the Strapi Admin panel (http://localhost:1337/admin).
+
+Seeding (Local only): The import_questions.js script is used for initial local database population. Note: This script is excluded from the repository (.gitignore) for data privacy.
+
+Manual Setup: If you are setting up the project for the first time, ensure you create the Questions and Scores collection types in Strapi and set the appropriate Public permissions (find/create).
 📁 Project Management
-Track progress and tasks here:
-👉 View Trello Board
+
+Development followed an Agile methodology. Track progress and tasks here:
+👉 [View Trello Board] https://trello.com/b/zxegXEBf
+
+![Architecture Diagram](./diagramme.png)
+
+---
 
 Author: Martine PINNA
