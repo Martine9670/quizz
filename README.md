@@ -111,8 +111,32 @@ cd ../backend && npm install
 Development followed an Agile methodology. Track progress and tasks here:
 👉 [View Trello Board] https://trello.com/b/zxegXEBf
 
-![Architecture Diagram](./diagramme.png)
+---
 
+graph TD
+    subgraph Client [Frontend React - Vite]
+        UI[UI Components & Badges]
+        Logic[Game Logic / Audio useRef]
+        PWA[PWA & Dyslexic Mode]
+        Services[API Services - Axios]
+        
+        UI <--> Logic
+        Logic <--> Services
+        PWA --- UI
+    end
+
+    subgraph Server [Backend Strapi]
+        API[REST API / JWT Auth]
+        Auth[User Permissions]
+        Content[Collections: Questions, Scores, Messages]
+        DB[(SQLite Database)]
+        
+        API <--> Auth
+        API <--> Content
+        Content --- DB
+    end
+
+    Services <-->|HTTP JSON| API
 ---
 
 Author: Martine PINNA
