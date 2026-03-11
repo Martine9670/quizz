@@ -88,6 +88,8 @@ node import_questions.example.js
 
 Development followed an Agile methodology. Track progress and tasks here: 👉 [View Trello Board] https://trello.com/b/zxegXEBf
 
+![User Flow Diagram](./diagram.jpg)
+
 -----
 
 Author: Martine PINNA
