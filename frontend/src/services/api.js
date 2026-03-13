@@ -1,63 +1,95 @@
 /* --- CONFIGURATION --- */
 /**
- * On utilise la variable d'environnement définie dans .env.
- * Si elle est absente ou que le Cloud est suspendu, on bascule sur http://localhost:1337.
- * Note : J'ai corrigé 'https://localhost' en 'http://localhost' car Strapi local tourne en HTTP par défaut.
+ * On définit l'URL de base. 
+ * IMPORTANT : 
+ * 1. Si Strapi Cloud est suspendu, assurez-vous de supprimer VITE_API_URL de votre .env local
+ * ou de le régler sur http://localhost:1337
+ * 2. Le code ci-dessous nettoie automatiquement les doublons de /api
  */
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:1337';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:1337';
+
+/**
+ * Fonction utilitaire pour centraliser la gestion des erreurs de fetch
+ */
+const safeFetch = async (endpoint, options) => {
+  // 1. On nettoie BASE_URL pour enlever tout /api ou / à la fin
+  const sanitizedBase = BASE_URL.replace(/\/api\/?$/, '').replace(/\/$/, '');
+  
+  // 2. On s'assure que l'endpoint commence par /api
+  const cleanEndpoint = endpoint.startsWith('/api') ? endpoint : `/api${endpoint}`;
+  
+  // 3. Construction de l'URL finale
+  const url = `${sanitizedBase}${cleanEndpoint}`;
+
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.error?.message || `Erreur serveur: ${res.status}`);
+    }
+    return await res.json();
+  } catch (error) {
+    console.error(`Erreur lors de l'appel à ${url} :`, error.message);
+    throw error;
+  }
+};
 
 /* --- AUTHENTIFICATION --- */
 export const postRegister = async (username, email, password) => {
-  const res = await fetch(`${API_URL}/api/auth/local/register`, {
+  return await safeFetch(`/auth/local/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, email, password }),
   });
-  return await res.json();
 };
 
 /* --- CONNEXION (LOGIN) --- */
 export const postLogin = async (identifier, password) => {
-  const res = await fetch(`${API_URL}/api/auth/local`, {
+  return await safeFetch(`/auth/local`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ identifier, password }), // Strapi utilise 'identifier' (pseudo ou email)
+    body: JSON.stringify({ identifier, password }),
   });
-  return await res.json();
 };
 
-/* --- GESTION DES QUESTIONS (Version Optimisée) --- */
+/* --- GESTION DES QUESTIONS --- */
 export const fetchQuestions = async (categorie, niveau, limit = 50) => {
   try {
-    const res = await fetch(
-      `${API_URL}/api/questions/random?categorie=${categorie.toLowerCase()}&niveau=${niveau.toLowerCase()}&limit=${limit}`
+    const result = await safeFetch(
+      `/questions/random?categorie=${categorie.toLowerCase()}&niveau=${niveau.toLowerCase()}&limit=${limit}`,
+      { method: 'GET' }
     );
     
-    const result = await res.json();
-    
-    if (result.data && Array.isArray(result.data)) {
-      return result.data.map(item => ({
+    const data = result.data || result;
+    if (data && Array.isArray(data)) {
+      return data.map(item => ({
         q: item.intitule, 
         a: item.reponse 
       }));
     }
   } catch (error) {
-    console.error("Erreur API :", error);
+    console.error("Impossible de récupérer les questions :", error.message);
   }
   return [];
 };
 
 /* --- GESTION DES SCORES (LEADERBOARD) --- */
 export const fetchLeaderboard = async () => {
-  const res = await fetch(`${API_URL}/api/scores?sort=points:desc&pagination[limit]=5`);
-  return await res.json();
+  try {
+    return await safeFetch(`/scores?sort=points:desc&pagination[limit]=5`, {
+      method: 'GET'
+    });
+  } catch (error) {
+    console.error("Erreur leaderboard :", error.message);
+    return { data: [] };
+  }
 };
 
 export const saveScore = async (pseudo, points, total, difficulte, token) => {
   const payload = { 
     data: { pseudo, points, total, difficulte } 
   };
-  const res = await fetch(`${API_URL}/api/scores`, {
+  return await safeFetch(`/scores`, {
     method: 'POST',
     headers: { 
       'Content-Type': 'application/json', 
@@ -65,21 +97,24 @@ export const saveScore = async (pseudo, points, total, difficulte, token) => {
     },
     body: JSON.stringify(payload)
   });
-  return await res.json();
 };
 
 /* --- RÉCUPÉRER LE TOTAL DES POINTS D'UN JOUEUR --- */
 export const fetchUserTotalPoints = async (pseudo) => {
-  const res = await fetch(`${API_URL}/api/scores?filters[pseudo][$eq]=${pseudo}&pagination[limit]=100`);
-  const result = await res.json();
-  
-  if (result.data?.length > 0) {
-    const total = result.data.reduce((sum, item) => {
-      // Gestion de la structure Strapi v4 (attributes) ou v5 (direct)
-      const p = item.attributes ? item.attributes.points : item.points;
-      return sum + p;
-    }, 0);
-    return total;
+  try {
+    const result = await safeFetch(`/scores?filters[pseudo][$eq]=${pseudo}&pagination[limit]=100`, {
+      method: 'GET'
+    });
+    
+    const data = result.data || [];
+    if (data.length > 0) {
+      return data.reduce((sum, item) => {
+        const p = item.attributes ? item.attributes.points : item.points;
+        return sum + p;
+      }, 0);
+    }
+  } catch (error) {
+    console.error("Erreur points totaux :", error.message);
   }
   return 0;
 };

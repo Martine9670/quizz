@@ -2,7 +2,6 @@
 
 A vibrant, modern general knowledge quiz built with React, Vite, and JavaScript. This project focuses on clean code, Service Pattern architecture, and separation of concerns.
 
-🌐 **Live Demo**: [quizzy on Vercel](https://quizz-martine.vercel.app)  
 📋 **Project Board**: [View Trello Board](https://trello.com/b/zxegXEBf)
 
 ![User Flow Diagram](./diagram.jpg)
@@ -47,8 +46,6 @@ A vibrant, modern general knowledge quiz built with React, Vite, and JavaScript.
 |-------|-----------|
 | Frontend | React 19 + Vite 7 |
 | Backend | Strapi 5 (Headless CMS) |
-| Hosting (Frontend) | Vercel |
-| Hosting (Backend) | Strapi Cloud |
 | Styling | CSS3 (Variables, Flexbox, Grid, Animations) |
 | Libraries | canvas-confetti, axios, vite-plugin-pwa |
 
@@ -78,7 +75,7 @@ Technical logic is isolated in `src/services/api.js`. UI components remain "dumb
 ## ⚙️ Installation & Setup (Local Development)
 
 ### Prerequisites
-- Node.js v24+
+- Node.js v18+
 - npm
 
 ### 1. Clone the repository
