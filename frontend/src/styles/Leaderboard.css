@@ -153,3 +153,22 @@
     margin: 30px auto;
   }
 }
+
+@media (max-width: 768px) {
+  .sidebar-leaderboard {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .history-item {
+    padding: 8px;
+  }
+
+  .history-user strong {
+    font-size: 0.8rem;
+  }
+
+  .points {
+    font-size: 0.9rem;
+  }
+}

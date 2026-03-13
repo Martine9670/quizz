@@ -221,3 +221,36 @@
     font-size: 0.75rem;
   }
 }
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .nav-logo {
+    font-size: 1.2rem;
+  }
+
+  .nav-slogan {
+    display: none;
+  }
+
+  .nav-links {
+    gap: 6px;
+  }
+
+  .nav-item {
+    font-size: 0.75rem;
+  }
+
+  .nav-logout-btn {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+  }
+
+  .btn-dys {
+    padding: 4px 8px;
+    font-size: 0.6rem;
+  }
+}
