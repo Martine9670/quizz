@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "scores",
+  "info": {
+    "singularName": "score",
+    "pluralName": "scores",
+    "displayName": "Score"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pseudo": {
+      "type": "string"
+    },
+    "points": {
+      "type": "integer"
+    },
+    "total": {
+      "type": "integer"
+    },
+    "difficulte": {
+      "type": "string"
+    }
+  }
+}

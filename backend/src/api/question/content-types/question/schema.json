@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "questions",
+  "info": {
+    "singularName": "question",
+    "pluralName": "questions",
+    "displayName": "question"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "reponse": {
+      "type": "string"
+    },
+    "niveau": {
+      "type": "enumeration",
+      "enum": [
+        "facile",
+        "moyen",
+        "difficile"
+      ]
+    },
+    "intitule": {
+      "type": "string"
+    },
+    "categorie": {
+      "type": "enumeration",
+      "enum": [
+        "tech",
+        "espace",
+        "cine",
+        "gaming",
+        "monde",
+        "cuisine",
+        "sport",
+        "musique",
+        "histoire",
+        "geographie"
+      ]
+    }
+  }
+}
