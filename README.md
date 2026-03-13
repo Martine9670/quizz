@@ -75,7 +75,7 @@ Technical logic is isolated in `src/services/api.js`. UI components remain "dumb
 ## ⚙️ Installation & Setup (Local Development)
 
 ### Prerequisites
-- Node.js v18+
+- Node.js v24
 - npm
 
 ### 1. Clone the repository
