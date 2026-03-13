@@ -131,4 +131,5 @@ build
 .strapi-cloud.json
 migrate.js
 seed_category.js
-seed_*.js
+seed_*.jsimport_questions.js
+questions_export.json
