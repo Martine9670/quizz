@@ -75,7 +75,7 @@ Technical logic is isolated in `src/services/api.js`. UI components remain "dumb
 ## ⚙️ Installation & Setup (Local Development)
 
 ### Prerequisites
-- Node.js v24
+- Node.js v18+
 - npm
 
 ### 1. Clone the repository
@@ -139,11 +139,17 @@ In `http://localhost:1337/admin` → **Settings → Users & Permissions → Role
 
 ## 🔄 Data Management
 
-- **Database**: 4500+ questions managed via the Strapi Admin panel.
+- **Database**: 4500+ questions managed via the Strapi Admin panel at `http://localhost:1337/admin`.
 - **Export**: Use the provided `export_questions.js` script to export questions from a local Strapi instance.
-- **Seeding (Example)**: A template script `import_questions.example.js` is provided to test your local installation:
+
+### Seeding example data
+A template script `import_questions.example.js` is provided at the root of the project with 15 sample questions (5 per difficulty level) to test your local installation.
+
+Make sure Strapi is running, then in a separate terminal:
 
 ```bash
+# From the root of the project
+npm install axios
 node import_questions.example.js
 ```
 
