@@ -248,3 +248,32 @@
   font-size: 0.85rem;
   opacity: 0.8;
 }
+
+@media (max-width: 768px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .category-card {
+    padding: 15px;
+  }
+
+  .category-icon {
+    font-size: 1.8rem;
+  }
+
+  .category-label {
+    font-size: 0.75rem;
+  }
+
+  .quizz-card {
+    padding: 20px;
+  }
+
+  .question-text {
+    font-size: 1.2rem;
+    height: auto;
+    min-height: 100px;
+  }
+}
