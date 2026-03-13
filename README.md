@@ -75,7 +75,7 @@ Technical logic is isolated in `src/services/api.js`. UI components remain "dumb
 ## ⚙️ Installation & Setup (Local Development)
 
 ### Prerequisites
-- Node.js v18+
+- Node.js v24
 - npm
 
 ### 1. Clone the repository
@@ -145,11 +145,17 @@ In `http://localhost:1337/admin` → **Settings → Users & Permissions → Role
 ### Seeding example data
 A template script `import_questions.example.js` is provided at the root of the project with 15 sample questions (5 per difficulty level) to test your local installation.
 
-Make sure Strapi is running, then in a separate terminal:
-
 ```bash
-# From the root of the project
+# Step 1 — Go to the root of the project
+cd quizz
+
+# Step 2 — Install the script dependency
 npm install axios
+
+# Step 3 — Start Strapi first (in a separate terminal)
+cd backend && npm install && npm run develop
+
+# Step 4 — Back in the first terminal, run the script
 node import_questions.example.js
 ```
 
