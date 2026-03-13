@@ -239,3 +239,44 @@
   font-size: 0.9rem;
   background: rgba(0, 0, 0, 0.2); /* Rappel de ton style */
 }
+
+@media (max-width: 768px) {
+  .landing-wrapper {
+    padding: 20px 15px;
+    gap: 30px;
+  }
+
+  .landing-intro {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .landing-text .main-title {
+    font-size: 2rem;
+  }
+
+  .description-text {
+    font-size: 1rem;
+  }
+
+  .btn-cta {
+    font-size: 1.1rem;
+    padding: 1rem 1.8rem;
+  }
+
+  .neon-border-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: unset;
+    margin: 0 auto;
+  }
+
+  .landing-features {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-text {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}
