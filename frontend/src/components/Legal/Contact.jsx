@@ -24,7 +24,7 @@ const Contact = ({ onBack }) => {
       setStatus("Envoi en cours...");
 
       // Requête vers Strapi
-      await axios.post('http://localhost:1337/api/messages', {
+      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, {        
         data: {
           email: email.value,
           contenu: message.value 
