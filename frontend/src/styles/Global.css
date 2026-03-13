@@ -349,3 +349,21 @@ html, body, #root {
 .badge-container .badge-label {
   color: inherit;
 }
+
+@media (max-width: 768px) {
+  .welcome-text {
+    white-space: normal;
+    font-size: 1.2rem;
+    animation: none;
+    width: 90%;
+  }
+
+  .symbol-1, .symbol-2, .symbol-3, .symbol-4 {
+    display: none;
+  }
+
+  .app-container {
+    overflow-x: hidden;
+    width: 100%;
+  }
+}
