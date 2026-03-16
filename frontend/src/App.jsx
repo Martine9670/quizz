@@ -10,14 +10,13 @@ import Footer from './components/Layout/Footer';
 // Composants - Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
-import { postRegister, postLogin, fetchQuestions, fetchLeaderboard, saveScore, fetchUserTotalPoints } from './services/api';
+import { postRegister, postLogin, fetchQuestions, fetchLeaderboard, saveScore, fetchUserTotalPoints, normalizeText, getLevenshteinDistance } from './services/api';
 
 // Composants - Game
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
 import CategorySelector from './components/Game/CategorySelector';
 import GameModeSelector from './components/Game/GameModeSelector';
-import { normalizeText } from './services/api';
 
 // Composant LandingPage
 import LandingPage from "./components/Layout/LandingPage";
@@ -229,11 +228,19 @@ const validerReponse = useCallback((e = null) => {
   if (e) e.preventDefault();
   
   const bonneReponse = questionsDuNiveau[indexQuestion]?.a;
+  const userText = normalizeText(reponse);
+  const targetText = normalizeText(bonneReponse);
+
+  // 1. Calcul de la distance de Levenshtein
+  const distance = getLevenshteinDistance(userText, targetText);
+
+  // 2. Vérification (Identique OU distance <= 1)
+  const isCorrect = userText === targetText || distance <= 1;
+
+  // 3. Calcul du score local pour éviter le délai du cycle d'état React
   let nouveauScore = score;
 
-  // Utilisation de normalizeText pour une comparaison flexible
-  // On compare les deux versions "nettoyées" (minuscules, sans accents, sans tirets)
-  if (normalizeText(reponse) === normalizeText(bonneReponse)) {
+  if (isCorrect) {
     successSound.currentTime = 0;
     successSound.play().catch(err => console.error("Audio error:", err));
     nouveauScore = score + 1;
@@ -243,12 +250,13 @@ const validerReponse = useCallback((e = null) => {
     errorSound.play().catch(err => console.error("Audio error:", err));
   }
 
-  // Suite de la logique (passage à la question suivante ou fin)
+  // 4. Navigation ou Fin de partie
   if (indexQuestion + 1 < questionsDuNiveau.length) {
     setIndexQuestion(i => i + 1);
     setReponse("");
     setTimeLeft(15);
   } else {
+    // On envoie le score calculé localement pour l'enregistrement immédiat
     terminerJeu(nouveauScore);
   }
 }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
