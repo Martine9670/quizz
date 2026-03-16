@@ -17,6 +17,7 @@ import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
 import CategorySelector from './components/Game/CategorySelector';
 import GameModeSelector from './components/Game/GameModeSelector';
+import { normalizeText } from './services/api';
 
 // Composant LandingPage
 import LandingPage from "./components/Layout/LandingPage";
@@ -222,29 +223,35 @@ function App() {
     if (niveau) enregistrerScore(scoreFinal, niveau);
   }, [niveau, enregistrerScore]);
 
-  const validerReponse = useCallback((e = null) => {
-    if (e) e.preventDefault();
-    const bonneReponse = questionsDuNiveau[indexQuestion]?.a;
-    let nouveauScore = score;
+/* --- DANS App.jsx --- */
 
-    if (reponse.trim().toLowerCase() === bonneReponse?.toLowerCase()) {
-      successSound.currentTime = 0;
-      successSound.play().catch(err => console.error("Audio error:", err));
-      nouveauScore = score + 1;
-      setScore(nouveauScore);
-    } else {
-      errorSound.currentTime = 0;
-      errorSound.play().catch(err => console.error("Audio error:", err));
-    }
+const validerReponse = useCallback((e = null) => {
+  if (e) e.preventDefault();
+  
+  const bonneReponse = questionsDuNiveau[indexQuestion]?.a;
+  let nouveauScore = score;
 
-    if (indexQuestion + 1 < questionsDuNiveau.length) {
-      setIndexQuestion(i => i + 1);
-      setReponse("");
-      setTimeLeft(15);
-    } else {
-      terminerJeu(nouveauScore);
-    }
-  }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
+  // Utilisation de normalizeText pour une comparaison flexible
+  // On compare les deux versions "nettoyées" (minuscules, sans accents, sans tirets)
+  if (normalizeText(reponse) === normalizeText(bonneReponse)) {
+    successSound.currentTime = 0;
+    successSound.play().catch(err => console.error("Audio error:", err));
+    nouveauScore = score + 1;
+    setScore(nouveauScore);
+  } else {
+    errorSound.currentTime = 0;
+    errorSound.play().catch(err => console.error("Audio error:", err));
+  }
+
+  // Suite de la logique (passage à la question suivante ou fin)
+  if (indexQuestion + 1 < questionsDuNiveau.length) {
+    setIndexQuestion(i => i + 1);
+    setReponse("");
+    setTimeLeft(15);
+  } else {
+    terminerJeu(nouveauScore);
+  }
+}, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
 
   const handleRejouer = () => {
     setCategorie(null);

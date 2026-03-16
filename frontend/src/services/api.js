@@ -118,3 +118,12 @@ export const fetchUserTotalPoints = async (pseudo) => {
   }
   return 0;
 };
+
+export const normalizeText = (text) => {
+  return text
+    .toLowerCase()                     // Tout en minuscules
+    .normalize("NFD")                  // Décompose les accents (ex: é -> e + ´)
+    .replace(/[\u0300-\u036f]/g, "")   // Supprime les accents
+    .replace(/[-]/g, " ")              // Remplace les tirets par des espaces
+    .trim();                           // Enlève les espaces inutiles au début/fin
+};

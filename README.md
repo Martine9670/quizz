@@ -32,6 +32,16 @@ A vibrant, modern general knowledge quiz built with React, Vite, and JavaScript.
 
 ---
 
+## 🧩 Fonctionnalités Spécifiques & UX
+
+### Normalisation de texte (Fuzzy Matching)
+Afin d'améliorer l'expérience utilisateur (UX) et d'éviter la frustration lors des saisies, l'application intègre un algorithme de normalisation des réponses :
+* **Tolérance aux accents** : Utilisation de la décomposition Unicode (NFD) pour ignorer les accents.
+* **Insensibilité à la casse** : Comparaison systématique en minuscules.
+* **Flexibilité des caractères spéciaux** : Les tirets sont traités comme des espaces pour faciliter la saisie sur mobile.
+
+---
+
 ## ⚖️ Navigation & Compliance
 
 - **GDPR Ready**: Dedicated pages for Terms of Use (CGU), Legal Mentions, and GDPR policy.
