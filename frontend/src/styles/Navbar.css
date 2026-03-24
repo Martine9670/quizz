@@ -32,6 +32,18 @@
   text-shadow: 0 0 15px rgba(100, 108, 255, 0.5);
 }
 
+/* --- NOUVEAU STYLE POUR LE BOUTON LOGO (Accessibilité) --- */
+.btn-logo-reset {
+  background: none;
+  border: none;
+  font-family: inherit; /* Garde la police Orbitron du parent */
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-shadow: inherit; /* Garde l'effet néon */
+}
+
 .nav-slogan {
   font-family: 'OpenDyslexic'; /* La police spéciale est mise par défaut ! */
   font-size: 1.5rem;

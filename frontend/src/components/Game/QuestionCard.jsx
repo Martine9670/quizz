@@ -11,21 +11,29 @@ const QuestionCard = ({
   terminerJeu, 
   score 
 }) => {
+  
+  // CLEAN CODE : On extrait la logique de confirmation pour plus de clarté
+  const handleQuit = () => {
+    if (window.confirm("Quitter la partie et enregistrer le score ?")) {
+      terminerJeu(score);
+    }
+  };
+
   return (
     /* --- STRUCTURE PRINCIPALE --- */
-    /* Utilisation de <article> au lieu de <div> pour la sémantique (C1.e) */
+    /* Utilisation de <article> au lieu de <div> pour la sémantique */
     <article className="card">
       
       {/* COMPOSANT TIMER */}
       <Timer timeLeft={timeLeft} />
       
       {/* SECTION QUESTION */}
-      {/* On utilise une balise <h2> pour la hiérarchie des titres (C1.e) */}
+      {/* On utilise une balise <h2> pour la hiérarchie des titres  */}
       <h2 className="question-text">{question}</h2>
       
       {/* SECTION FORMULAIRE DE RÉPONSE */}
       <form onSubmit={validerReponse}>
-        {/* LABEL OBLIGATOIRE pour l'accessibilité (C1.c) 
+        {/* LABEL OBLIGATOIRE pour l'accessibilité 
             sr-only est une classe pour cacher le texte visuellement mais le laisser pour les malvoyants */}
         <label htmlFor="answer-input" className="sr-only">Votre réponse</label>
         
@@ -47,7 +55,7 @@ const QuestionCard = ({
       
       {/* SECTION ACTIONS DE SORTIE */}
       <button 
-        onClick={() => window.confirm("Quitter la partie et enregistrer le score ?") && terminerJeu(score)} 
+        onClick={handleQuit} 
         className="btn-abandon answer-btn-exit"
         aria-label="Quitter et enregistrer le score"
       >

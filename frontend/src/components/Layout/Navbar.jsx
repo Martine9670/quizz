@@ -10,14 +10,13 @@ const Navbar = ({
       
 {/* --- SECTION GAUCHE : LOGO & STATUT --- */}
       <div className="nav-left">
-        {/* On ajoute onClick et le style cursor pour le retour accueil */}
-        <h1 
-          className="nav-logo" 
-          aria-label="Quizzy - Le jeu de quiz"
-          onClick={resetQuizz}
-          style={{ cursor: 'pointer' }}
-        >
-          🕹️ QUIZZY
+        {/* AMÉLIORATION ACCESSIBILITÉ : Le h1 reste pour le SEO, mais l'interaction est dans un bouton */}
+        <h1 className="nav-logo">
+          <button 
+            onClick={resetQuizz} 
+            className="btn-logo-reset"
+            aria-label="Retour à l'accueil Quizzy"
+          >🕹️ QUIZZY</button>
         </h1>
         
         <div className="nav-status">
