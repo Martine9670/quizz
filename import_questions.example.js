@@ -6,7 +6,7 @@ const axios = require('axios');
 const API_URL = 'http://localhost:1337/api/questions';
 
 const exampleQuestions = [
-  // --- FACILE ---
+  // --- EASY ---
   {
     data: {
       intitule: "Quelle est la capitale de la France ?",
@@ -48,7 +48,7 @@ const exampleQuestions = [
     }
   },
 
-  // --- MOYEN ---
+  // --- MEDIUM ---
   {
     data: {
       intitule: "En quelle année a été créé JavaScript ?",
@@ -90,7 +90,7 @@ const exampleQuestions = [
     }
   },
 
-  // --- DIFFICILE ---
+  // --- HARD ---
   {
     data: {
       intitule: "Quel physicien a théorisé l'effet photoélectrique, lui valant le prix Nobel en 1921 ?",

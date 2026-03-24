@@ -1,4 +1,4 @@
-/* --- COMPOSANT NAVBAR --- */
+/* --- NAVBAR COMPONENT --- */
 const Navbar = ({ 
   isLoggedIn, user, niveau, termine, 
   resetQuizz, handleLogout, setIsRegistering, isRegistering,
@@ -8,9 +8,9 @@ const Navbar = ({
   return (
     <nav className="navbar" aria-label="Navigation principale">
       
-{/* --- SECTION GAUCHE : LOGO & STATUT --- */}
+{/* --- LEFT SECTION: LOGO & STATUS --- */}
       <div className="nav-left">
-        {/* AMÉLIORATION ACCESSIBILITÉ : Le h1 reste pour le SEO, mais l'interaction est dans un bouton */}
+        {/* ACCESSIBILITY IMPROVEMENT: h1 remains for SEO, but interaction is in a button */}
         <h1 className="nav-logo">
           <button 
             onClick={resetQuizz} 
@@ -27,7 +27,7 @@ const Navbar = ({
           ></span>
         </div>
 
-        {/* --- AFFICHAGE DYNAMIQUE --- */}
+        {/* --- DYNAMIC DISPLAY --- */}
         {niveau === null ? (
           <span className={`nav-slogan ${isDyslexic ? 'dyslexic-mode' : ''}`}>
             Prêt à relever le défi ?
@@ -41,10 +41,10 @@ const Navbar = ({
         )}      
       </div>
 
-{/* --- SECTION DROITE : LIENS & ACTIONS --- */}
+{/* --- RIGHT SECTION: LINKS & ACTIONS --- */}
       <div className="nav-links">
         
-        {/* BOUTON AUDIO (Nouveau !) */}
+        {/* AUDIO BUTTON (New!) */}
         <button 
           onClick={toggleMute}
           className="btn-nav audio-toggle"
@@ -54,7 +54,7 @@ const Navbar = ({
           {isMuted ? "🔇" : "🔊"}
         </button>
 
-        {/* BOUTON ACCESSIBILITÉ */}
+        {/* ACCESSIBILITY BUTTON */}
         <button 
           onClick={() => setIsDyslexic(!isDyslexic)}
           className="btn-nav"
@@ -64,7 +64,7 @@ const Navbar = ({
           {isDyslexic ? "Mode Dys : ON" : "Mode Dys : OFF"}
         </button>
 
-        {/* ACTIONS D'AUTHENTIFICATION */}
+        {/* AUTHENTICATION ACTIONS */}
         {isLoggedIn ? (
           <>
             <button onClick={resetQuizz} className="nav-item">Accueil</button>

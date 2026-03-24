@@ -15,9 +15,9 @@ export default defineConfig({
       },
       includeAssets: ['favicon.ico', 'robots.txt', 'sounds/*.mp3'], 
       
-      /* --- MANIFEST PWA --- */
+      /* --- PWA MANIFEST --- */
       manifest: {
-        id: '/', // <-- Pour identifier l'app de manière unique
+        id: '/', // <-- To uniquely identify the app
         name: 'Quizzy Pro',
         short_name: 'Quizzy',
         description: 'Le meilleur quizz pour tester vos connaissances',

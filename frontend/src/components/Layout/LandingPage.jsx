@@ -3,17 +3,17 @@ import '../../styles/LandingPage.css';
 
 const LandingPage = ({ onStart, historique, isMuted }) => {
 
-  // 2. Bloc pour contrôler la musique de l'App depuis la Landing
+  // 2. Block to control App music from Landing
   useEffect(() => {
-    // On cherche l'élément audio de l'application (le bgMusicRef de App.js)
-    // S'il n'a pas d'ID, on peut essayer de le couper via la logique globale
-    const music = document.querySelector('audio'); // Cible l'audio de fond
+    // Look for application audio element (App.js bgMusicRef)
+    // If no ID, try stopping via global logic
+    const music = document.querySelector('audio'); // Targets background audio
     
     if (music) {
       if (isMuted) {
         music.pause();
       } else {
-        // On ne relance que si l'utilisateur n'est pas sur "Mute"
+        // Only restart if user is not on "Mute"
         music.play().catch(() => console.log("Attente interaction"));
       }
     }
@@ -21,7 +21,7 @@ const LandingPage = ({ onStart, historique, isMuted }) => {
 
   return (
     <div className="landing-wrapper">
-      {/* ... tout le reste de ton code reste identique ... */}
+      {/* ... all the rest of your code remains identical ... */}
         <h1 className="welcome-text">BIENVENUE SUR QUIZZY</h1>
       <section className="landing-intro">
         <div className="landing-text">

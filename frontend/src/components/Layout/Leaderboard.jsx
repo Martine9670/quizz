@@ -1,17 +1,17 @@
 import { useState } from 'react';
 
-/* --- COMPOSANT LEADERBOARD --- */
+/* --- LEADERBOARD COMPONENT --- */
 const Leaderboard = ({ historique }) => {
-  /* --- LOGIQUE DE FILTRAGE --- */
+  /* --- FILTERING LOGIC --- */
   const [ongletDifficulte, setOngletDifficulte] = useState('facile');
-  const [ongletFormat, setOngletFormat] = useState(10); // 10, 50 ou 100
+  const [ongletFormat, setOngletFormat] = useState(10); // 10, 50 or 100
 
-  // On filtre par FORMAT (nb questions) ET par DIFFICULTÉ
+  // Filter by FORMAT (nb questions) AND by DIFFICULTY
   const scoresFiltres = historique
     .map(h => h.attributes ? { ...h.attributes, id: h.id } : h)
     .filter(data => 
       (data.difficulte || 'facile') === ongletDifficulte && 
-      (data.total === ongletFormat) // On filtre sur la colonne "total"
+      (data.total === ongletFormat) // Filter on "total" column
     )
     .sort((a, b) => b.points - a.points);
 
@@ -19,7 +19,7 @@ const Leaderboard = ({ historique }) => {
     <div className="history-section">
       <h3>🏆 Le tableau des légendes</h3>
 
-      {/* --- 1. SÉLECTION DU FORMAT (Rapide, Standard, Marathon) --- */}
+      {/* --- 1. FORMAT SELECTION (Rapid, Standard, Marathon) --- */}
       <div className="format-tabs">
         <button 
           className={`tab-btn ${ongletFormat === 10 ? 'active' : ''}`} 
@@ -41,7 +41,7 @@ const Leaderboard = ({ historique }) => {
         </button>
       </div>
 
-      {/* --- 2. SÉLECTION DE LA DIFFICULTÉ --- */}
+      {/* --- 2. DIFFICULTY SELECTION --- */}
       <div className="difficulty-tabs">
         {['facile', 'moyen', 'difficile'].map((niv) => (
           <button 
@@ -54,7 +54,7 @@ const Leaderboard = ({ historique }) => {
         ))}
       </div>
       
-      {/* --- 3. LISTE DES SCORES FILTRÉS --- */}
+      {/* --- 3. FILTERED SCORE LIST --- */}
       <ul className="history-list">
         {scoresFiltres.map((data, i) => (
           <li key={data.id || i} className="history-item">

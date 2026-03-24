@@ -1,6 +1,6 @@
 import React from 'react';
 
-/* --- COMPOSANT FOOTER --- */
+/* --- FOOTER COMPONENT --- */
 const Footer = ({ onNavigate }) => {
   return (
     <footer className="footer" aria-label="Pied de page">

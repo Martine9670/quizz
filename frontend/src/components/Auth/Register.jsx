@@ -1,12 +1,12 @@
-/* --- COMPOSANT D'INSCRIPTION --- */
-// On récupère authError ici aussi
+/* --- REGISTER COMPONENT --- */
+// Also get authError here
 const Register = ({ handleRegister, setIsRegistering, authError }) => {
   return (
     <section aria-labelledby="register-title">
-      {/* --- TITRE DE LA SECTION --- */}
+      {/* --- SECTION TITLE --- */}
       <h2 id="register-title" className="main-title">Inscription</h2>
       
-      {/* --- FORMULAIRE D'INSCRIPTION --- */}
+      {/* --- REGISTRATION FORM --- */}
       <form onSubmit={handleRegister} aria-label="Formulaire d'inscription">
         <label htmlFor="reg-username" className="sr-only">Pseudo</label>
         <input id="reg-username" name="username" className="input-field" placeholder="Pseudo..." required />
@@ -17,8 +17,8 @@ const Register = ({ handleRegister, setIsRegistering, authError }) => {
         <label htmlFor="reg-password" className="sr-only">Mot de passe</label>
         <input id="reg-password" name="password" type="password" className="input-field" placeholder="Mot de passe..." required />
 
-        {/* --- GESTION DES ERREURS D'AUTHENTIFICATION --- */}
-        {/* --- AFFICHAGE DE L'ERREUR SERVEUR OU VALIDATION --- */}
+        {/* --- AUTHENTICATION ERROR HANDLING --- */}
+        {/* --- DISPLAY SERVER OR VALIDATION ERROR --- */}
         {authError && (
           <p style={{ color: '#ff4d4d', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '15px' }} role="alert">
             {authError}
@@ -31,7 +31,7 @@ const Register = ({ handleRegister, setIsRegistering, authError }) => {
         </p>
       </form>
 
-      {/* --- LIEN DE BASCULE VERS CONNEXION --- */}
+      {/* --- TOGGLE LINK TO LOGIN --- */}
       <button 
         onClick={() => setIsRegistering(false)} 
         className="toggle-auth"

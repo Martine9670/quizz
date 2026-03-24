@@ -24,13 +24,13 @@ html, body, #root {
   font-family: 'Poppins', sans-serif;
 }
 
-/* --- LOGIQUE DYSLEXIQUE CIBLÉE --- */
+/* --- TARGETED DYSLEXIC LOGIC --- */
 .dyslexic-mode, 
 .dyslexic-mode * {
   font-family: 'OpenDyslexicRegular', sans-serif !important;
 }
 
-/* --- LE CONTAINER PRINCIPAL --- */
+/* --- MAIN CONTAINER --- */
 .app-container {
   min-height: 100vh;
   width: 100vw;
@@ -41,7 +41,7 @@ html, body, #root {
   overflow-x: hidden;
   background: transparent;
   z-index: 1;
-  /* Utilisation du padding-top pour gérer la navbar sans forcer */
+  /* Using padding-top to handle navbar without forcing */
   padding-top: calc(var(--navbar-height) + 20px);
   align-items: center;
 }
@@ -52,7 +52,7 @@ html, body, #root {
   color: white;
 }
 
-/* --- SYMBOLES DE FOND --- */
+/* --- BACKGROUND SYMBOLS --- */
 .bg-symbol {
   position: fixed;
   z-index: 0; 
@@ -68,7 +68,7 @@ html, body, #root {
 .symbol-3 { font-size: 18rem; top: 55%; right: 60%; transform: rotate(10deg); color: black; }
 .symbol-4 { font-size: 18rem; bottom: 60%; right: 20%; transform: rotate(10deg); color: black; }
 
-/* --- CARTES --- */
+/* --- CARDS --- */
 .card {
   background: black;
   padding: 40px;
@@ -97,7 +97,7 @@ html, body, #root {
   50% { transform: translateY(-15px); }
 }
 
-/* --- TITRES & TEXTES SPECIAUX --- */
+/* --- TITLES & SPECIAL TEXTS --- */
 .card h2, .welcome-text, .nav-logo {
   font-family: 'Orbitron', sans-serif;
 }
@@ -123,7 +123,7 @@ html, body, #root {
   100% { width: 0; }
 }
 
-/* --- TITRE DU SÉLECTEUR DE CATÉGORIE --- */
+/* --- CATEGORY SELECTOR TITLE --- */
 .category-selector .main-title {
   color: #ffffff;
   font-family: 'Orbitron', sans-serif;
@@ -134,19 +134,19 @@ html, body, #root {
   margin-bottom: 40px;
   margin-top: 10px;
   
-  /* L'effet Glow pour décoller du fond sombre */
+  /* Glow effect to lift off dark background */
   text-shadow: 0 0 15px rgba(100, 108, 255, 0.7), 
                0 0 30px rgba(100, 108, 255, 0.3);
   
-  /* Un léger dégradé pour le relief */
+  /* Slight gradient for relief */
   background: linear-gradient(to bottom, #ffffff 50%, #c2c5ff 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: block; /* S'assure qu'il prend toute la largeur */
+  display: block; /* Ensures it takes full width */
 }
 
-/* --- BOUTONS & INPUTS --- */
+/* --- BUTTONS & INPUTS --- */
 .btn-primary, .btn-abandon {
   width: 100%; 
   max-width: 220px;
@@ -250,7 +250,7 @@ html, body, #root {
   max-width: 700px;
   text-align: left;
   margin: 40px auto; 
-  /* Pas besoin de color ici, .card s'en occupe */
+  /* No need for color here, .card handles it */
 }
 
 .legal-content { 
@@ -288,15 +288,15 @@ html, body, #root {
 .welcome-player-title { font-size: 2.5rem; color: #ccc; margin-bottom: 2rem; text-align: center; }
 .welcome-player-title span { color: rgba(235, 74, 74, 0.938); text-transform: capitalize; }
 
-/* --- GESTION DES MARGES DE CARTES --- */
-/* On utilise une classe de wrapper pour descendre les cartes spécifiques */
+/* --- CARD MARGIN MANAGEMENT --- */
+/* Use wrapper class to push down specific cards */
 .contact-card-fix, 
 .card:has(.contact-form),
 .legal-card {
   margin-top: 50px;
 }
 
-/* On laisse les cartes de jeu (.quizz-card) libres de leurs mouvements pour Game.css */
+/* Leave game cards (.quizz-card) free for Game.css */
 .card, .game-layout-wrapper {
   margin-left: auto;
   margin-right: auto;
@@ -314,7 +314,7 @@ html, body, #root {
   margin-right: auto;
 }
 
-/* Style de base commun */
+/* Common base style */
 .badge-container {
   display: inline-flex;
   align-items: center;
@@ -332,7 +332,7 @@ html, body, #root {
   text-transform: uppercase;
 }
 
-/* Variantes de couleurs selon le niveau */
+/* Color variants by level */
 .badge-novice   { border-color: #94a3b8; color: #94a3b8; }
 .badge-apprenti { border-color: #4ade80; color: #4ade80; }
 .badge-guerrier { border-color: #f87171; color: #f87171; }
@@ -345,7 +345,7 @@ html, body, #root {
   transition: all 0.3s ease;
 }
 
-/* On s'assure que le label hérite de la couleur du parent */
+/* Ensure label inherits parent color */
 .badge-container .badge-label {
   color: inherit;
 }

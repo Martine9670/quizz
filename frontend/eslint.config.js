@@ -5,23 +5,23 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
-/* --- CONFIGURATION ESLINT --- */
+/* --- ESLINT CONFIGURATION --- */
 export default defineConfig([
-  /* IGNORER LES FICHIERS DE BUILD */
+  /* IGNORE BUILD FILES */
   globalIgnores(['dist', 'dev-dist']),
   
   {
-    /* FICHIERS CIBLÉS */
+    /* TARGETED FILES */
     files: ['**/*.{js,jsx}'],
     
-    /* EXTENSIONS DE CONFIGURATION */
+    /* CONFIGURATION EXTENSIONS */
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
     
-    /* OPTIONS DE LANGAGE */
+    /* LANGUAGE OPTIONS */
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -32,7 +32,7 @@ export default defineConfig([
       },
     },
     
-    /* RÈGLES PERSONNALISÉES */
+    /* CUSTOM RULES */
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },

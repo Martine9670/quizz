@@ -1,11 +1,11 @@
-/* --- CONTENEUR PRINCIPAL DU CLASSEMENT --- */
+/* --- MAIN LEADERBOARD CONTAINER --- */
 .sidebar-leaderboard {
   position: fixed;
   right: 40px;
-  top: 55%; /* Légèrement descendu pour ne pas coller la navbar */
-  transform: translateY(-50%); /* Centrage vertical corrigé */
-  width: 340px; /* Élargi pour éviter les scores tronqués sur 100 */
-  max-height: 85vh; /* Empêche de sortir de l'écran */
+  top: 55%; /* Slightly lowered to avoid sticking to navbar */
+  transform: translateY(-50%); /* Corrected vertical centering */
+  width: 340px; /* Widened to avoid truncated scores on 100 */
+  max-height: 85vh; /* Prevent going off-screen */
   display: flex;
   flex-direction: column;
   box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 15px rgba(203, 99, 231, 0.4);
@@ -17,7 +17,7 @@
   z-index: 100;
 }
 
-/* --- TITRE ET ENTÊTE --- */
+/* --- TITLE AND HEADER --- */
 .history-section h3 {
   font-size: 0.9rem;
   margin-bottom: 20px;
@@ -28,20 +28,20 @@
   font-weight: 900;
 }
 
-/* --- LISTE ET SCROLLBAR --- */
+/* --- LIST AND SCROLLBAR --- */
 .history-list {
   list-style: none;
   padding: 0;
   margin: 0;
   overflow-y: auto;
   padding-right: 5px;
-  flex-grow: 1; /* Permet à la liste d'occuper l'espace restant */
+  flex-grow: 1; /* Allows list to take up remaining space */
 }
 
 .history-list::-webkit-scrollbar { width: 4px; }
 .history-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
 
-/* --- ÉLÉMENTS DE LA LISTE (LIGNES) --- */
+/* --- LIST ITEMS (ROWS) --- */
 .history-item {
   display: flex;
   justify-content: space-between;
@@ -56,25 +56,25 @@
 
 .history-item:hover { transform: translateX(-5px); background: rgba(255, 255, 255, 0.07); }
 
-/* Bordure colorée selon le rang pour le Top 3 */
+/* Colored border by rank for Top 3 */
 .history-item:nth-child(1) { border-left-color: #ffd700; background: rgba(255, 215, 0, 0.05); }
 .history-item:nth-child(2) { border-left-color: #c0c0c0; }
 .history-item:nth-child(3) { border-left-color: #cd7f32; }
 
-/* --- INFORMATIONS UTILISATEUR --- */
+/* --- USER INFO --- */
 .history-user { display: flex; align-items: center; gap: 12px; }
 .history-user strong { font-size: 0.95rem; color: white !important; }
 .rank { color: #4CAF50 !important; font-size: 0.8rem; font-weight: 900; min-width: 25px; }
 
-/* --- DÉTAILS DU SCORE --- */
+/* --- SCORE DETAILS --- */
 .score-date { font-size: 0.7rem; opacity: 0.5; } 
 
 .history-details {
   display: flex;
-  flex-direction: column; /* Badge et score l'un sur l'autre pour gagner de la place */
+  flex-direction: column; /* Badge and score stacked to save space */
   align-items: flex-end;
   gap: 4px;
-  min-width: 90px; /* Empêche le texte d'être tronqué */
+  min-width: 90px; /* Prevents text from being truncated */
 }
 
 .points { 
@@ -85,7 +85,7 @@
   white-space: nowrap; 
 }
 
-/* --- BADGES DE DIFFICULTÉ --- */
+/* --- DIFFICULTY BADGES --- */
 .badge-mini {
   font-size: 0.6rem;
   padding: 3px 10px;
@@ -99,7 +99,7 @@
 .badge-mini.moyen { background: rgba(250, 204, 21, 0.1); color: #facc15; border-color: rgba(250, 204, 21, 0.3); }
 .badge-mini.difficile { background: rgba(248, 113, 113, 0.1); color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
 
-/* --- ONGLETS (FORMATS & DIFFICULTÉ) --- */
+/* --- TABS (FORMATS & DIFFICULTY) --- */
 .format-tabs, .difficulty-tabs {
   display: flex;
   gap: 8px;
@@ -123,15 +123,15 @@
 
 .tab-btn:hover:not(.active) { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
-/* États Actifs */
+/* Active States */
 .tab-btn.active { font-weight: bold; color: white; }
 
-/* Couleurs spécifiques Difficulté Active */
+/* Specific Colors Active Difficulty */
 .tab-btn.facile.active { background: rgba(74, 222, 128, 0.15); border-color: #4ade80; color: #4ade80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
 .tab-btn.moyen.active { background: rgba(250, 204, 21, 0.15); border-color: #facc15; color: #facc15; box-shadow: 0 0 10px rgba(250, 204, 21, 0.3); }
 .tab-btn.difficile.active { background: rgba(248, 113, 113, 0.15); border-color: #f87171; color: #f87171; box-shadow: 0 0 10px rgba(248, 113, 113, 0.3); }
 
-/* Couleur spécifique Format Active (10, 50, 100) */
+/* Specific Color Active Format (10, 50, 100) */
 .format-tabs .tab-btn.active { background: rgba(100, 108, 255, 0.2); border-color: #646cff; color: #fff; box-shadow: 0 0 10px rgba(100, 108, 255, 0.3); }
 
 /* --- MESSAGES --- */
@@ -143,7 +143,7 @@
   margin-top: 20px;
 }
 
-/* --- CONFIGURATION RESPONSIVE --- */
+/* --- RESPONSIVE CONFIGURATION --- */
 @media (max-width: 1100px) {
   .sidebar-leaderboard {
     position: static;

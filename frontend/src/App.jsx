@@ -2,26 +2,26 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 
-// Composants - Layout
+// Components - Layout
 import Navbar from './components/Layout/Navbar';
 import Leaderboard from './components/Layout/Leaderboard';
 import Footer from './components/Layout/Footer';
 
-// Composants - Auth
+// Components - Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import { postRegister, postLogin, fetchQuestions, fetchLeaderboard, saveScore, fetchUserTotalPoints, normalizeText, getLevenshteinDistance } from './services/api';
 
-// Composants - Game
+// Components - Game
 import LevelSelector from './components/Game/LevelSelector';
 import QuestionCard from './components/Game/QuestionCard';
 import CategorySelector from './components/Game/CategorySelector';
 import GameModeSelector from './components/Game/GameModeSelector';
 
-// Composant LandingPage
+// LandingPage Component
 import LandingPage from "./components/Layout/LandingPage";
 
-// Composants - Legal
+// Components - Legal
 import Contact from './components/Legal/Contact';
 import LegalText from './components/Legal/LegalText';
 import CGU from './components/Legal/CGU';
@@ -35,7 +35,7 @@ import './styles/Game.css';
 import './styles/Leaderboard.css';
 import './styles/LandingPage.css';
 
-/* --- DICTIONNAIRE DES CATÉGORIES --- */
+/* --- CATEGORY DICTIONARY --- */
 const labelsCategories = {
   tech: 'Tech & Code',
   espace: 'Espace',
@@ -73,14 +73,14 @@ const Home = ({ userStats }) => {
   );
 };
 
-/* --- INITIALISATION DES ASSETS AUDIO --- */
+/* --- AUDIO ASSETS INITIALIZATION --- */
 const successSound = new Audio('/sounds/correct.mp3');
 const errorSound = new Audio('/sounds/wrong.mp3');
 successSound.volume = 0.5;
 errorSound.volume = 0.4;
 
 function App() {
-  /* --- ÉTATS - AUTHENTICATION & UI --- */
+  /* --- STATES - AUTHENTICATION & UI --- */
   const [user, setUser]                     = useState(localStorage.getItem("quizzUser") || "");
   const [isLoggedIn, setIsLoggedIn]         = useState(!!localStorage.getItem("quizzUser"));
   const [isRegistering, setIsRegistering]   = useState(false);
@@ -92,7 +92,7 @@ function App() {
   const [isMuted, setIsMuted]               = useState(false);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
 
-  /* --- ÉTATS - LOGIQUE DE JEU --- */
+  /* --- STATES - GAME LOGIC --- */
   const [nbQuestions, setNbQuestions]           = useState(10);
   const [categorie, setCategorie]               = useState(null);
   const [niveau, setNiveau]                     = useState(null);
@@ -104,10 +104,10 @@ function App() {
   const [historique, setHistorique]             = useState([]);
   const [timeLeft, setTimeLeft]                 = useState(15);
 
-  /* --- RÉFÉRENCES --- */
+  /* --- REFERENCES --- */
   const bgMusicRef = useRef(new Audio('/sounds/musicgame.mp3'));
 
-  /* --- ACTIONS API --- */
+  /* --- API ACTIONS --- */
   const chargerScores = useCallback(async () => {
     try {
       const result = await fetchLeaderboard();
@@ -132,7 +132,7 @@ function App() {
     }
   }, [user, questionsDuNiveau.length, chargerScores]);
 
-  /* --- GESTIONNAIRES AUTH --- */
+  /* --- AUTH HANDLERS --- */
   const handleRegister = async (e) => {
     e.preventDefault();
     setAuthError("");
@@ -199,7 +199,7 @@ function App() {
     }
   };
 
-  /* --- GESTIONNAIRES GAME --- */
+  /* --- GAME HANDLERS --- */
   const handleDemarrer = async (choix) => {
     try {
       const selection = await fetchQuestions(categorie, choix, nbQuestions);
@@ -222,7 +222,7 @@ function App() {
     if (niveau) enregistrerScore(scoreFinal, niveau);
   }, [niveau, enregistrerScore]);
 
-/* --- DANS App.jsx --- */
+/* --- IN App.jsx --- */
 
 const validerReponse = useCallback((e = null) => {
   if (e) e.preventDefault();
@@ -231,13 +231,13 @@ const validerReponse = useCallback((e = null) => {
   const userText = normalizeText(reponse);
   const targetText = normalizeText(bonneReponse);
 
-  // 1. Calcul de la distance de Levenshtein
+  // 1. Calculate Levenshtein distance
   const distance = getLevenshteinDistance(userText, targetText);
 
-  // 2. Vérification (Identique OU distance <= 1)
+  // 2. Verification (Identical OR distance <= 1)
   const isCorrect = userText === targetText || distance <= 1;
 
-  // 3. Calcul du score local pour éviter le délai du cycle d'état React
+  // 3. Calculate local score to avoid React state cycle delay
   let nouveauScore = score;
 
   if (isCorrect) {
@@ -250,13 +250,13 @@ const validerReponse = useCallback((e = null) => {
     errorSound.play().catch(err => console.error("Audio error:", err));
   }
 
-  // 4. Navigation ou Fin de partie
+  // 4. Navigation or End of game
   if (indexQuestion + 1 < questionsDuNiveau.length) {
     setIndexQuestion(i => i + 1);
     setReponse("");
     setTimeLeft(15);
   } else {
-    // On envoie le score calculé localement pour l'enregistrement immédiat
+    // Send locally calculated score for immediate recording
     terminerJeu(nouveauScore);
   }
 }, [indexQuestion, questionsDuNiveau, reponse, score, terminerJeu]);
@@ -305,7 +305,7 @@ const validerReponse = useCallback((e = null) => {
     setIsMuted(!isMuted);
   };
 
-  /* --- EFFETS --- */
+  /* --- EFFECTS --- */
   useEffect(() => {
     const music = bgMusicRef.current;
     music.loop = true;
@@ -378,24 +378,24 @@ const validerReponse = useCallback((e = null) => {
     return () => clearInterval(interval);
   }, [timeLeft, niveau, termine, questionsDuNiveau.length, validerReponse]);
 
-  /* --- RENDU --- */
+  /* --- RENDER --- */
   return (
     <main className={`app-container ${isDyslexic ? 'dyslexic-mode' : ''}`}>
 
-      {/* Popup de bienvenue après inscription */}
+      {/* Welcome popup after registration */}
       {showWelcomePopup && (
         <div className="welcome-popup">
           🎉 Bienvenue {user} ! Ton compte a été créé avec succès !
         </div>
       )}
 
-      {/* Symboles décoratifs de fond */}
+      {/* Decorative background symbols */}
       <div className="bg-symbol symbol-1">?</div>
       <div className="bg-symbol symbol-2">!</div>
       <div className="bg-symbol symbol-3">+</div>
       <div className="bg-symbol symbol-4">=</div>
 
-      {/* Barre de navigation */}
+      {/* Navigation bar */}
       <Navbar {...{
         isLoggedIn, user, niveau, termine,
         resetQuizz: () => { resetQuizz(); setActivePage("game"); },

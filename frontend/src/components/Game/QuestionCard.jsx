@@ -1,7 +1,7 @@
 /* --- IMPORTS --- */
 import Timer from './Timer';
 
-/* --- COMPOSANT QUESTION CARD --- */
+/* --- QUESTION CARD COMPONENT --- */
 const QuestionCard = ({ 
   timeLeft, 
   question, 
@@ -12,7 +12,7 @@ const QuestionCard = ({
   score 
 }) => {
   
-  // CLEAN CODE : On extrait la logique de confirmation pour plus de clarté
+  // CLEAN CODE: Extract confirmation logic for clarity
   const handleQuit = () => {
     if (window.confirm("Quitter la partie et enregistrer le score ?")) {
       terminerJeu(score);
@@ -20,21 +20,21 @@ const QuestionCard = ({
   };
 
   return (
-    /* --- STRUCTURE PRINCIPALE --- */
-    /* Utilisation de <article> au lieu de <div> pour la sémantique */
+    /* --- MAIN STRUCTURE --- */
+    /* Using <article> instead of <div> for semantics */
     <article className="card">
       
-      {/* COMPOSANT TIMER */}
+      {/* TIMER COMPONENT */}
       <Timer timeLeft={timeLeft} />
       
-      {/* SECTION QUESTION */}
-      {/* On utilise une balise <h2> pour la hiérarchie des titres  */}
+      {/* QUESTION SECTION */}
+      {/* Using an <h2> tag for heading hierarchy */}
       <h2 className="question-text">{question}</h2>
       
-      {/* SECTION FORMULAIRE DE RÉPONSE */}
+      {/* ANSWER FORM SECTION */}
       <form onSubmit={validerReponse}>
-        {/* LABEL OBLIGATOIRE pour l'accessibilité 
-            sr-only est une classe pour cacher le texte visuellement mais le laisser pour les malvoyants */}
+        {/* MANDATORY LABEL for accessibility 
+            sr-only is a class to hide text visually but keep it for screen readers */}
         <label htmlFor="answer-input" className="sr-only">Votre réponse</label>
         
         <input
@@ -45,7 +45,7 @@ const QuestionCard = ({
           placeholder="Ta réponse..."
           autoFocus
           required
-          aria-required="true" // Indique que le champ est obligatoire
+          aria-required="true" // Indicates that the field is required
         />
         
         <button type="submit" className="btn-primary answer-btn" aria-label="Valider ma réponse">
@@ -53,7 +53,7 @@ const QuestionCard = ({
         </button>
       </form>
       
-      {/* SECTION ACTIONS DE SORTIE */}
+      {/* EXIT ACTIONS SECTION */}
       <button 
         onClick={handleQuit} 
         className="btn-abandon answer-btn-exit"

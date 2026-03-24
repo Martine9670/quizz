@@ -1,4 +1,4 @@
-/* --- STRUCTURE DE LA NAVBAR --- */
+/* --- NAVBAR STRUCTURE --- */
 .navbar {
   width: 100%;
   height: var(--navbar-height);
@@ -22,7 +22,7 @@
   gap: 15px;
 }
 
-/* --- LOGO ET SLOGAN --- */
+/* --- LOGO AND SLOGAN --- */
 .nav-logo {
   font-family: 'Orbitron', sans-serif;
   color: white;
@@ -32,20 +32,20 @@
   text-shadow: 0 0 15px rgba(100, 108, 255, 0.5);
 }
 
-/* --- NOUVEAU STYLE POUR LE BOUTON LOGO (Accessibilité) --- */
+/* --- NEW STYLE FOR LOGO BUTTON (Accessibility) --- */
 .btn-logo-reset {
   background: none;
   border: none;
-  font-family: inherit; /* Garde la police Orbitron du parent */
+  font-family: inherit; /* Keep parent Orbitron font */
   font-size: inherit;
   color: inherit;
   cursor: pointer;
   padding: 0;
-  text-shadow: inherit; /* Garde l'effet néon */
+  text-shadow: inherit; /* Keep neon effect */
 }
 
 .nav-slogan {
-  font-family: 'OpenDyslexic'; /* La police spéciale est mise par défaut ! */
+  font-family: 'OpenDyslexic'; /* Special font is set by default! */
   font-size: 1.5rem;
   color: rgba(255, 255, 255, 0.4);
   font-style: italic;
@@ -54,12 +54,12 @@
   padding-left: 15px;
 }
 
-/* Mode dyslexique pour le slogan */
+/* Dyslexic mode for slogan */
 .nav-slogan.dyslexic-mode {
-  font-family: 'Poppins'; /* On remet la police normale quand la classe est là ! */
+  font-family: 'Poppins'; /* Revert to normal font when class is present! */
 }
 
-/* --- INFORMATIONS DE JEU ET NAVIGATION --- */
+/* --- GAME INFO AND NAVIGATION --- */
 .nav-game-info {
   display: flex;
   align-items: center;
@@ -90,7 +90,7 @@
     color: white; 
 }
 
-/* --- BOUTONS D'ACTION (LOGOUT & DYS) --- */
+/* --- ACTION BUTTONS (LOGOUT & DYS) --- */
 .nav-logout-btn { 
     background: #ff6b6b; 
     color: white; 
@@ -128,14 +128,14 @@
   color: black;
 }
 
-/* Style quand le mode est activé */
+/* Style when mode is active */
 .btn-dys[aria-pressed="true"] {
   background: #4ade80;
   color: black;
   border-color: #4ade80;
 }
 
-/* --- INDICATEURS DE STATUT (PULSE) --- */
+/* --- STATUS INDICATORS (PULSE) --- */
 .status-indicator {
   width: 12px;
   height: 12px;
@@ -151,14 +151,14 @@
   transition: all 0.5s ease;
 }
 
-/* État Connecté (Vert) */
+/* Connected State (Green) */
 .status-dot.online, .pulse-green {
   background: #4ade80;
   box-shadow: 0 0 10px #4ade80;
   animation: pulse-green 2s infinite;
 }
 
-/* État Déconnecté (Rouge) */
+/* Disconnected State (Red) */
 .status-dot.offline, .pulse-red {
   background: #ff6b6b;
   box-shadow: 0 0 10px #ff6b6b;
@@ -199,7 +199,7 @@
 /* --- RESPONSIVE FIX --- */
 @media (max-width: 900px) {
   .navbar {
-    flex-direction: column; /* On empile Logo et Boutons */
+    flex-direction: column; /* Stack Logo and Buttons */
     padding: 15px;
     gap: 15px;
   }
@@ -209,7 +209,7 @@
     gap: 5px;
   }
 
-  /* On cache le slogan sur mobile pour gagner de la place */
+  /* Hide slogan on mobile to save space */
   .nav-slogan {
     border-left: none;
     padding-left: 0;
@@ -219,7 +219,7 @@
   .nav-links {
     width: 100%;
     justify-content: center;
-    flex-wrap: wrap; /* Les boutons passent à la ligne si besoin */
+    flex-wrap: wrap; /* Buttons wrap if needed */
     gap: 10px;
   }
 
@@ -227,7 +227,7 @@
     font-size: 1.5rem;
   }
 
-  /* Ajustement de l'info de jeu (Niveau/Score) */
+  /* Game info adjustment (Level/Score) */
   .nav-game-info {
     margin-left: 0;
     font-size: 0.75rem;

@@ -1,23 +1,23 @@
-/* --- COMPOSANT TIMER --- */
+/* --- TIMER COMPONENT --- */
 const Timer = ({ timeLeft }) => {
-  /* --- LOGIQUE DE CALCUL --- */
+  /* --- CALCULATION LOGIC --- */
   const totalTime = 15;
   const percentage = (timeLeft / totalTime) * 100;
 
   return (
     <div className="timer-wrapper">
-      {/* AFFICHAGE NUMÉRIQUE */}
+      {/* DIGITAL DISPLAY */}
       <div className="timer-text">
         <span className="sr-only">Temps restant : </span>
         ⏱ {timeLeft}s
       </div>
       
-      {/* BARRE DE PROGRESSION VISUELLE (C1.c & C1.d) */}
+      {/* VISUAL PROGRESS BAR (C1.c & C1.d) */}
       <div className="timer-bar-bg">
         <div
           className={`timer-bar-fill ${timeLeft <= 5 ? 'danger' : ''}`}
           style={{ width: `${percentage}%` }}
-          /* --- ATTRIBUTS D'ACCESSIBILITÉ --- */
+          /* --- ACCESSIBILITY ATTRIBUTES --- */
           role="progressbar"
           aria-valuenow={timeLeft}
           aria-valuemin="0"

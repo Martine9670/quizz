@@ -1,24 +1,24 @@
 /* --- CONFIGURATION --- */
 /**
- * On définit l'URL de base. 
+ * Define base URL. 
  * IMPORTANT : 
- * 1. Si Strapi Cloud est suspendu, assurez-vous de supprimer VITE_API_URL de votre .env local
- * ou de le régler sur http://localhost:1337
- * 2. Le code ci-dessous nettoie automatiquement les doublons de /api
+ * 1. If Strapi Cloud is suspended, make sure to remove VITE_API_URL from your local .env
+ * or set it to http://localhost:1337
+ * 2. The code below automatically cleans up /api duplicates
  */
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:1337';
 
 /**
- * Fonction utilitaire pour centraliser la gestion des erreurs de fetch
+ * Utility function to centralize fetch error handling
  */
 const safeFetch = async (endpoint, options) => {
-  // 1. On nettoie BASE_URL pour enlever tout /api ou / à la fin
+  // 1. Clean BASE_URL to remove any /api or / at the end
   const sanitizedBase = BASE_URL.replace(/\/api\/?$/, '').replace(/\/$/, '');
   
-  // 2. On s'assure que l'endpoint commence par /api
+  // 2. Ensure endpoint starts with /api
   const cleanEndpoint = endpoint.startsWith('/api') ? endpoint : `/api${endpoint}`;
   
-  // 3. Construction de l'URL finale
+  // 3. Final URL construction
   const url = `${sanitizedBase}${cleanEndpoint}`;
 
   try {
@@ -34,7 +34,7 @@ const safeFetch = async (endpoint, options) => {
   }
 };
 
-/* --- AUTHENTIFICATION --- */
+/* --- AUTHENTICATION --- */
 export const postRegister = async (username, email, password) => {
   return await safeFetch(`/auth/local/register`, {
     method: 'POST',
@@ -43,7 +43,7 @@ export const postRegister = async (username, email, password) => {
   });
 };
 
-/* --- CONNEXION (LOGIN) --- */
+/* --- LOGIN --- */
 export const postLogin = async (identifier, password) => {
   return await safeFetch(`/auth/local`, {
     method: 'POST',
@@ -52,7 +52,7 @@ export const postLogin = async (identifier, password) => {
   });
 };
 
-/* --- GESTION DES QUESTIONS --- */
+/* --- QUESTIONS MANAGEMENT --- */
 export const fetchQuestions = async (categorie, niveau, limit = 50) => {
   try {
     const result = await safeFetch(
@@ -73,7 +73,7 @@ export const fetchQuestions = async (categorie, niveau, limit = 50) => {
   return [];
 };
 
-/* --- GESTION DES SCORES (LEADERBOARD) --- */
+/* --- SCORE MANAGEMENT (LEADERBOARD) --- */
 export const fetchLeaderboard = async () => {
   try {
     return await safeFetch(`/scores?sort=points:desc&pagination[limit]=5`, {
@@ -99,7 +99,7 @@ export const saveScore = async (pseudo, points, total, difficulte, token) => {
   });
 };
 
-/* --- RÉCUPÉRER LE TOTAL DES POINTS D'UN JOUEUR --- */
+/* --- GET PLAYER TOTAL POINTS --- */
 export const fetchUserTotalPoints = async (pseudo) => {
   try {
     const result = await safeFetch(`/scores?filters[pseudo][$eq]=${pseudo}&pagination[limit]=100`, {
@@ -121,16 +121,16 @@ export const fetchUserTotalPoints = async (pseudo) => {
 
 export const normalizeText = (text) => {
   return text
-    .toLowerCase()                     // Tout en minuscules
-    .normalize("NFD")                  // Décompose les accents (ex: é -> e + ´)
-    .replace(/[\u0300-\u036f]/g, "")   // Supprime les accents
-    .replace(/[-]/g, " ")              // Remplace les tirets par des espaces
-    .trim();                           // Enlève les espaces inutiles au début/fin
+    .toLowerCase()                     // All lowercase
+    .normalize("NFD")                  // Decompose accents (e.g., é -> e + ´)
+    .replace(/[\u0300-\u036f]/g, "")   // Remove accents
+    .replace(/[-]/g, " ")              // Replace hyphens with spaces
+    .trim();                           // Remove unnecessary spaces at start/end
 };
 
 /**
- * Calcule la distance de Levenshtein entre deux chaînes.
- * Plus le score est bas, plus les mots sont proches.
+ * Calculates Levenshtein distance between two strings.
+ * The lower the score, the closer the words.
  */
 export const getLevenshteinDistance = (a, b) => {
   const matrix = [];
@@ -145,7 +145,7 @@ export const getLevenshteinDistance = (a, b) => {
         matrix[i][j] = Math.min(
           matrix[i - 1][j - 1] + 1, // substitution
           matrix[i][j - 1] + 1,     // insertion
-          matrix[i - 1][j] + 1      // suppression
+          matrix[i - 1][j] + 1      // deletion
         );
       }
     }

@@ -1,30 +1,30 @@
 /* ============================================================
-   GAME.CSS - VERSION COMPLÈTE RESTAURÉE ET STABILISÉE
+   GAME.CSS - COMPLETE RESTORED AND STABILIZED VERSION
    ============================================================ */
 
-/* --- LE VERROU : Uniquement pour la carte de jeu --- */
+/* --- THE LOCK: Only for game card --- */
 .quizz-card {
-  /* DIMENSIONS FIXES - Rien ne bouge */
-  width: 800px;           /* Largeur fixe pour éviter le changement horizontal */
-  height: 550px;          /* Hauteur fixe pour éviter le saut vertical */
+  /* FIXED DIMENSIONS - Nothing moves */
+  width: 800px;           /* Fixed width to avoid horizontal shifting */
+  height: 550px;          /* Fixed height to avoid vertical jump */
   
-  /* On empêche le contenu de déborder ou de pousser */
+  /* Prevent content from overflowing or pushing */
   overflow: hidden;       
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   
-  /* On garde ton style visuel */
+  /* Keep your visual style */
   background: black;
   border-radius: 40px;
   border: 8px solid rgba(255, 255, 255, 0.2);
   padding: 40px;
   box-sizing: border-box; 
-  margin: 20px auto;      /* Centrage horizontal */
-  flex-shrink: 0;         /* Empêche la carte de s'écraser dans un flex-container */
+  margin: 20px auto;      /* Horizontal centering */
+  flex-shrink: 0;         /* Prevents card from crushing in a flex-container */
 }
 
-/* --- SÉLECTEUR DE NIVEAUX --- */
+/* --- LEVEL SELECTOR --- */
 .level-grid {
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@
 .moyen { background: #facc15; color: #713f12; }
 .difficile { background: #f87171; color: #7f1d1d; }
 
-/* --- LOGIQUE DU TIMER --- */
+/* --- TIMER LOGIC --- */
 .timer-bar-bg { 
   width: 100%; 
   height: 12px; 
@@ -72,7 +72,7 @@
   box-shadow: 0 0 10px #ff6b6b;
 }
 
-/* --- BOUTONS DE RÉPONSES --- */
+/* --- ANSWER BUTTONS --- */
 .answer-btn {
   background: rgba(74, 222, 128, 0.1);
   border: 2px solid #4ade80;
@@ -91,7 +91,7 @@
   box-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
 }
 
-/* Style différent pour le bouton QUITTER (Rouge) */
+/* Different style for QUIT button (Red) */
 .answer-btn-exit {
   background: transparent;
   border: 2px solid #f87171;
@@ -105,7 +105,7 @@
   box-shadow: 0 0 20px rgba(248, 113, 113, 0.4);
 }
 
-/* --- ÉLÉMENTS DE TEXTE DU JEU --- */
+/* --- GAME TEXT ELEMENTS --- */
 .card .main-title {
   color: #4ade80; 
   font-family: 'Orbitron', sans-serif;
@@ -114,11 +114,11 @@
 }
 
 .question-text {
-  /* On donne une hauteur fixe à la zone de texte pour que 
-     le passage de 1 à 3 lignes ne change rien au reste */
+  /* Give fixed height to text area so that 
+     switching from 1 to 3 lines changes nothing else */
   height: 150px; 
   display: flex;
-  align-items: center;    /* Centre le texte verticalement dans ses 150px */
+  align-items: center;    /* Center text vertically within its 150px */
   justify-content: center;
   
   color: #ebdcdc;
@@ -136,7 +136,7 @@
   margin-top: 10px;
 }
 
-/* --- AFFICHAGE QUESTION PROGRESS --- */
+/* --- QUESTION PROGRESS DISPLAY --- */
 .question-progress {
   text-align: center;
   font-size: 1.2rem;
@@ -154,16 +154,16 @@
   color: rgba(66, 54, 54, 0.966);
 }
 
-/* --- MEDIA QUERY (Uniquement pour le mobile) --- */
+/* --- MEDIA QUERY (Only for mobile) --- */
 @media (max-width: 820px) {
   .quizz-card {
-    width: 95%;           /* On repasse en % seulement quand l'écran est trop petit */
-    height: auto;         /* On libère la hauteur sur mobile pour éviter les bugs */
+    width: 95%;           /* Switch back to % only when screen is too small */
+    height: auto;         /* Release height on mobile to avoid bugs */
     min-height: 500px;
   }
 }
 
-/* --- CATEGORIE SELECTOR --- */
+/* --- CATEGORY SELECTOR --- */
 .category-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -200,7 +200,7 @@
   font-family: 'Orbitron', sans-serif;
 }
 
-/* Titre au-dessus des boutons */
+/* Title above buttons */
 .mode-selection-title {
   font-size: 1rem;
   color: #fff;
@@ -208,7 +208,7 @@
   opacity: 0.9;
 }
 
-/* Container des boutons */
+/* Button container */
 .game-mode-container {
   display: flex;
   gap: 12px;
@@ -217,7 +217,7 @@
   margin-bottom: 20px;
 }
 
-/* Style de base des boutons de mode */
+/* Base style for mode buttons */
 .mode-btn {
   display: flex;
   align-items: center;
@@ -237,9 +237,9 @@
   transform: translateY(-2px);
 }
 
-/* Style quand le bouton est sélectionné */
+/* Style when button is selected */
 .mode-btn.active {
-  background-color: #4CAF50; /* Ton vert */
+  background-color: #4CAF50; /* Your green */
   border-color: #4CAF50;
   box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
 }
