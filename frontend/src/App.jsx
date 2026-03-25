@@ -402,7 +402,8 @@ const validerReponse = useCallback((e = null) => {
         handleLogout,
         setIsRegistering: (val) => { setShowLanding(false); setIsRegistering(val); },
         isRegistering, isDyslexic, setIsDyslexic,
-        isMuted, toggleMute
+        isMuted, toggleMute,
+        activePage
       }} />
 
       {activePage === "game" && (

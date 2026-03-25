@@ -3,7 +3,8 @@ const Navbar = ({
   isLoggedIn, user, niveau, termine, 
   resetQuizz, handleLogout, setIsRegistering, isRegistering,
   isDyslexic, setIsDyslexic,
-  isMuted, toggleMute
+  isMuted, toggleMute,
+  activePage
 }) => {
   return (
     <nav className="navbar" aria-label="Navigation principale">
@@ -77,9 +78,11 @@ const Navbar = ({
             </button>
           </>
         ) : (
-          <button onClick={() => setIsRegistering(!isRegistering)} className="nav-item">
-            {isRegistering ? "Se connecter" : "S'inscrire"}
-          </button>
+          activePage === 'game' && (
+            <button onClick={() => setIsRegistering(!isRegistering)} className="nav-item">
+              {isRegistering ? "Se connecter" : "S'inscrire"}
+            </button>
+          )
         )}
       </div>
     </nav>
